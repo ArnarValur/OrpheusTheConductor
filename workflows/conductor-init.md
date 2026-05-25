@@ -1,13 +1,31 @@
-# Source: TheOracle v2.0 @ 2026-05-22
+# Source: TheOracle v2.1 @ 2026-05-25
 
 ---
 name: conductor-init
-description: Initialize Conductor — scaffold project structure through an interactive grill
+description: "Initialize Conductor — scaffold project structure through an interactive grill. Creates project-context.md (consolidated identity + operational), scaffolds adr/ and docs/ with .gitkeep, runs targeted domain scan on brownfield projects, migrates v2.0 conductors to v2.1, and deploys all workflows + the grill skill."
+reads:
+  - .                         # codebase scan (brownfield detection + targeted domain scan)
+  - conductor/                # existing conductor state, if any (brownfield re-init / v2.0 migration)
+  - .docs/                    # optional migration source
+writes:
+  - conductor/project-context.md
+  - conductor/workflow.md
+  - conductor/context.md      # conditional — brownfield targeted scan only
+  - conductor/index.md
+  - conductor/pulse.md
+  - conductor/relay.md
+  - conductor/tracks.md
+  - conductor/adr/.gitkeep
+  - conductor/docs/.gitkeep
+  - conductor/code_styleguides/*.md
+  - .agents/workflows/*.md
 ---
 
-# 🎵 Conductor Init — Project Scaffolding
+# 🎵 Conductor Init — Project Scaffolding (v2.1)
 
 When the user invokes `/conductor-init`, execute this interactive setup sequence to scaffold a Conductor-managed project.
+
+> **v2.1 changes from v2.0:** consolidated `project-context.md` (identity + operational in one file, identity-first section order per S5), lazy `conductor/adr/` and `conductor/docs/` directories with `.gitkeep`, brownfield targeted domain scan that pre-populates `context.md`, optional `.docs/` migration, dynamic `index.md` with no dead links, and the deploy step now copies the new `/grill` workflow.
 
 ---
 
@@ -16,6 +34,7 @@ When the user invokes `/conductor-init`, execute this interactive setup sequence
 Determine if this is a **Brownfield** (existing) or **Greenfield** (new) project.
 
 **Brownfield indicators** — if ANY are present, classify as Brownfield:
+
 - Version control directories: `.git`, `.svn`, `.hg`
 - Dependency manifests: `package.json`, `pom.xml`, `requirements.txt`, `go.mod`, `Cargo.toml`, `pubspec.yaml`
 - Source code directories: `src/`, `app/`, `lib/` containing code files
@@ -24,65 +43,147 @@ Determine if this is a **Brownfield** (existing) or **Greenfield** (new) project
 **Greenfield** — ONLY if none of the above are found.
 
 **If an existing `conductor/` directory is detected:**
-> Ask the user: "A `conductor/` directory already exists. Do you want to reinitialize (this will overwrite existing configuration) or abort?"
-> If abort, halt. If reinitialize, proceed but warn about overwriting.
+> Ask the user: "A `conductor/` directory already exists. Do you want to **reinitialize** (this will detect a v2.0 conductor and migrate it to v2.1 in place — see Step 1b) or **abort**?"
+> If abort, halt. If reinitialize, proceed to Step 1b.
 
-**If Brownfield:**
-1. Announce existing project detected
+**If Brownfield (no existing conductor):**
+
+1. Announce existing project detected.
 2. If uncommitted git changes exist, warn: "You have uncommitted changes. Commit or stash before proceeding."
-3. Perform a read-only scan: analyze `README.md`, manifest files, and directory structure to infer project context
-4. Respect `.gitignore` and `.geminiignore` when scanning
-5. Summarize findings: inferred tech stack, architecture type, project goal
+3. Perform a read-only scan: analyze `README.md`, manifest files, and directory structure to infer project context.
+4. Respect `.gitignore` and `.geminiignore` when scanning.
+5. Summarize findings: inferred tech stack, architecture type, project goal.
 
 **If Greenfield:**
-1. Announce new project initialization
-2. Initialize git repo if `.git` doesn't exist: `git init`
-3. Ask: "What are you building?" — use the response as the initial concept
+
+1. Announce new project initialization.
+2. Initialize git repo if `.git` doesn't exist: `git init`.
+3. Ask: "What are you building?" — use the response as the initial concept.
 
 ---
 
-## Step 2: Product Definition Grill
+## Step 1b: v2.0 → v2.1 Migration (only when reinitializing an existing conductor)
+
+This step implements D9 from the design brief. **It does NOT clobber** existing user data — tracks, pulse, relay, pulse-archive, agent-rules, and code_styleguides are preserved untouched.
+
+### 1b.1 Detect conductor version
+
+| Signal | Diagnosis |
+|--------|-----------|
+| `conductor/project-context.md` contains `Product Definition` AND `Tech Stack` sections | v2.0 conductor-init structure (single file) — minor migration only |
+| Any of `conductor/product.md`, `conductor/product-guidelines.md`, `conductor/tech-stack.md` exist as separate files | Pre-v2.0 Oracle structure or manual user split — merge required |
+| Neither — only legacy files present | Ask the user to describe the project state before proceeding |
+
+### 1b.2 Migration actions
+
+Apply in order:
+
+1. **Scaffold new lazy directories** (idempotent):
+
+   ```bash
+   mkdir -p conductor/adr conductor/docs
+   touch conductor/adr/.gitkeep conductor/docs/.gitkeep
+   ```
+
+2. **Handle product.md split (P2 phrasing):**
+   - If any of `product.md`, `product-guidelines.md`, or `tech-stack.md` exist as separate files (from pre-v2.0 Oracle or manual user edits), present them to the user with proposed section assignments in the consolidated `project-context.md`, and ask: *"Merge these into `project-context.md` and remove the originals?"*
+   - On approval, merge content into `project-context.md` using the section order in Step 10 (identity-first per S5). Remove the source files. Commit as a separate step labeled "migrate: consolidate v2.0 product files".
+   - If `project-context.md` already contains the merged content (v2.0 conductor-init structure), no action.
+
+3. **Targeted domain scan** (only if `conductor/context.md` does not exist) — invoke Step 2b. Otherwise leave `context.md` alone.
+
+4. **Rewrite `conductor/index.md`** to the dynamic v2.1 format — keep only links to files that **actually exist** on disk. See Step 11. Then reconcile lazily via [`protocols/index-sync.md`](../protocols/index-sync.md) for any v2.1 lazy files present (context.md, prd.md, first ADR, docs/, agent-rules/).
+
+5. **Update workflow source headers** in `.agents/workflows/*.md` from `# Source: TheOracle v2.0 ...` to `# Source: TheOracle v2.1 @ {today}`. Copy the latest workflows from `~/Hermes/TheOracle/workflows/` to `.agents/workflows/`, overwriting old versions.
+
+6. **Preserve everything else.** Do NOT touch `conductor/pulse.md`, `conductor/relay.md`, `conductor/tracks.md`, `conductor/tracks/`, `conductor/pulse-archive/`, `conductor/agent-rules/`, or `conductor/code_styleguides/`.
+
+7. **Report** the migration result to the user and skip ahead to Step 12 (deploy workflows) — Steps 2–11 are for fresh initializations.
+
+---
+
+## Step 2: Product Definition Grill (identity #1)
 
 Ask these questions **sequentially** (one at a time, wait for response before next). Maximum 5 questions. For each question, provide 3 suggested answers plus a write-in option.
 
 Topics to cover:
+
 - **Product name** — What is the project called?
-- **Tagline** — One-line description
+- **Tagline** — One-line description.
 - **Description** — What does it do? What problem does it solve?
 - **Target audience** — Who is this for?
 - **Key differentiators** — What makes this unique?
 
-For Brownfield projects, pre-fill suggestions from the code analysis.
+For Brownfield projects, pre-fill suggestions from the code analysis in Step 1.
 
-After gathering responses, draft `project-context.md` content for the Product Definition section. Present for review and approval before writing.
+After gathering responses, draft the **Product Definition** section content for `project-context.md`. Present for review and approval before writing (writing happens in Step 10).
 
 ---
 
-## Step 3: Product Guidelines Grill
+## Step 2b: Targeted Domain Scan (brownfield only — D4)
+
+> **Skip for greenfield.** Greenfield projects get no `context.md` at init — the file is created lazily by `/grill` when the first domain term emerges.
+
+For brownfield projects, perform a **targeted** domain scan — NOT a naive grep across the entire codebase.
+
+### Procedure
+
+1. **Ask the user:** *"Where does your core domain logic live?"* with suggestions inferred from Step 1's read-only scan:
+   - `src/domain/`, `src/models/`, `src/entities/`
+   - `app/entities/`, `app/models/`
+   - `models/`, `entities/`
+   - Database schema files (`*.surql`, `migrations/`, `schema/`, `*.sql`)
+   - API route handlers if domain logic is colocated there
+
+2. **Prioritize during the scan:**
+   - Model / entity directories.
+   - Database schema files (`.surql`, SQL migrations, ORM model definitions).
+   - Type definitions for domain entities.
+   - API route handlers (when they encode domain operations rather than CRUD).
+
+3. **Exclude during the scan:**
+   - Utility / infrastructure code: `Logger`, `Config`, `DatabaseConnector`, `AuthMiddleware`, `Cache`, `EventBus`.
+   - Test directories.
+   - Build artifacts, `node_modules/`, `vendor/`, `target/`.
+   - Anything matching `.gitignore` or `.geminiignore`.
+
+4. **Extract candidates:** class names, type names, table names, top-level keys in entity files. For each candidate, capture aliases found in the code (e.g., `User` and `Customer` if both appear referring to the same domain concept).
+
+5. **Present the candidate list to the user:**
+   > "Here's what I found in your domain layer. Confirm the ones that are real domain concepts (vs incidental types):"
+   > {numbered list with proposed definition and "Also known as" column}
+
+6. **Write `conductor/context.md`** from the brownfield template (see [`conductor-v2.1-design-brief.md`](../conductor-v2.1-design-brief.md) → `context.md` Templates → Brownfield). Populate `## Entities` with confirmed terms. Leave `## Relationships` and `## Terminology Boundaries` empty for `/grill` to refine.
+
+7. **Queue an index-sync append** for `context.md` (applied in Step 11).
+
+---
+
+## Step 3: Product Guidelines Grill (identity #2)
 
 Ask sequentially. Maximum 3 questions. Topics:
 
-- **Brand voice** — Technical/casual/formal? Tone and personality.
-- **UX principles** — Key design principles (e.g., "simplicity first", "mobile-first")
-- **Accessibility** — Accessibility standards to follow (e.g., WCAG 2.1 AA)
+- **Brand voice** — Technical / casual / formal? Tone and personality.
+- **UX principles** — Key design principles (e.g., "simplicity first", "mobile-first").
+- **Accessibility** — Accessibility standards to follow (e.g., WCAG 2.1 AA).
 
-Draft the Guidelines section for `project-context.md`. Present for review.
+Draft the **Product Guidelines** section content for `project-context.md`. Present for review.
 
 ---
 
-## Step 4: Tech Stack Grill
+## Step 4: Tech Stack Grill (identity #3)
 
 Ask sequentially. Maximum 5 questions. Topics:
 
-- **Languages** — Primary programming language(s)
-- **Frameworks** — Frontend/backend frameworks
-- **Databases** — Data storage solutions
+- **Languages** — Primary programming language(s).
+- **Frameworks** — Frontend / backend frameworks.
+- **Databases** — Data storage solutions.
 - **Deployment targets** — Where will this run? (cloud, self-hosted, edge, etc.)
-- **Hosting** — Hosting provider/platform
+- **Hosting** — Hosting provider / platform.
 
 For Brownfield projects, present the inferred stack and ask for confirmation rather than starting from scratch.
 
-Draft the Tech Stack section for `project-context.md`. Present for review.
+Draft the **Tech Stack** section content for `project-context.md`. Present for review.
 
 ---
 
@@ -106,6 +207,8 @@ List available style guides from `~/Hermes/TheOracle/templates/code_styleguides/
 
 > "Based on your tech stack, I recommend: {recommended guides}. Would you like to proceed with these, or customize the selection?"
 
+`general.md` is always included regardless of selection.
+
 ---
 
 ## Step 6: Workflow Mode Selection
@@ -113,6 +216,7 @@ List available style guides from `~/Hermes/TheOracle/templates/code_styleguides/
 Present two workflow modes and ask the user to choose:
 
 ### Strict Mode
+
 - **Best for:** Products, production apps, TDD-driven development
 - Enforces test-driven development (write tests first)
 - Requires phase completion verification
@@ -121,6 +225,7 @@ Present two workflow modes and ask the user to choose:
 - Full spec → plan → implement cycle
 
 ### Light Mode
+
 - **Best for:** Prototypes, websites, experiments, spikes
 - No mandatory TDD
 - Flexible commit cadence
@@ -133,16 +238,44 @@ Present two workflow modes and ask the user to choose:
 
 ## Step 7: Create Directory Structure
 
-Create the `conductor/` directory and its subdirectories:
+Create the `conductor/` directory tree. Lazy directories (`adr/`, `docs/`) get a `.gitkeep` so Git tracks them (Git does not track empty directories).
 
+```bash
+mkdir -p conductor/tracks conductor/pulse-archive conductor/code_styleguides conductor/adr conductor/docs
+touch conductor/adr/.gitkeep conductor/docs/.gitkeep
 ```
+
+Resulting tree:
+
+```text
 conductor/
 ├── tracks/
 ├── pulse-archive/
-└── code_styleguides/
+├── code_styleguides/
+├── adr/
+│   └── .gitkeep
+└── docs/
+    └── .gitkeep
 ```
 
-Command: `mkdir -p conductor/tracks conductor/pulse-archive conductor/code_styleguides`
+> Lazy files (`context.md`, `prd.md`, `context-map.md`) are NOT created here. They appear when `/grill` or Step 2b writes something to them.
+
+---
+
+## Step 7b: `.docs/` Migration (optional, D12 + P1)
+
+If a `.docs/` directory exists in the project root, ask:
+
+> "Found a `.docs/` directory with {N} files. v2.1 places long-form documentation under `conductor/docs/` instead. Migrate `.docs/` → `conductor/docs/`?"
+
+On approval:
+
+1. `mv .docs/* conductor/docs/`
+2. Remove the now-empty `.docs/` directory.
+3. Remove `conductor/docs/.gitkeep` (no longer needed — real files are present).
+4. Queue an index-sync append for `docs/` (applied in Step 11).
+
+> Reminder: `conductor/docs/` has **no command writers** in v2.1 (P1). Humans write there directly. This migration is the only v2.1 command-touch to that directory.
 
 ---
 
@@ -150,10 +283,10 @@ Command: `mkdir -p conductor/tracks conductor/pulse-archive conductor/code_style
 
 Copy the selected style guides from `~/Hermes/TheOracle/templates/code_styleguides/` to `conductor/code_styleguides/`.
 
-Example:
 ```bash
 cp ~/Hermes/TheOracle/templates/code_styleguides/typescript.md conductor/code_styleguides/
 cp ~/Hermes/TheOracle/templates/code_styleguides/general.md conductor/code_styleguides/
+# ... etc.
 ```
 
 Always include `general.md` regardless of selection.
@@ -169,39 +302,33 @@ Based on the mode selected in Step 6:
 
 ---
 
-## Step 10: Create `project-context.md`
+## Step 10: Create `project-context.md` (consolidated, identity-first per S5)
 
-Write `conductor/project-context.md` using the template at `~/Hermes/TheOracle/templates/project-context.md` as a base. Populate it with all information gathered during Steps 2–4.
+Write `conductor/project-context.md` using the template at `~/Hermes/TheOracle/templates/project-context.md` as a base. The file consolidates **identity + operational** content in one document. Populate with information gathered during Steps 2–4.
 
-The file should contain these sections:
-```markdown
-# Project Context
+**Section order (deliberate, identity-first per S5 — do NOT reorder):**
 
-## Product Definition
-- **Name:** {name}
-- **Tagline:** {tagline}
-- **Description:** {description}
-- **Target Audience:** {audience}
-- **Key Differentiators:** {differentiators}
+1. **Product Definition** (from Step 2)
+2. **Product Guidelines** (from Step 3)
+3. **Tech Stack** (from Step 4)
+4. **Caution Levels** (from template default; user-editable)
+5. **Domain Expertise** (from template default; user-editable)
+6. **Preferred Workflows** (from template default; updated to mention `adr/` and `pulse.md` decision split)
+7. **Project-Specific Constraints** (from template default; user-editable)
+8. **Environment Notes** (from template default; user-editable)
 
-## Product Guidelines
-- **Brand Voice:** {voice}
-- **UX Principles:** {principles}
-- **Accessibility:** {standards}
-
-## Tech Stack
-- **Languages:** {languages}
-- **Frameworks:** {frameworks}
-- **Databases:** {databases}
-- **Deployment Targets:** {targets}
-- **Hosting:** {hosting}
-```
+> After this file is written, **no command writes to it** (S3). All future edits are by the user directly. This includes framework switches, brand voice changes, and caution-level adjustments — they happen in the user's editor, not via `/grill` or any other workflow.
 
 ---
 
-## Step 11: Create Conductor Files
+## Step 11: Create Conductor Files (dynamic `index.md`)
 
 ### `conductor/index.md`
+
+The init-time `index.md` lists **only files that actually exist on disk now**. Lazy files (`context.md`, `prd.md`, `adr/*`, `docs/*` migrated content) get added later via [`protocols/index-sync.md`](../protocols/index-sync.md).
+
+Base template:
+
 ```markdown
 # Conductor Index
 
@@ -217,7 +344,18 @@ The file should contain these sections:
 - [Tracks Directory](./tracks/)
 ```
 
+**Conditional appends** (apply now if the corresponding lazy file/dir was created in this run):
+
+| Trigger this run | Append under | Link |
+|------------------|--------------|------|
+| Step 2b wrote `context.md` (brownfield scan) | `## Context` | `- [Domain Glossary](./context.md)` |
+| Step 7b migrated `.docs/` → `docs/` | `## Documentation` (new section) | `- [Project Docs](./docs/)` |
+| `conductor/agent-rules/` exists (installed by the agent-rules plugin) | `## Context` | `- [Agent Rules](./agent-rules/)` |
+
+> `adr/` and `docs/` themselves are NOT linked at init even though their `.gitkeep` files exist. They are linked on first real-content write (first ADR, first migrated/authored doc). See [`protocols/index-sync.md`](../protocols/index-sync.md) for the rules.
+
 ### `conductor/relay.md`
+
 ```markdown
 # Relay — Cross-Session Handoff
 
@@ -227,11 +365,12 @@ Timestamped entries for context continuity between sessions.
 
 ## {YYYY-MM-DD HH:MM}
 - **Session:** Initial setup
-- **Status:** Project initialized with Conductor
-- **Next:** Begin first track or define project scope
+- **Status:** Project initialized with Conductor (TheOracle v2.1)
+- **Next:** Refine domain with `/grill` or create the first track with `/new-track`
 ```
 
 ### `conductor/pulse.md`
+
 ```markdown
 # Pulse — Current Project State
 
@@ -248,14 +387,16 @@ _None yet._
 _None._
 
 ## 🧠 Session Memory
-- Project initialized with Conductor
+- Project initialized with Conductor (TheOracle v2.1)
 
 ## 📋 Next Session Suggestions
+- Refine domain language with `/grill`
 - Create the first track with `/new-track`
-- Review project-context.md for accuracy
+- Review `project-context.md` for accuracy
 ```
 
 ### `conductor/tracks.md`
+
 ```markdown
 # Tracks Registry
 
@@ -289,21 +430,26 @@ Copy the Conductor workflow files to the project's `.agents/workflows/` director
 ```bash
 mkdir -p .agents/workflows
 cp ~/Hermes/TheOracle/workflows/conductor.md .agents/workflows/
+cp ~/Hermes/TheOracle/workflows/conductor-init.md .agents/workflows/
+cp ~/Hermes/TheOracle/workflows/grill.md .agents/workflows/
 cp ~/Hermes/TheOracle/workflows/checkpoint.md .agents/workflows/
 cp ~/Hermes/TheOracle/workflows/new-track.md .agents/workflows/
 ```
 
-Each copied file already contains the `# Source: TheOracle v2.0` header.
+Each copied file already contains the `# Source: TheOracle v2.1 @ {date}` header.
+
+> **v2.1 adds `/grill` to the deployed set.** If you are reinitializing a v2.0 project, this is how the user gets the new command.
 
 ---
 
 ## Step 13: Initial Track Generation (Optional)
 
 Ask the user:
-> "Would you like to create the first track now, or do that later with `/new-track`?"
+> "Would you like to create the first track now, run `/grill` to refine the domain first, or do that later?"
 
-If yes, invoke the `/new-track` workflow inline.
-If no, skip to Step 14.
+- **First track now** → invoke the `/new-track` workflow inline.
+- **Grill first** → tell the user to run `/grill` after this command completes; it will read the freshly-written `project-context.md` (and `context.md` if brownfield) for orientation.
+- **Later** → skip to Step 14.
 
 ---
 
@@ -313,10 +459,16 @@ Stage all conductor files and commit:
 
 ```bash
 git add conductor/ .agents/workflows/
-git commit -m "chore: initialize conductor (TheOracle v2.0)"
+git commit -m "chore: initialize conductor (TheOracle v2.1)"
 ```
 
-Announce completion:
-> "✅ Conductor initialized. Your project is ready."
-> "Run `/conductor` to see status, or `/new-track` to create your first track."
+If `.docs/` was migrated in Step 7b, include `.docs/`'s removal in the same commit (or a separate `chore: migrate .docs/ → conductor/docs/` commit — your call based on cleanliness).
 
+Announce completion:
+
+> "✅ Conductor v2.1 initialized. Your project is ready."
+>
+> **Next:**
+> - `/grill` — refine domain language, batch ADRs, optionally write a PRD
+> - `/new-track` — create a feature/bug/chore track (will be domain-aware on top of `/grill`'s output)
+> - `/conductor` — resume / status dashboard
