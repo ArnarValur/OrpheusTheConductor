@@ -1,4 +1,4 @@
-<!-- Template: TheOracle v2.0 | Mode: strict -->
+<!-- Template: TheOracle v2.1 | Mode: strict -->
 # Project Workflow — Strict (TDD)
 
 > Full test-driven development workflow with coverage gates.
@@ -9,7 +9,7 @@
 ## Guiding Principles
 
 1. **The Plan is the Source of Truth:** All work must be tracked in `tracks.md`
-2. **The Tech Stack is Deliberate:** Changes to the tech stack must be documented in `tech-stack.md` *before* implementation
+2. **The Tech Stack is Deliberate:** Changes to the tech stack must be documented in the **Tech Stack** section of `project-context.md` *before* implementation. Architecturally significant changes (those satisfying the three-criteria ADR test: hard to reverse, surprising without context, real trade-off) additionally warrant an ADR in `conductor/adr/` — surface as a candidate at `/grill`, `/new-track`, or `/checkpoint` time.
 3. **Test-Driven Development:** Write unit tests before implementing functionality
 4. **High Code Coverage:** Aim for >80% code coverage for all modules
 5. **User Experience First:** Every decision should prioritize user experience
@@ -53,8 +53,9 @@ All tasks follow a strict 11-step lifecycle:
 
 7. **Document Deviations:** If implementation differs from tech stack:
    - **STOP** implementation
-   - Update `tech-stack.md` with new design
-   - Add dated note explaining the change
+   - Update the **Tech Stack** section of `project-context.md` with the new design
+   - Add a dated note explaining the change (user-edited; no command writes to `project-context.md` post-init per S3)
+   - If the change is architecturally significant (three-criteria ADR test), surface it as an ADR candidate at the next `/grill`, `/new-track`, or `/checkpoint`
    - Resume implementation
 
 8. **Commit Code Changes:**
@@ -97,7 +98,7 @@ All tasks follow a strict 11-step lifecycle:
    - If tests fail: inform user, attempt fix (max 2 attempts). If still failing, **stop and ask for guidance**
 
 4. **Propose Manual Verification Plan:**
-   - Analyze `product.md`, `product-guidelines.md`, and `tracks.md` to determine the phase's user-facing goals
+   - Analyze `project-context.md` (Product Definition + Guidelines sections), `prd.md` (when present, for current scope), and `tracks.md` to determine the phase's user-facing goals
    - Generate step-by-step verification instructions with specific commands and expected outcomes
 
    **Frontend example:**

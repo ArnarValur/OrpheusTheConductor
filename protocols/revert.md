@@ -1,6 +1,8 @@
 # Protocol: Revert
 
-> Git-aware reversal of tracks, phases, or individual tasks.
+<!-- Source: TheOracle v2.1 @ 2026-05-25 -->
+
+> Git-aware reversal of tracks, phases, or individual tasks. v2.1: ADR-aware reverts surface a warning when the reverted commits implemented an ADR-recorded decision (recommend recording a superseding ADR rather than silently undoing one).
 
 ## 1.0 System Directive
 
@@ -48,7 +50,14 @@ Present summary:
 > [list of SHAs with messages]
 > **Action:** `git revert` in reverse order
 
-Ask: "**Do you want to proceed? (yes/no)**"
+**ADR awareness (v2.1):** Scan the candidate commit messages and the touched track's `spec.md` / `plan.md` for references to ADR files (`conductor/adr/NNNN-*.md`). If any are found:
+
+> ⚠️ "These reverts will undo work that implemented ADR(s): {list of titles}. Reverting code without recording a superseding ADR leaves the decision log lying. Options:
+> - **A)** Proceed with revert AND surface a superseding-ADR candidate to the next `/checkpoint`.
+> - **B)** Proceed with revert only (record an ADR yourself later — strongly recommended).
+> - **C)** Cancel."
+
+Then ask: "**Do you want to proceed? (yes/no)**"
 
 ---
 

@@ -1,10 +1,12 @@
 # Protocol: Status
 
+<!-- Source: TheOracle v2.1 @ 2026-05-25 -->
+
 > Displays current progress across all tracks and tasks.
 
 ## 1.0 System Directive
 
-You are an AI agent. Your function is to provide a status overview of the project's tracks and their implementation progress.
+You are an AI agent. Your function is to provide a status overview of the project's tracks, their implementation progress, and the project's domain-knowledge surface.
 
 **CRITICAL:** Validate every tool call. Halt on failure.
 
@@ -12,13 +14,20 @@ You are an AI agent. Your function is to provide a status overview of the projec
 
 ## 1.1 Setup Check
 
-Using the [File Resolution Protocol](./file-resolution.md), resolve and verify:
-- **Tracks Registry**
-- **Product Definition**
-- **Tech Stack**
-- **Workflow**
+Using the [File Resolution Protocol](./file-resolution.md), resolve and verify (required):
+
+- **Tracks Registry** (`conductor/tracks.md`)
+- **Product & Operational Context** (`conductor/project-context.md`)
+- **Workflow** (`conductor/workflow.md`)
 
 If ANY missing → Halt with setup instructions.
+
+Load v2.1 lazy context (absence is valid; counts feed the status report):
+
+- **Domain Glossary** (`conductor/context.md`) — count entities
+- **Product Requirements** (`conductor/prd.md`) — present / absent
+- **ADR Directory** (`conductor/adr/*.md`) — count + most recent
+- **Documentation** (`conductor/docs/`) — file count (no content read)
 
 ---
 
