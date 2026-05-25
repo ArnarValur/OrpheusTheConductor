@@ -6,6 +6,7 @@
 >
 > **Created:** 2026-05-25 — session `491dc99f`
 > **Revised:** 2026-05-25 — session `e20ad7b9` (5 rounds of refinement + architectural review + v2.0 audit)
+> **Revised:** 2026-05-25 — second-pass supplement absorbed (seams S1–S5 + polish P1–P4 applied inline; supplement retained as audit trail)
 > **Status:** ✅ Ready for implementation.
 
 ---
@@ -18,6 +19,7 @@ Currently, Merkurial-studio projects have **two parallel documentation trees**:
 2. **`.docs/`** — manually maintained documentation, reports, guides, API docs
 
 This creates friction:
+
 - Two folders to open in Obsidian to get the full picture
 - Domain knowledge (glossary, terminology, design decisions) lives in neither — it's scattered across chat history and developer memory
 - Architectural decisions aren't recorded — future agents and future sessions re-litigate settled questions
@@ -64,11 +66,13 @@ Leave the native Antigravity command alone — it may evolve with future patches
 ```
 
 Optional sections (only when they add genuine value):
+
 - **Considered Options** — when rejected alternatives are worth remembering
 - **Consequences** — when non-obvious downstream effects need callout
 - **Superseded by** — when a later ADR replaces this one
 
 **When to write an ADR** (all three must be true):
+
 1. **Hard to reverse** — the cost of changing your mind later is meaningful
 2. **Surprising without context** — a future reader will wonder "why on earth?"
 3. **Real trade-off** — there were genuine alternatives, you picked one for specific reasons
@@ -79,6 +83,7 @@ During a `/grill` or `/new-track` session, the agent accumulates candidate decis
 ### D4: Brownfield init pre-populates `context.md` (targeted scan)
 
 When `/conductor-init` runs on a brownfield codebase, it performs a **targeted domain scan** — not a naive grep across the entire codebase. The scan:
+
 1. **Asks the user:** *"Where does your core domain logic live?"* (e.g., `src/domain/`, `models/`, `app/entities/`)
 2. **Prioritizes:** Model/entity directories, database schema files (`.surql`, SQL migrations), type definitions, and API route handlers
 3. **Excludes:** Utility/infrastructure code (`Logger`, `Config`, `DatabaseConnector`, `AuthMiddleware`) — these are technical, not domain concepts
@@ -109,6 +114,7 @@ No rename to `frd.md`. The PRD→FRD naming hierarchy is logically clean but add
 
 > [!WARNING]
 > **v2.0 is internally inconsistent.** The audit confirmed:
+>
 > - `conductor-init.md` Step 10 writes Product Definition + Guidelines + Tech Stack into ONE file: `project-context.md`
 > - `README.md`, `templates/index.md`, `file-resolution.md`, and `SKILL.md` all assume FOUR separate files: `product.md`, `product-guidelines.md`, `tech-stack.md`, `project-context.md`
 > - The `templates/project-context.md` template contains only operational info (caution levels, domain expertise) — no product identity
@@ -118,7 +124,8 @@ No rename to `frd.md`. The PRD→FRD naming hierarchy is logically clean but add
 **Decision: Option A — consolidate.** `project-context.md` becomes the **single identity + operational document**. Kill `product.md`, `product-guidelines.md`, `tech-stack.md` as separate files.
 
 Razor-sharp boundary with `prd.md`:
-- **`project-context.md`** = Identity + operational constraints. What the product *is*, how agents should behave, tech stack, guidelines, caution levels, domain expertise. Written once by `/conductor-init`.
+
+- **`project-context.md`** = Identity + operational constraints. What the product *is*, how agents should behave, tech stack, guidelines, caution levels, domain expertise. Created by `/conductor-init`; user-edited thereafter (no command writes here). [S3]
 - **`prd.md`** = Living scope document. Features, capabilities, what's in and what's out. Written by `/grill` when product scope crystallizes. Evolves over time.
 
 They share no sections.
@@ -145,7 +152,7 @@ Brownfield re-init on a v2.0 conductor must:
 
 1. **Add new directories:** `adr/.gitkeep`, `docs/.gitkeep`
 2. **Run targeted domain scan** only if `context.md` doesn't already exist
-3. **Handle product.md split:** If separate `product.md`, `product-guidelines.md`, `tech-stack.md` exist (v2.0 README structure), offer to merge their content into `project-context.md` and remove the originals. If `project-context.md` already contains everything (v2.0 conductor-init structure), no action needed.
+3. **Handle product.md split:** If any of `product.md`, `product-guidelines.md`, or `tech-stack.md` exist as separate files (from pre-v2.0 Oracle or manual user edits), offer to merge their content into `project-context.md` and remove the originals. If `project-context.md` already contains everything (v2.0 conductor-init structure), no action needed. [P2]
 4. **Rewrite `index.md`** to the new dynamic format, keeping only links to files that actually exist
 5. **Update workflow source headers** from `v2.0` to `v2.1`
 6. **Do NOT clobber:** Preserve existing tracks, pulse, relay, pulse-archive, agent-rules, code_styleguides
@@ -166,9 +173,13 @@ Today, `checkpoint.md` Step 3 appends decisions into `pulse.md`'s Session Memory
 
 This is the same batching pattern as D3, applied at checkpoint time. The symmetry is itself cohesion. Architectural decisions get a permanent home in `adr/`; operational notes stay in `pulse.md` where they belong.
 
+**Scope — no double-processing [S1]:** `/checkpoint` only processes decisions **not already handled by a command-end batch**. Concretely: it reads `pulse.md` Session Memory entries written during free-form work (while no batching command was active). Decisions surfaced and either approved or rejected by a prior `/grill` or `/new-track` ADR batch are NOT re-surfaced — they're considered settled (approved → in `adr/`, rejected → dropped intentionally). This preserves trust in the batching UX: a deliberate rejection in `/grill` must not zombie-return at `/checkpoint`.
+
 ### D12: `conductor/docs/` defined
 
-`conductor/docs/` is for **long-form human-authored documentation** — guides, reports, post-mortems, API references. It is **read-only to all commands** except explicit user-driven writes. No command auto-generates content here.
+`conductor/docs/` is for **long-form human-authored documentation** — guides, reports, post-mortems, API references.
+
+**Write semantics [P1]:** v2.1 has **no command** that writes to `conductor/docs/`. Humans write there directly with their editor. Agents must not auto-generate content here. If a future command needs to write documentation, it requires its own decision record.
 
 This replaces the existing `.docs/` convention, bringing it under the conductor roof.
 
@@ -200,7 +211,7 @@ This replaces the existing `.docs/` convention, bringing it under the conductor 
 
 | Document | Scope | Answers | Written by | Lifecycle |
 |----------|-------|---------|------------|-----------|
-| `project-context.md` | Product | What is this? Tech stack? Guidelines? Constraints? | `/conductor-init` | Written once, updated rarely |
+| `project-context.md` | Product | What is this? Tech stack? Guidelines? Constraints? | `/conductor-init` (no command writes here post-init; user-edited thereafter) | Created at init, user-maintained |
 | `context.md` | Domain | Domain terms? Entity relationships? | `/grill`, `/new-track`, `/conductor-init` (brownfield) | Living document, grows over time |
 | `context-map.md` | Domain | Where are the bounded contexts? | `/grill` or manual | Only for multi-context projects |
 | `prd.md` | Product | What's the full scope we're building? | `/grill` (when scope crystallizes) | Living document, evolves with product |
@@ -278,7 +289,9 @@ Phase 1: /conductor-init                  Phase 2: /grill → /new-track
 
 ## Reader/Writer Contracts
 
-Every workflow file gets a frontmatter block declaring what it reads and writes. This makes the system self-documenting and is the foundation for a future `conductor-doctor` command that can validate integrity.
+**Scope [P4]: workflows only.** Each workflow file in `workflows/` (and each skill `SKILL.md` that wraps a workflow) gets a frontmatter block declaring what it reads and writes. Protocols (`protocols/*.md`) are reference docs invoked by workflows; their I/O is covered transitively by the calling workflow's contract. This keeps the contract surface small and unambiguous.
+
+The contracts make the system self-documenting and are the foundation for a future `conductor-doctor` command that can validate integrity.
 
 ```yaml
 # Example: grill.md frontmatter
@@ -398,7 +411,11 @@ Add to the scaffolding:
 Upgrade the existing workflow:
 
 - **Before the spec grill:** Read `conductor/context.md`, `conductor/adr/*`, and `conductor/prd.md` (if they exist)
-- **Domain validation (D5 forward-compat):** When `context-map.md` exists, validate the chosen domain against registered context names. When it doesn't exist, accept any domain (current behavior).
+- **Domain validation step ordering [S4]:** Insert validation as a **new Step 2a, before existing Step 2 domain parsing in `workflows/new-track.md`**:
+  1. **Step 2a (new):** If `context-map.md` exists, validate the proposed domain against registered context names. If invalid, halt with a list of valid contexts. If `context-map.md` does not exist, skip silently. (D5 forward-compat)
+  2. **Step 2 (existing):** Parse `tracks.md` for existing domains and present them to the user.
+
+  Order matters — `context-map.md` is the authoritative source for multi-context projects; `tracks.md` is descriptive only. Without explicit ordering, `tracks.md` domains can shadow the context-map check.
 - **During the grill:** Use domain glossary terms in questions and suggestions
 - **New domain terms:** When the spec interview introduces new entities or terminology not in `context.md`, append them to the glossary automatically (or offer to)
 - **ADR proposals:** Accumulate candidate decisions during the spec interview. At end of command invocation (D10), batch-present them to the user for approval before writing to `adr/`
@@ -422,6 +439,7 @@ Repurpose Step 3:
 ### 5. Update: `/conductor` resume
 
 Add to context loading (Step 1):
+
 - `conductor/context.md` — domain glossary (if exists)
 - `conductor/prd.md` — product scope (if exists)
 - `conductor/adr/*.md` — architectural decision records (if any)
@@ -461,22 +479,36 @@ Add to context loading (Step 1):
 
 | File | Change |
 |------|--------|
-| `templates/project-context.md` | Merge: add Product Definition, Guidelines, Tech Stack sections alongside existing operational sections |
+| `templates/project-context.md` | Merge: add Product Definition, Guidelines, Tech Stack sections alongside existing operational sections (section order specified below per S5) |
 | `templates/index.md` | Remove references to `product.md`, `product-guidelines.md`, `tech-stack.md`; use new dynamic format |
 | `protocols/file-resolution.md` | Replace defaults table with v2.1 version (see deliverable #6) |
 | `README.md` | Update per-project structure to show consolidated `project-context.md` + new v2.1 files |
 | `skills/the-oracle/SKILL.md` | Update per-project structure + extend intent routing table |
 
+**Merged `templates/project-context.md` section order [S5] — identity-first, operational-second:**
+
+1. **Product Definition** (identity)
+2. **Product Guidelines** (brand voice, UX, accessibility)
+3. **Tech Stack** (languages, frameworks, deployment)
+4. **Caution Levels** (operational)
+5. **Domain Expertise** (operational)
+6. **Preferred Workflows** (operational)
+7. **Project-Specific Constraints**
+8. **Environment Notes**
+
+Mental model mirrors *"what is this product → how should agents behave when working on it."* When agents partial-read (token budget, context window), identity sections sit in the first chunk; operational guardrails come after. Reverse order means agents miss product intent on shallow reads.
+
 ### 8. New: `protocols/index-sync.md`
 
 Shared protocol for dynamic index management:
+
 - Append rules per file type (exact link text and target section)
 - Reconcile path for defensive rebuilds during `/conductor` resume
 - Used by: `/grill`, `/new-track`, `/checkpoint`, `/conductor`
 
-### 9. New: `protocols/reader-writer-contracts.md` (reference)
+### ~~9. New: `protocols/reader-writer-contracts.md`~~ — **dropped [S2]**
 
-Documents the contract format and lists all workflow contracts in one place for cross-reference. Individual contracts live in each workflow's frontmatter; this file is the central registry.
+Originally planned as a central registry mirroring each workflow's frontmatter contracts. **Dropped** — a hand-maintained registry creates a second sync target, the exact failure mode v2.1 is designed to eliminate (alongside consolidating `product.md`/`tech-stack.md`/`product-guidelines.md` and unifying decision logs). The frontmatter blocks ARE the source of truth. If a registry view is wanted later, make it the **generated output** of a future `conductor-doctor` command (see Reader/Writer Contracts section), not a hand-maintained doc.
 
 ---
 
@@ -566,7 +598,7 @@ conductor/
 
 ## Verification Plan
 
-### Core flow verification:
+### Core flow verification
 
 1. **`/conductor-init`** on a fresh greenfield project — confirm new dirs created with `.gitkeep`, no content files, `index.md` has no broken links
 2. **`/conductor-init`** on a brownfield project (e.g., `~/SurrealDB/`) — confirm targeted scan asks for domain logic location, `context.md` pre-populated with domain terms (not infrastructure noise)
@@ -577,11 +609,11 @@ conductor/
 7. **Obsidian safety** — confirm `index.md` contains no dead links at any point in the lifecycle
 8. **Git safety** — confirm `git clone` + `conductor/` has all expected directories intact
 
-### Integration verification:
+### Integration verification
 
-9. **Round-trip test:** `/conductor-init` → `/grill` → `/new-track` → `/checkpoint` → `/conductor`. Confirm no broken refs in `index.md`, no orphan files in `conductor/`, no duplicate decision records across `pulse.md` and `adr/`
-10. **v2.0 → v2.1 brownfield re-init** on a real v2.0 project (one that has the old separate `product.md` files). Verify D9 migration doesn't lose content
-11. **Reader/writer contract validation** — for each workflow, verify its declared reads/writes match actual file operations
+1. **Round-trip test:** `/conductor-init` → `/grill` → `/new-track` → `/checkpoint` → `/conductor`. Confirm no broken refs in `index.md`, no orphan files in `conductor/`, no duplicate decision records across `pulse.md` and `adr/`
+2. **v2.0 → v2.1 brownfield re-init** on a real v2.0 project (one that has the old separate `product.md` files). Verify D9 migration doesn't lose content
+3. **Reader/writer contract validation** — for each workflow, verify its declared reads/writes match actual file operations. **Method [P3]:** manual cross-check during implementation, comparing each workflow's frontmatter to the file operations it actually performs. Automated validation via `conductor-doctor` is deferred to a later track.
 
 ---
 

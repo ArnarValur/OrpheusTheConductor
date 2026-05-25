@@ -7,6 +7,7 @@
 TheOracle v1 was built for the Mercury SSD workstation (Predator Helios 300, user `addinator`). It was a Gemini CLI extension using TOML commands, with hardcoded Mercury paths and a relay protocol for multi-agent TUI communication.
 
 Oracle v2.0 adapts this system for PlutoII (Pop!_OS, user `solmundur`, Antigravity IDE) with these key changes:
+
 - TOML commands → Antigravity workflow markdown files
 - Gemini CLI extension → Antigravity skill in `~/Hermes/TheOracle/`
 - Mercury paths → PlutoII paths
@@ -43,6 +44,7 @@ Oracle v2.0 adapts this system for PlutoII (Pop!_OS, user `solmundur`, Antigravi
 #### [NEW] SKILL.md
 
 Main entry point for Antigravity. Defines:
+
 - Skill name: `the-oracle`
 - Description: spec-driven development orchestrator
 - When to use: starting projects, creating tracks, resuming work, reviewing
@@ -54,6 +56,7 @@ Main entry point for Antigravity. Defines:
 #### [NEW] README.md
 
 Human-readable overview of TheOracle v2.0. Documents:
+
 - What it does
 - The 4 slash commands
 - Per-project structure when conductor is initialized
@@ -72,6 +75,7 @@ Ported directly from old Oracle. No changes needed — fully infrastructure-agno
 #### [NEW] implement.md
 
 Ported from old Oracle with minor updates:
+
 - References `workflow.md` (which may be strict or light mode) instead of hardcoded TDD
 - Removes references to `hrelay` for blocker reporting
 - Adds `relay.md` file-based handoff for blockers instead
@@ -79,6 +83,7 @@ Ported from old Oracle with minor updates:
 #### [NEW] new-track.md
 
 Ported from old Oracle with updates:
+
 - Track path uses `conductor/tracks/{domain}/{snake_case}_{YYYYMMDD}/` format
 - Domain selection step added (from old workflow template)
 - References updated workflow mode awareness
@@ -104,6 +109,7 @@ All templates go in `~/Hermes/TheOracle/templates/`. These are copied into proje
 #### [NEW] workflow-strict.md
 
 Adapted from old Oracle's 14KB `workflow.md`. Full TDD workflow:
+
 - Red → Green → Refactor cycle
 - >80% coverage gate
 - 11-step standard task workflow
@@ -116,6 +122,7 @@ Split into sections optimized for partial reads (core workflow vs reference sect
 #### [NEW] workflow-light.md
 
 New file. Lighter workflow for prototypes, websites, and non-product projects:
+
 - Plan → Execute → Verify cycle (no mandatory test-first)
 - Git commit protocol (same as strict)
 - Checkpointing (same as strict)
@@ -125,6 +132,7 @@ New file. Lighter workflow for prototypes, websites, and non-product projects:
 #### [NEW] project-context.md
 
 Replaces old `agent-profile.md`. Contains ONLY:
+
 - Caution Levels table (UI, Config, Shared packages, etc.)
 - Domain Expertise table
 - Preferred Workflows (session start, checkpoint frequency)
@@ -150,6 +158,7 @@ All workflows go in `~/Hermes/TheOracle/workflows/`. These are copied to project
 #### [NEW] conductor.md
 
 `/conductor` — The resume command. Steps:
+
 1. Load context: read `conductor/relay.md`, `conductor/pulse.md`, `conductor/tracks.md`, `conductor/project-context.md`
 2. Present status report (invoke status protocol)
 3. Await orders (implement, review, new track, checkpoint)
@@ -159,6 +168,7 @@ Source header: `# Source: TheOracle v2.0 @ {date}`
 #### [NEW] conductor-init.md
 
 `/conductor-init` — Scaffolding grill. Steps:
+
 1. Detect Brownfield vs Greenfield
 2. Interactive Product Definition grill
 3. Product Guidelines grill
@@ -179,6 +189,7 @@ Source header: `# Source: TheOracle v2.0 @ {date}`
 #### [NEW] checkpoint.md
 
 `/checkpoint` — Save session state. Steps:
+
 1. Session summary → write to `conductor/pulse.md`
 2. 200-line archiving guardrail on pulse.md
 3. Decision log update
@@ -194,6 +205,7 @@ Source header: `# Source: TheOracle v2.0 @ {date}`
 #### [NEW] new-track.md
 
 `/new-track` — Create new track. Steps:
+
 1. Gather info (description, type)
 2. Domain selection (from existing domains in tracks.md or new)
 3. Create track folder: `conductor/tracks/{domain}/{snake_case}_{YYYYMMDD}/`
@@ -271,16 +283,19 @@ Upstream inspiration: [gemini-cli-extensions/conductor](https://github.com/gemin
 ### Automated Tests
 
 1. Verify all files exist at expected paths:
+
    ```bash
    find ~/Hermes/TheOracle -type f | sort
    ```
 
 2. Verify no Mercury/old references remain:
+
    ```bash
    grep -ri "mercury\|/mercury\|addinator\|hrelay\|hermes_agent_id\|hermesopolis" ~/Hermes/TheOracle/
    ```
 
 3. Verify workflow files have source headers:
+
    ```bash
    head -1 ~/Hermes/TheOracle/workflows/*.md
    ```
@@ -295,7 +310,9 @@ Upstream inspiration: [gemini-cli-extensions/conductor](https://github.com/gemin
 ### Post-Migration
 
 1. Verify old Oracle can be safely removed:
+
    ```bash
    diff -rq ~/Hermes/Ideas/Oracle\(Old\)/templates/code_styleguides ~/Hermes/TheOracle/templates/code_styleguides
    ```
+
 2. Trash the old Oracle: `trash ~/Hermes/Ideas/Oracle\(Old\)/`
