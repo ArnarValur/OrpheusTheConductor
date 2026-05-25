@@ -1,8 +1,10 @@
 # File Resolution Protocol
 
+<!-- Source: TheOracle v2.1 @ 2026-05-25 -->
+
 **PROTOCOL: How to locate conductor files within any project.**
 
-To find a file (e.g., "**Product Definition**") within a specific context (Project Root or a specific Track):
+To find a file (e.g., "**Product & Operational Context**") within a specific context (Project Root or a specific Track):
 
 ## Step 1: Identify Index
 
@@ -21,6 +23,8 @@ Determine the relevant index file:
 
 Read the index file and look for a link with a matching or semantically similar label.
 
+> **Note (v2.1):** The project `index.md` is **dynamic** — links are appended lazily as files come into existence (see [`index-sync.md`](./index-sync.md)). A missing link does NOT mean the file is missing; it may mean the file hasn't been created yet. Fall through to Step 4 to check the default path.
+
 ## Step 3: Resolve Path
 
 If a link is found, resolve its path **relative to the directory containing the `index.md` file**.
@@ -33,27 +37,37 @@ If the index file is missing or the link is absent, use the **Default Path** key
 
 ## Step 5: Verify
 
-You MUST verify the resolved file actually exists on the disk.
+You MUST verify the resolved file actually exists on the disk. Several v2.1 files are lazy — they only exist once something has been written to them (e.g., `context.md`, `prd.md`, anything in `adr/`). Absence of the file is a valid state; do not auto-create empty stubs.
 
-## Default Paths (Project)
+## Default Paths (Project) — v2.1
 
-| Document | Default Path |
-|----------|-------------|
-| **Product Definition** | `conductor/product.md` |
-| **Tech Stack** | `conductor/tech-stack.md` |
-| **Workflow** | `conductor/workflow.md` |
-| **Product Guidelines** | `conductor/product-guidelines.md` |
-| **Project Context** | `conductor/project-context.md` |
-| **Tracks Registry** | `conductor/tracks.md` |
-| **Tracks Directory** | `conductor/tracks/` |
-| **Pulse** | `conductor/pulse.md` |
-| **Relay** | `conductor/relay.md` |
-| **Agent Rules** | `conductor/agent-rules/` |
+| Document                          | Default Path                  | Lifecycle |
+|-----------------------------------|-------------------------------|-----------|
+| **Product & Operational Context** | `conductor/project-context.md` | Created at init, user-edited thereafter (no command writes here) |
+| **Domain Glossary**               | `conductor/context.md`         | Lazy — created by `/grill` or brownfield `/conductor-init` |
+| **Context Map**                   | `conductor/context-map.md`     | Optional — multi-bounded-context projects only |
+| **Product Requirements**          | `conductor/prd.md`             | Lazy — created by `/grill` when product scope crystallizes |
+| **Workflow**                      | `conductor/workflow.md`        | Created at init from strict or light template |
+| **ADR Directory**                 | `conductor/adr/`               | Scaffolded with `.gitkeep` at init; files appended by `/grill`, `/new-track`, `/checkpoint` (batched) |
+| **Documentation**                 | `conductor/docs/`              | Scaffolded with `.gitkeep` at init; human-authored only (no command writes) |
+| **Agent Rules**                   | `conductor/agent-rules/`       | Optional — installed by the agent-rules plugin |
+| **Tracks Registry**               | `conductor/tracks.md`          | Created at init |
+| **Tracks Directory**              | `conductor/tracks/`            | Created at init |
+| **Pulse**                         | `conductor/pulse.md`           | Created at init, updated by `/checkpoint` and `/conductor` |
+| **Relay**                         | `conductor/relay.md`           | Created at init, updated by `/checkpoint` |
+
+**Removed in v2.1** (consolidated into `project-context.md` per design brief D7):
+
+- ~~`conductor/product.md`~~
+- ~~`conductor/tech-stack.md`~~
+- ~~`conductor/product-guidelines.md`~~
+
+If any of these are encountered on a pre-v2.1 project, treat their content as authoritative for the corresponding `project-context.md` section until `/conductor-init` migration consolidates them (see brief D9).
 
 ## Default Paths (Track)
 
-| Document | Default Path |
-|----------|-------------|
-| **Specification** | `conductor/tracks/<domain>/<track_id>/spec.md` |
-| **Implementation Plan** | `conductor/tracks/<domain>/<track_id>/plan.md` |
-| **Metadata** | `conductor/tracks/<domain>/<track_id>/metadata.json` |
+| Document                | Default Path                                                |
+|-------------------------|-------------------------------------------------------------|
+| **Specification**       | `conductor/tracks/<domain>/<track_id>/spec.md`              |
+| **Implementation Plan** | `conductor/tracks/<domain>/<track_id>/plan.md`              |
+| **Metadata**            | `conductor/tracks/<domain>/<track_id>/metadata.json`        |

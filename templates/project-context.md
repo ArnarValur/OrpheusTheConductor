@@ -1,12 +1,51 @@
-<!-- Template: TheOracle v2.0 -->
+<!-- Template: TheOracle v2.1 -->
 # Project Context — <Project Name>
 
-> Operational context for this project. Customize per conductor branch.
-> Persona and communication style are handled separately — this file is purely operational.
+> Single identity + operational document for this project.
+>
+> **Created by `/conductor-init`; user-edited thereafter — no command writes here.**
+> Persona and communication style are handled separately by `/hermes`.
+>
+> Section order is deliberate: **identity-first (1–3), operational-second (4–8).**
+> Agents partial-reading this file should see *what the product is* before *how to behave when working on it*.
 
 ---
 
-## Caution Levels
+## 1. Product Definition
+
+<!-- Identity. Populated by `/conductor-init` Step 2 (Product Definition Grill). -->
+
+- **Name:** <Product name>
+- **Tagline:** <One-line description>
+- **Description:** <What does it do? What problem does it solve?>
+- **Target Audience:** <Who is this for?>
+- **Key Differentiators:** <What makes this unique?>
+
+---
+
+## 2. Product Guidelines
+
+<!-- Brand voice, UX principles, accessibility. Populated by `/conductor-init` Step 3. -->
+
+- **Brand Voice:** <Technical / casual / formal — tone and personality>
+- **UX Principles:** <e.g. "simplicity first", "mobile-first", "keyboard-accessible">
+- **Accessibility:** <e.g. WCAG 2.1 AA>
+
+---
+
+## 3. Tech Stack
+
+<!-- Languages, frameworks, deployment. Populated by `/conductor-init` Step 4. -->
+
+- **Languages:** <Primary programming language(s)>
+- **Frameworks:** <Frontend / backend frameworks>
+- **Databases:** <Data storage solutions>
+- **Deployment Targets:** <Where this runs — cloud, self-hosted, edge>
+- **Hosting:** <Hosting provider / platform>
+
+---
+
+## 4. Caution Levels
 
 | Domain              | Level       | Notes                                   |
 |---------------------|-------------|-----------------------------------------|
@@ -19,7 +58,7 @@
 
 ---
 
-## Domain Expertise
+## 5. Domain Expertise
 
 <!-- Customize for this project -->
 
@@ -31,7 +70,7 @@
 
 ---
 
-## Preferred Workflows
+## 6. Preferred Workflows
 
 1. **Session Start Protocol:**
    - Read `conductor/relay.md` first (pending messages, blockers)
@@ -43,8 +82,8 @@
    - Consider mid-phase checkpoints for long phases (>5 tasks)
 
 3. **Decision Logging:**
-   - Log non-obvious decisions in git notes
-   - Update `pulse.md` after every major step
+   - Architectural decisions live in `conductor/adr/` (batched by `/grill`, `/new-track`, or `/checkpoint`)
+   - Operational notes live in `conductor/pulse.md` Session Memory
    - Verify actual state on disk before proposing changes
 
 4. **Debugging Protocol:**
@@ -54,7 +93,7 @@
 
 ---
 
-## Project-Specific Constraints
+## 7. Project-Specific Constraints
 
 <!-- Add constraints unique to this project -->
 
@@ -69,7 +108,7 @@ Examples:
 
 ---
 
-## Environment Notes
+## 8. Environment Notes
 
 <!-- Add any environment-specific details -->
 
