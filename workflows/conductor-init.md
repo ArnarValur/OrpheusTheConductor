@@ -1,31 +1,7 @@
-# Source: TheOracle v2.1 @ 2026-05-25
-
----
-name: conductor-init
-description: "Initialize Conductor — scaffold project structure through an interactive grill. Creates project-context.md (consolidated identity + operational), scaffolds adr/ and docs/ with .gitkeep, runs targeted domain scan on brownfield projects, migrates v2.0 conductors to v2.1, and deploys all workflows + the grill skill."
-reads:
-  - .                         # codebase scan (brownfield detection + targeted domain scan)
-  - conductor/                # existing conductor state, if any (brownfield re-init / v2.0 migration)
-  - .docs/                    # optional migration source
-writes:
-  - conductor/project-context.md
-  - conductor/workflow.md
-  - conductor/context.md      # conditional — brownfield targeted scan only
-  - conductor/index.md
-  - conductor/pulse.md
-  - conductor/relay.md
-  - conductor/tracks.md
-  - conductor/adr/.gitkeep
-  - conductor/docs/.gitkeep
-  - conductor/code_styleguides/*.md
-  - .agents/workflows/*.md
----
-
-# 🎵 Conductor Init — Project Scaffolding (v2.1)
+# 🎵 Conductor Init — Project Scaffolding
 
 When the user invokes `/conductor-init`, execute this interactive setup sequence to scaffold a Conductor-managed project.
 
-> **v2.1 changes from v2.0:** consolidated `project-context.md` (identity + operational in one file, identity-first section order per S5), lazy `conductor/adr/` and `conductor/docs/` directories with `.gitkeep`, brownfield targeted domain scan that pre-populates `context.md`, optional `.docs/` migration, dynamic `index.md` with no dead links, and the deploy step now copies the new `/grill` workflow.
 
 ---
 
@@ -64,7 +40,7 @@ Determine if this is a **Brownfield** (existing) or **Greenfield** (new) project
 
 ## Step 1b: v2.0 → v2.1 Migration (only when reinitializing an existing conductor)
 
-This step implements D9 from the design brief. **It does NOT clobber** existing user data — tracks, pulse, relay, pulse-archive, agent-rules, and code_styleguides are preserved untouched.
+**This step does NOT clobber** existing user data — tracks, pulse, relay, pulse-archive, agent-rules, and code_styleguides are preserved untouched.
 
 ### 1b.1 Detect conductor version
 
@@ -85,16 +61,16 @@ Apply in order:
    touch conductor/adr/.gitkeep conductor/docs/.gitkeep
    ```
 
-2. **Handle product.md split (P2 phrasing):**
+2. **Handle product.md split:**
    - If any of `product.md`, `product-guidelines.md`, or `tech-stack.md` exist as separate files (from pre-v2.0 Oracle or manual user edits), present them to the user with proposed section assignments in the consolidated `project-context.md`, and ask: *"Merge these into `project-context.md` and remove the originals?"*
-   - On approval, merge content into `project-context.md` using the section order in Step 10 (identity-first per S5). Remove the source files. Commit as a separate step labeled "migrate: consolidate v2.0 product files".
+   - On approval, merge content into `project-context.md` using the section order in Step 10 (identity-first). Remove the source files. Commit as a separate step labeled "migrate: consolidate v2.0 product files".
    - If `project-context.md` already contains the merged content (v2.0 conductor-init structure), no action.
 
 3. **Targeted domain scan** (only if `conductor/context.md` does not exist) — invoke Step 2b. Otherwise leave `context.md` alone.
 
-4. **Rewrite `conductor/index.md`** to the dynamic v2.1 format — keep only links to files that **actually exist** on disk. See Step 11. Then reconcile lazily via [`protocols/index-sync.md`](../protocols/index-sync.md) for any v2.1 lazy files present (context.md, prd.md, first ADR, docs/, agent-rules/).
+4. **Rewrite `conductor/index.md`** to the dynamic format — keep only links to files that **actually exist** on disk. See Step 11. Then reconcile: for any lazy files present (context.md, prd.md, first ADR, docs/, agent-rules/), ensure `index.md` has a matching link — append if missing.
 
-5. **Update workflow source headers** in `.agents/workflows/*.md` from `# Source: TheOracle v2.0 ...` to `# Source: TheOracle v2.1 @ {today}`. Copy the latest workflows from `~/Hermes/TheOracle/workflows/` to `.agents/workflows/`, overwriting old versions.
+5. **Update deployed workflows** — copy the latest workflows from `~/Hermes/TheOracle/workflows/` to `.agents/workflows/`, overwriting old versions.
 
 6. **Preserve everything else.** Do NOT touch `conductor/pulse.md`, `conductor/relay.md`, `conductor/tracks.md`, `conductor/tracks/`, `conductor/pulse-archive/`, `conductor/agent-rules/`, or `conductor/code_styleguides/`.
 
@@ -102,7 +78,7 @@ Apply in order:
 
 ---
 
-## Step 2: Product Definition Grill (identity #1)
+## Step 2: Product Definition Grill
 
 Ask these questions **sequentially** (one at a time, wait for response before next). Maximum 5 questions. For each question, provide 3 suggested answers plus a write-in option.
 
@@ -120,7 +96,7 @@ After gathering responses, draft the **Product Definition** section content for 
 
 ---
 
-## Step 2b: Targeted Domain Scan (brownfield only — D4)
+## Step 2b: Targeted Domain Scan (brownfield only)
 
 > **Skip for greenfield.** Greenfield projects get no `context.md` at init — the file is created lazily by `/grill` when the first domain term emerges.
 
@@ -153,13 +129,13 @@ For brownfield projects, perform a **targeted** domain scan — NOT a naive grep
    > "Here's what I found in your domain layer. Confirm the ones that are real domain concepts (vs incidental types):"
    > {numbered list with proposed definition and "Also known as" column}
 
-6. **Write `conductor/context.md`** from the brownfield template (see [`conductor-v2.1-design-brief.md`](../conductor-v2.1-design-brief.md) → `context.md` Templates → Brownfield). Populate `## Entities` with confirmed terms. Leave `## Relationships` and `## Terminology Boundaries` empty for `/grill` to refine.
+6. **Write `conductor/context.md`** from the brownfield template. Populate `## Entities` with confirmed terms. Leave `## Relationships` and `## Terminology Boundaries` empty for `/grill` to refine.
 
 7. **Queue an index-sync append** for `context.md` (applied in Step 11).
 
 ---
 
-## Step 3: Product Guidelines Grill (identity #2)
+## Step 3: Product Guidelines Grill
 
 Ask sequentially. Maximum 3 questions. Topics:
 
@@ -171,7 +147,7 @@ Draft the **Product Guidelines** section content for `project-context.md`. Prese
 
 ---
 
-## Step 4: Tech Stack Grill (identity #3)
+## Step 4: Tech Stack Grill
 
 Ask sequentially. Maximum 5 questions. Topics:
 
@@ -262,7 +238,7 @@ conductor/
 
 ---
 
-## Step 7b: `.docs/` Migration (optional, D12 + P1)
+## Step 7b: `.docs/` Migration (optional)
 
 If a `.docs/` directory exists in the project root, ask:
 
@@ -275,7 +251,7 @@ On approval:
 3. Remove `conductor/docs/.gitkeep` (no longer needed — real files are present).
 4. Queue an index-sync append for `docs/` (applied in Step 11).
 
-> Reminder: `conductor/docs/` has **no command writers** in v2.1 (P1). Humans write there directly. This migration is the only v2.1 command-touch to that directory.
+> Reminder: `conductor/docs/` has **no command writers**. Humans write there directly. This migration is the only command-touch to that directory.
 
 ---
 
@@ -302,11 +278,11 @@ Based on the mode selected in Step 6:
 
 ---
 
-## Step 10: Create `project-context.md` (consolidated, identity-first per S5)
+## Step 10: Create `project-context.md`
 
 Write `conductor/project-context.md` using the template at `~/Hermes/TheOracle/templates/project-context.md` as a base. The file consolidates **identity + operational** content in one document. Populate with information gathered during Steps 2–4.
 
-**Section order (deliberate, identity-first per S5 — do NOT reorder):**
+**Section order (deliberate, identity-first — do NOT reorder):**
 
 1. **Product Definition** (from Step 2)
 2. **Product Guidelines** (from Step 3)
@@ -317,7 +293,7 @@ Write `conductor/project-context.md` using the template at `~/Hermes/TheOracle/t
 7. **Project-Specific Constraints** (from template default; user-editable)
 8. **Environment Notes** (from template default; user-editable)
 
-> After this file is written, **no command writes to it** (S3). All future edits are by the user directly. This includes framework switches, brand voice changes, and caution-level adjustments — they happen in the user's editor, not via `/grill` or any other workflow.
+> After this file is written, **no command writes to it**. All future edits are by the user directly. This includes framework switches, brand voice changes, and caution-level adjustments — they happen in the user's editor, not via `/grill` or any other workflow.
 
 ---
 
@@ -325,7 +301,7 @@ Write `conductor/project-context.md` using the template at `~/Hermes/TheOracle/t
 
 ### `conductor/index.md`
 
-The init-time `index.md` lists **only files that actually exist on disk now**. Lazy files (`context.md`, `prd.md`, `adr/*`, `docs/*` migrated content) get added later via [`protocols/index-sync.md`](../protocols/index-sync.md).
+The init-time `index.md` lists **only files that actually exist on disk now**. Lazy files (`context.md`, `prd.md`, `adr/*`, `docs/*` migrated content) get added later when created by `/grill`, `/new-track`, or `/checkpoint`.
 
 Base template:
 
@@ -352,7 +328,7 @@ Base template:
 | Step 7b migrated `.docs/` → `docs/` | `## Documentation` (new section) | `- [Project Docs](./docs/)` |
 | `conductor/agent-rules/` exists (installed by the agent-rules plugin) | `## Context` | `- [Agent Rules](./agent-rules/)` |
 
-> `adr/` and `docs/` themselves are NOT linked at init even though their `.gitkeep` files exist. They are linked on first real-content write (first ADR, first migrated/authored doc). See [`protocols/index-sync.md`](../protocols/index-sync.md) for the rules.
+> `adr/` and `docs/` themselves are NOT linked at init even though their `.gitkeep` files exist. They are linked on first real-content write (first ADR, first migrated/authored doc) by the index sync steps in `/grill`, `/new-track`, or `/checkpoint`.
 
 ### `conductor/relay.md`
 
@@ -365,7 +341,7 @@ Timestamped entries for context continuity between sessions.
 
 ## {YYYY-MM-DD HH:MM}
 - **Session:** Initial setup
-- **Status:** Project initialized with Conductor (TheOracle v2.1)
+- **Status:** Project initialized with Conductor
 - **Next:** Refine domain with `/grill` or create the first track with `/new-track`
 ```
 
@@ -387,7 +363,7 @@ _None yet._
 _None._
 
 ## 🧠 Session Memory
-- Project initialized with Conductor (TheOracle v2.1)
+- Project initialized with Conductor
 
 ## 📋 Next Session Suggestions
 - Refine domain language with `/grill`
@@ -430,15 +406,19 @@ Copy the Conductor workflow files to the project's `.agents/workflows/` director
 ```bash
 mkdir -p .agents/workflows
 cp ~/Hermes/TheOracle/workflows/conductor.md .agents/workflows/
-cp ~/Hermes/TheOracle/workflows/conductor-init.md .agents/workflows/
 cp ~/Hermes/TheOracle/workflows/grill.md .agents/workflows/
 cp ~/Hermes/TheOracle/workflows/checkpoint.md .agents/workflows/
 cp ~/Hermes/TheOracle/workflows/new-track.md .agents/workflows/
 ```
 
-Each copied file already contains the `# Source: TheOracle v2.1 @ {date}` header.
+**Post-copy verification:** After copying, verify each deployed file:
+1. Starts with `---` on line 1.
+2. Contains a `description:` field in the YAML frontmatter.
+3. Is under 12,000 characters total.
 
-> **v2.1 adds `/grill` to the deployed set.** If you are reinitializing a v2.0 project, this is how the user gets the new command.
+If any file fails these checks, halt and report the error — do not proceed with a broken deployment.
+
+> **Note:** `conductor-init.md` is intentionally NOT deployed into the project. It is a one-shot scaffolding command — the plugin-level skill provides it globally for any reinit or migration needs.
 
 ---
 
@@ -459,14 +439,14 @@ Stage all conductor files and commit:
 
 ```bash
 git add conductor/ .agents/workflows/
-git commit -m "chore: initialize conductor (TheOracle v2.1)"
+git commit -m "chore: initialize conductor"
 ```
 
 If `.docs/` was migrated in Step 7b, include `.docs/`'s removal in the same commit (or a separate `chore: migrate .docs/ → conductor/docs/` commit — your call based on cleanliness).
 
 Announce completion:
 
-> "✅ Conductor v2.1 initialized. Your project is ready."
+> "✅ Conductor initialized. Your project is ready."
 >
 > **Next:**
 > - `/grill` — refine domain language, batch ADRs, optionally write a PRD
