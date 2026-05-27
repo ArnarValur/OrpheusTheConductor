@@ -55,16 +55,16 @@ Apply any corrections inline, then proceed to Step 4.
 
 ## Step 4: Refinement Topic Selection
 
-Ask the user what they want to refine in this session:
+Ask the user what they want to refine in this session. **Use the `ask_question` tool** with `is_multi_select` set to true to present these options as a rich interactive GUI modal:
 
-| Focus | Outcome |
-|-------|---------|
-| **Domain language** | Sharpen `context.md` — definitions, entity relationships, terminology boundaries |
-| **Product scope** | Crystallize `prd.md` — features, capabilities, what's in / out |
-| **Architectural decision** | Talk through a specific decision and propose ADRs |
-| **General exploration** | Open-ended interview — surface candidate domain terms, decisions, scope edges |
+| Focus | Option Text | Outcome |
+|-------|-------------|---------|
+| **Domain language** | "Domain language (Sharpen context.md)" | Sharpen `context.md` — definitions, entity relationships, terminology boundaries |
+| **Product scope** | "Product scope (Crystallize prd.md)" | Crystallize `prd.md` — features, capabilities, what's in / out |
+| **Architectural decision** | "Architectural decision (Propose ADRs)" | Talk through a specific decision and propose ADRs |
+| **General exploration** | "General exploration (Open-ended interview)" | Open-ended interview — surface candidate domain terms, decisions, scope edges |
 
-The user may pick more than one. Mix freely during the interview.
+Fallback to standard text-based markdown options in the chat only if the tool fails. The user may pick more than one. Mix freely during the interview.
 
 ---
 
@@ -73,8 +73,8 @@ The user may pick more than one. Mix freely during the interview.
 **One question at a time.** Wait for the response before asking the next. For each question:
 
 1. **Read the codebase first** (when the question is grounded in code). Cite specific files and lines in your question.
-2. **Recommend 2–3 answers** based on what you've read, plus a write-in option. Default recommendations are based on the project's established conventions in `project-context.md`, `context.md`, and `adr/`.
-3. **Be specific.** Vague questions produce vague answers. Anchor every question to a concrete entity, file, or decision.
+2. **Formulate options and ask the user using the `ask_question` tool.** Recommend 2–3 specific answers based on what you've read. Anchor every question to a concrete entity, file, or decision, and list these recommendations under the `options` array in the tool. The IDE will render these as a cool interactive GUI modal.
+3. **Be specific.** Vague questions produce vague answers. Fallback to standard text-based markdown in the chat only if the tool is unavailable or fails.
 
 ### What to accumulate as you go
 
@@ -222,6 +222,7 @@ Tell the user what landed:
 
 While `/grill` is active:
 
+- **Use the `ask_question` tool** to present all multiple-choice questions, option lists, and selections to the user. This ensures they render as the rich interactive Antigravity GUI.
 - Treat `conductor/project-context.md` as read-only (read-only — no command writes here).
 - Treat `conductor/docs/` as read-only (read-only — no command writes here).
 - Treat ADRs in `conductor/adr/` as settled. Surface them in answers but never edit them; superseding ADRs use the `## Superseded by` link.
