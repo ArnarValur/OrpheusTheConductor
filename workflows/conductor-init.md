@@ -54,11 +54,12 @@ Determine if this is a **Brownfield** (existing) or **Greenfield** (new) project
 
 Apply in order:
 
-1. **Scaffold new lazy directories** (idempotent):
+1. **Scaffold new lazy directories and scratchpad** (idempotent):
 
    ```bash
    mkdir -p conductor/adr conductor/docs
    touch conductor/adr/.gitkeep conductor/docs/.gitkeep
+   [ ! -f conductor/scratchpad.md ] && echo -e "# Scratchpad\n\nUse this scratchpad to quickly write down notes, ideas, thoughts, or reminders.\nThis file is user-owned and will not be modified by Conductor." > conductor/scratchpad.md
    ```
 
 2. **Handle product.md split:**
@@ -219,6 +220,9 @@ Create the `conductor/` directory tree. Lazy directories (`adr/`, `docs/`) get a
 ```bash
 mkdir -p conductor/tracks conductor/pulse-archive conductor/code_styleguides conductor/adr conductor/docs
 touch conductor/adr/.gitkeep conductor/docs/.gitkeep
+
+# Create an initial user-owned scratchpad
+echo -e "# Scratchpad\n\nUse this scratchpad to quickly write down notes, ideas, thoughts, or reminders.\nThis file is user-owned and will not be modified by Conductor." > conductor/scratchpad.md
 ```
 
 Resulting tree:
@@ -230,8 +234,9 @@ conductor/
 ├── code_styleguides/
 ├── adr/
 │   └── .gitkeep
-└── docs/
-    └── .gitkeep
+├── docs/
+│   └── .gitkeep
+└── scratchpad.md
 ```
 
 > Lazy files (`context.md`, `prd.md`, `context-map.md`) are NOT created here. They appear when `/grill` or Step 2b writes something to them.
@@ -316,6 +321,7 @@ Base template:
 ## State
 - [Pulse](./pulse.md)
 - [Relay](./relay.md)
+- [Scratchpad](./scratchpad.md)
 - [Tracks Registry](./tracks.md)
 - [Tracks Directory](./tracks/)
 ```

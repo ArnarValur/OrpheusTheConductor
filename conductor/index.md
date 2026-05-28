@@ -9,5 +9,6 @@
 ## State
 - [Pulse](./pulse.md)
 - [Relay](./relay.md)
+- [Scratchpad](./scratchpad.md)
 - [Tracks Registry](./tracks.md)
 - [Tracks Directory](./tracks/)

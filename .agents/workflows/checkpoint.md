@@ -129,7 +129,7 @@ For each decision the user classified as **ADR**:
 For decisions classified as **Pulse**, append them to the Session Memory section of `pulse.md` using a compact format:
 
 ```markdown
-- *{date}* — {one-line decision summary} _(operational)_
+- *{YYYY-MM-DD - HH:MM}* — {one-line decision summary} _(operational)_
 ```
 
 These will be retained for the standard 200-line / 2-session archiving guardrail from Step 2.
