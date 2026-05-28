@@ -1,18 +1,17 @@
 # Pulse — Current Project State
 
-**Last Updated:** 2026-05-27 14:40
-**Session Focus:** Integrated Antigravity GUI (ask_question tool) into custom /grill workflow
+**Last Updated:** 2026-05-28 09:17
+**Session Focus:** Addressed future issues and todos (added time-of-day to session memory, added scratchpad scaffolding to conductor-init, and cleaned up hermes references)
 
 ## 🚀 Active Tracks
 _No tracks yet. Create one with `/new-track`._
 
 ## ✅ Recently Completed
-- Integrated `ask_question` tool calls into `/grill` workflow files ([workflows/grill.md](file:///home/solmundur/Hermes/TheOracle/workflows/grill.md) and [.agents/workflows/grill.md](file:///home/solmundur/Hermes/TheOracle/.agents/workflows/grill.md)) to leverage the Antigravity interactive GUI modal instead of plain text options
-- Fixed all 4 deployable workflow files (conductor, grill, checkpoint, new-track) — proper YAML frontmatter, inlined protocol refs, removed v2.0 commentary
-- Deleted redundant skills (the-oracle, grill trampolines)
-- Simplified conductor-init SKILL.md
-- Added post-copy verification to conductor-init Step 12
-- Redeployed workflows to TheOracle and DittoDatto
+- Added time-of-day (`HH:MM`) to the session memory format in `/checkpoint` workflow
+- Included `scratchpad.md` creation and linking in `/conductor-init` workflow (Step 7, Step 1b, Step 11)
+- Removed obsolete `/hermes` persona references from project context templates and active project context
+- Created `conductor/scratchpad.md` and linked it in `conductor/index.md` in the current project
+- Integrated `ask_question` tool calls into `/grill` workflow files to leverage the Antigravity interactive GUI modal instead of plain text options
 
 ## ⚠️ Blockers
 _None._
@@ -25,9 +24,8 @@ _None._
 - `conductor-init.md` stays as a skill only — intentionally not deployed
 - *2026-05-27* — Chose to use `ask_question` API in `/grill` workflow to render rich GUI option selectors _(operational)_
 - *2026-05-27* — Unixplor still needs manual workflow file update _(operational)_
+- *2026-05-28 - 09:17* — Added time-of-day to session memory, added scratchpad scaffolding, and cleaned up obsolete /hermes references _(operational)_
 
 ## 📋 Next Session Suggestions
-- Run `/grill` to verify the new interactive GUI question modal renders properly
+- Inspect and verify the new scratchpad scaffolding and time-of-day session memory entries
 - Update Unixplor project workflow files
-- Consider writing ADRs for the workflow format decisions (frontmatter requirement, protocol inlining)
-

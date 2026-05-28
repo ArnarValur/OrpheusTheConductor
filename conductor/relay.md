@@ -22,3 +22,10 @@ Timestamped entries for context continuity between sessions.
 - **Status:** Modified workflows/grill.md and .agents/workflows/grill.md to invoke the native ask_question API, ensuring rich selectable GUI options instead of raw markdown text. Commits pushed.
 - **Decisions:** None recorded as ADR (1 operational decision saved to Pulse Session Memory)
 - **Next:** Run a /grill session to verify the interactive question modals render perfectly.
+
+## 2026-05-28 09:17
+- **Session:** Addressed future issues and todos (added time-of-day to session memory, added scratchpad scaffolding to conductor-init, and cleaned up hermes references)
+- **Tracks touched:** None (infrastructure adjustments)
+- **Status:** Implemented all three changes in templates and workflows; created `scratchpad.md` and updated `index.md` for this project
+- **Decisions:** None (operational updates registered in Pulse Session Memory)
+- **Next:** Verify scratchpad creation on the next project initialization and inspect the timestamp format in future checkpoints
