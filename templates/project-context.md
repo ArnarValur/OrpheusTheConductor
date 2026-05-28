@@ -4,7 +4,6 @@
 > Single identity + operational document for this project.
 >
 > **Created by `/conductor-init`; user-edited thereafter — no command writes here.**
-> Persona and communication style are handled separately by `/hermes`.
 >
 > Section order is deliberate: **identity-first (1–3), operational-second (4–8).**
 > Agents partial-reading this file should see *what the product is* before *how to behave when working on it*.
