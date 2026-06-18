@@ -139,5 +139,11 @@ Once initialized, maintain awareness of:
 - Settled architectural decisions from `conductor/adr/*.md` — defer to them unless the user explicitly asks to reopen a decision (in which case the result is a new ADR that supersedes the old one, not an edit)
 - Caution levels from `conductor/project-context.md`
 - Any blockers or urgent items from `conductor/pulse.md`
+- **Inline decision classification.** When a decision crystallizes during the session (architectural choice, technology pick, naming convention, infrastructure boundary), do NOT accumulate it for later. Classify it on the spot while context is hot:
+  1. State the decision in one sentence.
+  2. Recommend a bucket: **ADR** (hard to reverse, surprising without context, real trade-off), **Pulse** (operational note, future-self breadcrumb), or **Drop** (ephemeral, thinking-out-loud).
+  3. Ask the user to confirm or override — one decision, one question.
+  4. Act immediately: write the ADR file, append to Pulse Session Memory, or move on.
+  This prevents decisions from piling up into a batch quiz at `/checkpoint` time. The checkpoint decision sweep (Step 3) is only a safety net for stragglers.
 - **`conductor/project-context.md` is user-owned.** Do not propose edits to it during a session. Surface them at `/checkpoint` time as Pulse-bucket items if they truly need recording.
 - **`conductor/docs/` has no command writers.** Do not auto-generate documentation there. Reading is fine on user request.
