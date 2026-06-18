@@ -1,12 +1,12 @@
 ---
-description: Save session state and classify accumulated decisions into ADR, pulse, or drop. The ADR gate.
+description: Save session state and sweep for unclassified decisions. Decisions should be classified inline during the session; this is the safety net.
 ---
 
 # Checkpoint — Save Session State
 
-When the user invokes `/checkpoint`, execute this sequence to persist the current session state. **Step 3 is the ADR gate** — it classifies accumulated decisions into architectural (→ ADR), operational (→ pulse Session Memory), and ephemeral (→ drop). Each decision ends up in exactly one place.
+When the user invokes `/checkpoint`, execute this sequence to persist the current session state. **Step 3 is a safety-net sweep** — it catches any decisions that weren't classified inline during the session. Most decisions should already be handled in real-time (see Conductor Session Behavior); this step ensures nothing slips through the cracks.
 
-Supports `--quick` flag: `/checkpoint --quick` skips Step 3 (the decision classifier).
+Supports `--quick` flag: `/checkpoint --quick` skips Step 3 (the decision sweep).
 
 ---
 
@@ -68,35 +68,48 @@ After updating, check if `pulse.md` exceeds 200 lines. If it does:
 
 ---
 
-## Step 3: Decision Classifier
+## Step 3: Decision Sweep (Safety Net)
 
 > **Skipped with `--quick` flag.**
 
+Decisions should be classified **inline during the session** as they crystallize (see Conductor Session Behavior). This step is a lightweight safety net to catch any that slipped through — not a batch quiz.
+
 ### Step 3a: Scope (no double-processing)
 
-`/checkpoint` only classifies decisions that were **not already handled by a command-end batch**. Source these from:
+`/checkpoint` only sweeps decisions that were **not already classified**. Skip anything that:
 
-- The Session Memory entries that were appended during free-form work (no `/grill` or `/new-track` active at the time).
+- Was **classified inline** during the session (already written as ADR or appended to Pulse).
+- Was already approved by a prior `/grill` or `/new-track` ADR batch (already in `conductor/adr/`).
+- Was **explicitly rejected or dropped** by a prior batch or inline classification. Re-surfacing a deliberate rejection erodes trust.
+
+Source remaining unclassified decisions from:
+
+- Session Memory entries appended during free-form work (no `/grill` or `/new-track` active at the time).
 - Decisions inferred from conversation context that surfaced outside any batching command's session.
-
-Decisions **already approved** by a prior `/grill` or `/new-track` ADR batch are already in `conductor/adr/` — do NOT re-record them.
-
-Decisions **explicitly rejected** by a prior batch are settled-as-dropped — do NOT re-surface them. Re-surfacing a deliberate rejection erodes trust in the batching UX.
 
 If unsure whether a decision was already handled, ask the user — do not silently re-prompt.
 
-### Step 3b: Classify
+### Step 3b: Sweep
 
-Present the unhandled decisions to the user as a single batch:
+If there are **zero** unhandled decisions, skip to Step 4 with:
 
-> "I noticed **{N}** decisions this session that weren't already batched into ADRs. Classify each:
->
-> | # | Decision | A → ADR (architectural) | B → Pulse (operational) | C → Drop (ephemeral) |
-> |---|----------|-------------------------|-------------------------|----------------------|
-> | 1 | {decision summary} | | | |
-> | … | … | | | |"
+> "No unclassified decisions — everything was handled inline. ✅"
 
-Per-bucket guidance (apply the same three criteria as `/grill` for the ADR bucket):
+If there are unhandled decisions (typically 0–2 stragglers), handle them **one at a time** — never as a batch table:
+
+For each unhandled decision:
+
+1. State the decision in one sentence.
+2. **Recommend** a classification (ADR / Pulse / Drop) with a one-line rationale. The agent makes the call; the user confirms or overrides.
+3. Present as a simple confirmation:
+   > **Decision:** {summary}
+   >
+   > I'd classify this as **{recommended bucket}** — {one-line reason}. OK, or override?
+4. Apply the user's answer immediately before moving to the next.
+
+**Do NOT present a batch classification table.** That UX forces the user to context-switch across multiple technical decisions simultaneously at end-of-session — the exact problem inline classification exists to prevent.
+
+Per-bucket guidance (same criteria as `/grill`):
 
 | Bucket | Test | Examples |
 |--------|------|----------|
@@ -106,7 +119,7 @@ Per-bucket guidance (apply the same three criteria as `/grill` for the ADR bucke
 
 ### Step 3c: Write ADR-bucket decisions
 
-For each decision the user classified as **ADR**:
+For each decision classified as **ADR** (whether inline during session or caught by this sweep):
 
 1. Number sequentially from the highest existing `conductor/adr/NNNN-*.md`.
 2. Write `conductor/adr/{NNNN}-{short-title-kebab}.md` using this format:

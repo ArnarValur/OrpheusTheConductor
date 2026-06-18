@@ -29,3 +29,10 @@ Timestamped entries for context continuity between sessions.
 - **Status:** Implemented all three changes in templates and workflows; created `scratchpad.md` and updated `index.md` for this project
 - **Decisions:** None (operational updates registered in Pulse Session Memory)
 - **Next:** Verify scratchpad creation on the next project initialization and inspect the timestamp format in future checkpoints
+
+## 2026-06-18 23:56
+- **Session:** Fixed decision batch quiz bug across all Conductor deployments
+- **Tracks touched:** None (infrastructure fix)
+- **Status:** Rewrote checkpoint Step 3 from batch classifier → safety-net sweep; added inline decision classification to conductor Session Behavior. Deployed to 11 checkpoint + 10 conductor files across 10 projects.
+- **Decisions:** None
+- **Next:** Verify inline classification works in a real session

@@ -1,7 +1,7 @@
 # Pulse — Current Project State
 
-**Last Updated:** 2026-05-28 09:17
-**Session Focus:** Addressed future issues and todos (added time-of-day to session memory, added scratchpad scaffolding to conductor-init, and cleaned up hermes references)
+**Last Updated:** 2026-06-18 23:56
+**Session Focus:** Fixed decision batch quiz bug — inline classification + safety-net sweep across all Conductor deployments
 
 ## 🚀 Active Tracks
 _No tracks yet. Create one with `/new-track`._
@@ -25,7 +25,8 @@ _None._
 - *2026-05-27* — Chose to use `ask_question` API in `/grill` workflow to render rich GUI option selectors _(operational)_
 - *2026-05-27* — Unixplor still needs manual workflow file update _(operational)_
 - *2026-05-28 - 09:17* — Added time-of-day to session memory, added scratchpad scaffolding, and cleaned up obsolete /hermes references _(operational)_
+- *2026-06-18 - 23:56* — Fixed decision batch quiz: decisions now classified inline during session, checkpoint Step 3 is safety-net sweep only. Deployed to 11 checkpoint + 10 conductor files across 10 projects _(operational)_
 
 ## 📋 Next Session Suggestions
-- Inspect and verify the new scratchpad scaffolding and time-of-day session memory entries
+- Verify inline decision classification works as expected in a real session
 - Update Unixplor project workflow files
