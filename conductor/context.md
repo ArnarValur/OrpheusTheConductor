@@ -1,8 +1,9 @@
-# Domain Glossary — TheOracle
+# Domain Glossary — Orpheus
 
 > Ubiquitous language for this project. All commands, specs, and discussions use these terms verbatim.
 >
 > **Created by `/conductor-init` brownfield scan; refined by `/grill`.**
+> Last refined: 2026-07-11 00:42
 
 ---
 
@@ -38,11 +39,21 @@
 | **Brownfield** | A project with existing code, dependencies, and version control. Triggers domain scan during `/conductor-init`. | Existing Project |
 | **Greenfield** | A new project with no existing code. Gets minimal scaffolding. | New Project |
 | **Settled Decision** | An ADR with status `accepted` that must not be re-litigated without explicit user request. | — |
+| **Orpheus** | The plugin/product itself — the spec-driven development orchestrator (formerly TheOracle, ≤ v2.1). Distinct from the Conductor, which is the per-project state directory Orpheus manages. | TheOracle (legacy) |
+| **Command** | One of the five slash-invoked units of Orpheus (`/conductor-init`, `/conductor`, `/grill`, `/new-track`, `/checkpoint`), distributed via the Orpheus plugin. Each declares a reader/writer contract in its frontmatter. Formerly called "workflow" — that term now refers exclusively to the Workflow Mode document. | Slash Command |
 
 ## Relationships
 
-_Refine with `/grill`._
+- **Orpheus** provides the five **Commands**; each Command reads/writes **Conductor** files strictly per its Reader/Writer Contract.
+- A **Conductor** contains: Project Context, Workflow, Domain Glossary, Pulse, Relay, Tracks Registry, Tracks, ADRs, and (lazily) PRD, Context Map, Scratchpad.
+- A **Track** belongs to one **Domain** and owns exactly one **Specification**, one **Implementation Plan**, and one `metadata.json`.
+- An **Implementation Plan** contains **Phases**; Phases contain **Tasks**.
+- **Grill** refines the Domain Glossary, batches **ADRs**, and lazily creates/updates the **PRD**.
+- **Checkpoint** snapshots the **Pulse**, appends to the **Relay**, and sweeps unclassified decisions.
 
 ## Terminology Boundaries
 
-_Refine with `/grill`._
+- **Orpheus ≠ Conductor** — Orpheus is the plugin/product; the Conductor is the per-project state (`conductor/`). "Install Orpheus" ≠ "initialize a Conductor."
+- **Command ≠ Workflow** — Commands are the five slash-invoked units; Workflow refers only to the Strict/Light mode document (`workflow.md`).
+- **Track ≠ Git branch** — Tracks are logical units under `conductor/tracks/`; Git stays on `main`.
+- **Grill** needs no qualifier — the old "Conductor `/grill` vs native `/grill-me`" distinction is retired; no `/grill-me` exists in the Claude ecosystem.
