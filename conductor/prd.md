@@ -11,7 +11,7 @@ Orpheus (formerly TheOracle) is the spec-driven development orchestrator for Mer
 - **Rename sweep:** TheOracle → Orpheus across all ~20 referencing files — `plugin.json`, README, source headers (`# Source: Orpheus v3.0 @ <date>`), templates, project context, glossary.
 - **Plugin packaging:** Orpheus ships as a Claude Code plugin (Commands + skills bundled); one install serves all projects in Claude Code CLI and Cowork. `protocols/` travel inside the plugin — the inlining constraint is retired.
 - **Primitive port:** Antigravity `ask_question` tool → Claude `AskUserQuestion`; `.agents/workflows/` deploy target retired.
-- **Migration:** ~10 live v2.x projects (DittoDatto, AgentPollus, Charon, Unixplor, …) migrate via the `/conductor-init` brownfield re-init path — preserve `conductor/` state untouched, retire `.agents/workflows/` copies.
+- **Migration:** ~10 live v2.x projects (DittoDatto, AgentPollus, Charon, Unixplor, …) migrate via the `/conductor-init` brownfield re-init path — preserve `conductor/` state untouched, retire `.agents/workflows/` copies. Migration logic ships as `protocols/migrate.md` inside the plugin; `/conductor` resume signposts it when v2.x remnants are detected (ADR 0004).
 
 ## Out of Scope
 
