@@ -43,3 +43,11 @@ Timestamped entries for context continuity between sessions.
 - **Status:** ADRs 0001–0005 recorded (rename→Orpheus v3.0, plugin distribution, migration via init, migration-as-protocol, conductor-gitted-secrets-ignored); prd.md created; glossary refined (Orpheus + Command entities, Relationships, Boundaries); DittoDatto hot-set measured at ~78K tokens with unbounded growers identified (relay, ADRs, pulse density); five Commands bootstrapped into `.claude/commands/`.
 - **Decisions:** ADR 0001, 0002, 0003, 0004, 0005
 - **Next:** In Claude Code CLI — `/conductor` to verify bootstrap, `/new-track` for the v3.0 port. Improvement backlog in pulse Session Memory awaits next `/grill`.
+
+## 2026-07-11 03:18
+- **Session:** Autonomous overnight v3.0 port — Phases 1–4 (user asleep; granted "sail through all phases + subagents")
+- **Tracks touched:** `v3_port_20260711` (platform) — grill + track created earlier this night, then all 4 phases executed
+- **Status:** **P1** rename clean surface → Orpheus v3.0 + Light self-host (ADR 0006). **P2** `ask_question` → `AskUserQuestion`; retired legacy `.agents/workflows/` + `workflows/`. **P3** packaged as a Claude Code plugin — `.claude-plugin/{plugin,marketplace}.json`, `commands/` (4) + `conductor-init` skill, `${CLAUDE_PLUGIN_ROOT}`-relative paths; `claude plugin validate .` passes (ADR 0007). **P4** `protocols/migrate.md` authored + wired into `/conductor-init` (Step 1b.0) & `/conductor` (Step 2.6); `conductor/.gitignore` shipped (ADR 0005 dogfood). 6 commits `b03098b`→`6c00c6a`, tree clean.
+- **Decisions:** ADR 0006 (Light self-host mode), ADR 0007 (plugin packaging + marketplace layout)
+- **Deferred (supervised):** live plugin install/registration verification (CLI + Cowork) and the DittoDatto pilot migration (separate live repo + real secrets). Runbook: `tracks/platform/v3_port_20260711/dittodatto-pilot.md`.
+- **Next (morning):** `claude --plugin-dir <repo>` → verify the five Commands register; run the DittoDatto pilot; fill `plugin.json` homepage/repo/license once a remote exists; then merge the branch.

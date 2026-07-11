@@ -1,0 +1,6 @@
+# conductor/.gitignore — local convenience files, never committed (ADR 0005)
+# Conductor state stays git-tracked for cross-machine sync, history, and revert;
+# only secrets and local scratch are excluded.
+docs/keys/
+*.env
+.obsidian/

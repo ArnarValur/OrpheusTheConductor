@@ -1,6 +1,6 @@
 # Protocol: Revert
 
-<!-- Source: TheOracle v2.1 @ 2026-05-25 -->
+<!-- Source: Orpheus v3.0 @ 2026-07-11 -->
 
 > Git-aware reversal of tracks, phases, or individual tasks. v2.1: ADR-aware reverts surface a warning when the reverted commits implemented an ADR-recorded decision (recommend recording a superseding ADR rather than silently undoing one).
 

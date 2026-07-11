@@ -63,6 +63,7 @@ Reconcile `conductor/index.md` against actual files on disk:
    - `N links added` (silently OK if N=0)
    - `M dead links` (with paths — surface to the user as bugs to fix)
    - `K orphans` (informational only — files on disk with no matching rule)
+6. **Signpost v2.x remnants.** If a `.agents/workflows/` directory, a root `plugin.json` named `the-oracle`, or `TheOracle`-headed files are present, surface a one-line notice in the status output: *"⚠️ v2.x Antigravity remnants detected — run `/conductor-init` to migrate to Orpheus v3.0 (see `protocols/migrate.md`)."* Do NOT migrate automatically — migration is `/conductor-init`'s job (via [`migrate.md`](../protocols/migrate.md)).
 
 This step is idempotent and safe to run on every `/conductor` invocation.
 
@@ -133,6 +134,7 @@ Wait for the user's selection and proceed accordingly:
 
 Once initialized, maintain awareness of:
 
+- **Interactive prompts:** Use the `AskUserQuestion` tool for all multiple-choice selections and confirmations — it renders as a rich Claude Code modal (up to 4 questions per call, 2–4 options each, with an automatic "Other" write-in). Fall back to plain markdown options only if the tool is unavailable.
 - Current track context throughout the session
 - Workflow rules from `conductor/workflow.md`
 - Domain language from `conductor/context.md` — use these terms verbatim when discussing the project

@@ -1,0 +1,16 @@
+{
+  "name": "merkurial-studio",
+  "owner": {
+    "name": "ArnarValur",
+    "email": "arnarvalurjonsson@gmail.com"
+  },
+  "description": "Merkurial-studio's plugin marketplace — home of Orpheus, the spec-driven development orchestrator.",
+  "plugins": [
+    {
+      "name": "orpheus",
+      "source": ".",
+      "description": "Spec-driven development orchestrator — five Commands (/conductor-init, /conductor, /grill, /new-track, /checkpoint) over per-project conductor/ state.",
+      "version": "3.0.0"
+    }
+  ]
+}

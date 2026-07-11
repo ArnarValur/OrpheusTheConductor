@@ -1,6 +1,6 @@
 # Protocol: Review
 
-<!-- Source: TheOracle v2.1 @ 2026-05-25 -->
+<!-- Source: Orpheus v3.0 @ 2026-07-11 -->
 
 > Reviews completed track work against guidelines, plan, ADRs, and code quality standards.
 
