@@ -4,7 +4,7 @@
 
 > Reference protocol for creating a new track (feature, bug, chore, spike) with spec and phased implementation plan.
 >
-> **Canonical execution lives in [`workflows/new-track.md`](../workflows/new-track.md)** — this protocol is the underlying reference that the slash command implements. v2.1 added domain-awareness, ADR batching, and the S4 context-map gate to the slash command; this protocol captures the contract that any implementation must honor.
+> **Canonical execution lives in [`commands/new-track.md`](../commands/new-track.md)** — this protocol is the underlying reference that the slash command implements. v2.1 added domain-awareness, ADR batching, and the S4 context-map gate to the slash command; this protocol captures the contract that any implementation must honor.
 
 ## 1.0 System Directive
 
