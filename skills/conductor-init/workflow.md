@@ -19,7 +19,7 @@ Determine if this is a **Brownfield** (existing) or **Greenfield** (new) project
 **Greenfield** — ONLY if none of the above are found.
 
 **If an existing `conductor/` directory is detected:**
-> Ask the user: "A `conductor/` directory already exists. Do you want to **reinitialize** (this will detect a v2.0 conductor and migrate it to v2.1 in place — see Step 1b) or **abort**?"
+> Ask the user: "A `conductor/` directory already exists. Do you want to **reinitialize** (detect the conductor version and migrate it in place — see Step 1b) or **abort**?"
 > If abort, halt. If reinitialize, proceed to Step 1b.
 
 **If Brownfield (no existing conductor):**
@@ -38,9 +38,13 @@ Determine if this is a **Brownfield** (existing) or **Greenfield** (new) project
 
 ---
 
-## Step 1b: v2.0 → v2.1 Migration (only when reinitializing an existing conductor)
+## Step 1b: In-place Migration (only when reinitializing an existing conductor)
 
 **This step does NOT clobber** existing user data — tracks, pulse, relay, pulse-archive, agent-rules, and code_styleguides are preserved untouched.
+
+### 1b.0 Retire Antigravity remnants (v2.x → v3.0)
+
+If this project carries v2.x Antigravity remnants — a `.agents/workflows/` directory, a root `plugin.json` named `the-oracle`, or `TheOracle`-headed files — run the **[Migrate protocol](${CLAUDE_PLUGIN_ROOT}/protocols/migrate.md)** first: it retires the deploy copies, confirms the Orpheus plugin, and ships the secrets `.gitignore` (ADR 0005), all while preserving `conductor/` state. Then continue with the version detection + state reconcile below.
 
 ### 1b.1 Detect conductor version
 

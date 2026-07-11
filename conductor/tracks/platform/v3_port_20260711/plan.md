@@ -35,16 +35,15 @@
 - [x] Task: Rewrite `README.md` → v3.0 (install, Commands, modes, conductor/ layout, migration)
 - [~] Verify: **`claude plugin validate .` passes** ✓. **Live install → Command registration in CLI + Cowork deferred to the user** (`claude --plugin-dir .`, then `/orpheus:conductor`).
 
-## Phase 4 — Migration Protocol + DittoDatto Pilot + Acceptance
+## Phase 4 — Migration Protocol + DittoDatto Pilot + Acceptance ⏸️ *(protocol authored; pilot deferred to a supervised run)*
 
-- [ ] Task: Author `protocols/migrate.md`
-    - [ ] Detect v2.x · preserve `conductor/` untouched · retire `.agents/workflows/` copies · confirm plugin availability
-    - [ ] Ship `conductor/.gitignore` (`docs/keys/`, `*.env`, `.obsidian/`) per ADR 0005
-- [ ] Task: Wire `/conductor-init` to invoke `migrate.md` on v2.x detection; `/conductor` to signpost remnants
-- [ ] Task: Pilot-migrate **DittoDatto**
+- [x] Task: Author `protocols/migrate.md` (detect v2.x · preserve `conductor/` · retire deploy copies · confirm plugin · secrets gitignore · index reconcile)
+    - [x] `conductor/.gitignore` shipped to Orpheus itself (`docs/keys/`, `*.env`, `.obsidian/`) per ADR 0005 — dogfooding
+- [x] Task: Wire `/conductor-init` → `migrate.md` (Step 1b.0, on v2.x remnants); `/conductor` → signpost remnants (Step 2.6)
+- [ ] Task: Pilot-migrate **DittoDatto** — ⏸️ **DEFERRED (supervised)**: separate live repo with real secrets, outside this worktree, needs interactive verification. Runbook ready → [`dittodatto-pilot.md`](./dittodatto-pilot.md)
     - [ ] Branch/backup its conductor state first
     - [ ] Migrate → verify `conductor/` intact, `.agents/workflows/` gone, secrets gitignored
     - [ ] Verify `/conductor` resumes on the plugin
-- [ ] Task: Acceptance + docs
-    - [ ] Run the full acceptance-criteria checklist from `spec.md`
-    - [ ] Update README + source headers; confirm v3.0 done
+- [~] Task: Acceptance + docs
+    - [x] README rewritten to v3.0 (Phase 3); source headers → `Orpheus v3.0` (Phase 1)
+    - [ ] Full acceptance checklist — pending live plugin install + the DittoDatto pilot (both supervised)
