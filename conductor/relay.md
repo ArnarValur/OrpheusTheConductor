@@ -36,3 +36,10 @@ Timestamped entries for context continuity between sessions.
 - **Status:** Rewrote checkpoint Step 3 from batch classifier → safety-net sweep; added inline decision classification to conductor Session Behavior. Deployed to 11 checkpoint + 10 conductor files across 10 projects.
 - **Decisions:** None
 - **Next:** Verify inline classification works in a real session
+
+## 2026-07-11 01:59
+- **Session:** First Cowork-era session — Orpheus rename grill, DittoDatto token measurement, CLI handoff
+- **Tracks touched:** None (pre-track: identity + evidence gathering)
+- **Status:** ADRs 0001–0005 recorded (rename→Orpheus v3.0, plugin distribution, migration via init, migration-as-protocol, conductor-gitted-secrets-ignored); prd.md created; glossary refined (Orpheus + Command entities, Relationships, Boundaries); DittoDatto hot-set measured at ~78K tokens with unbounded growers identified (relay, ADRs, pulse density); five Commands bootstrapped into `.claude/commands/`.
+- **Decisions:** ADR 0001, 0002, 0003, 0004, 0005
+- **Next:** In Claude Code CLI — `/conductor` to verify bootstrap, `/new-track` for the v3.0 port. Improvement backlog in pulse Session Memory awaits next `/grill`.
