@@ -458,3 +458,9 @@ Announce completion:
 > - `/grill` — refine domain language, batch ADRs, optionally write a PRD
 > - `/new-track` — create a feature/bug/chore track (will be domain-aware on top of `/grill`'s output)
 > - `/conductor` — resume / status dashboard
+
+---
+
+## Session Behavior
+
+- **Interactive prompts:** Use the `AskUserQuestion` tool for all multiple-choice selections and confirmations — it renders as a rich Claude Code modal (up to 4 questions per call, 2–4 options each, with an automatic "Other" write-in). Fall back to plain markdown options only if the tool is unavailable.

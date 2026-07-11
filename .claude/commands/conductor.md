@@ -133,6 +133,7 @@ Wait for the user's selection and proceed accordingly:
 
 Once initialized, maintain awareness of:
 
+- **Interactive prompts:** Use the `AskUserQuestion` tool for all multiple-choice selections and confirmations — it renders as a rich Claude Code modal (up to 4 questions per call, 2–4 options each, with an automatic "Other" write-in). Fall back to plain markdown options only if the tool is unavailable.
 - Current track context throughout the session
 - Workflow rules from `conductor/workflow.md`
 - Domain language from `conductor/context.md` — use these terms verbatim when discussing the project

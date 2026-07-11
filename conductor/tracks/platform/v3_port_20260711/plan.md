@@ -18,13 +18,13 @@
 - [x] Task: Rewrite `workflow.md` Strict/TDD → **Light mode** (per ADR 0006)
 - [x] ✅ Verify: `grep` clean across renamed set; all remaining refs are intentional history or deferred-by-design
 
-## Phase 2 — Primitive Port
+## Phase 2 — Primitive Port ✅
 
-- [ ] Task: Port `ask_question` → `AskUserQuestion` in all five Commands
-    - [ ] Map each call to the schema (question / header / options / multiSelect)
-    - [ ] Fit prompts to limits: ≤ 4 questions per modal, 2–4 options each
-- [ ] Task: Retire `.agents/workflows/` deploy-target references in Commands + templates
-- [ ] ✅ Verify: smoke-test each Command's modals render and return correctly
+- [x] Task: Port `ask_question` → `AskUserQuestion` in all five Commands
+    - [x] `grill.md` — ported 3 `ask_question` refs → `AskUserQuestion` (`multiSelect`, `options` label+description) + retired the dead Antigravity `/grill-me` line
+    - [x] conductor / conductor-init / new-track / checkpoint — had no literal primitive; added a uniform `AskUserQuestion` "Interactive prompts" convention (via subagent, diff-verified)
+- [x] Task: Retire legacy Antigravity command dirs — `.agents/workflows/` (4) + byte-identical `workflows/` (5) = 9 files deleted (superseded by `.claude/commands/`)
+- [~] Verify: static verification done (grep clean, diffs reviewed). **Live modal smoke-test deferred** — needs an interactive session; folds into the Phase 3 install verification the user runs.
 
 ## Phase 3 — Plugin Packaging + Distribution
 
