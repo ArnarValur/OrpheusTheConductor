@@ -5,17 +5,18 @@
 
 ---
 
-## Phase 1 — Rename Sweep + Self-Host Mode *(foundational)*
+## Phase 1 — Rename Sweep + Self-Host Mode *(foundational)* ✅
 
-- [ ] Task: Inventory all `TheOracle` references
-    - [ ] Run `grep -ri theoracle` and enumerate the ~20 hits
-    - [ ] Classify **forward-facing** (rename) vs **historical** (ADRs/relay — preserve verbatim)
-- [ ] Task: Rename TheOracle → Orpheus across forward-facing files
-    - [ ] Source headers → `# Source: Orpheus v3.0 @ <date>`
-    - [ ] `plugin.json` name/description, README, templates, glossary references
-    - [ ] `project-context.md` v2.1 header + "Antigravity" text — *user-owned: confirm the edit, do not silently rewrite identity prose*
-- [ ] Task: Rewrite `workflow.md` Strict/TDD → **Light mode** (per ADR 0006)
-- [ ] ✅ Verify: `grep -ri theoracle` clean except intentional legacy/AKA mentions
+- [x] Task: Inventory all `TheOracle` references
+    - [x] `grep -ri theoracle` — ~40 hits across 25 files
+    - [x] Classify forward-facing (rename) vs historical (preserve) vs mechanism-entangled (defer)
+- [x] Task: Rename TheOracle → Orpheus across the clean forward-facing surface
+    - [x] Protocol source headers ×7 → `Orpheus v3.0 @ 2026-07-11`
+    - [x] `plugin.json` (name `orpheus`, `3.0.0`, v3.0 description) + template headers ×4
+    - [x] `project-context.md` — user-approved v3.0 rewrite (identity + tech stack + environment de-staled)
+    - [~] Deferred: README + `conductor-init.md` `~/…/TheOracle/` source paths (entangled with Antigravity copy-from-source → **Phase 3**); `workflows/` + `.agents/workflows/` legacy dupes → **Phase 2**
+- [x] Task: Rewrite `workflow.md` Strict/TDD → **Light mode** (per ADR 0006)
+- [x] ✅ Verify: `grep` clean across renamed set; all remaining refs are intentional history or deferred-by-design
 
 ## Phase 2 — Primitive Port
 

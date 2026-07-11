@@ -1,5 +1,5 @@
 {
-  "name": "the-oracle",
-  "version": "2.1.0",
-  "description": "Spec-driven development orchestrator for Merkurial-studio. v2.1 adds consolidated project-context, a domain glossary (conductor/context.md), batched ADRs (conductor/adr/), a living PRD, dynamic index sync, and a domain-aware /new-track + new /grill skill."
+  "name": "orpheus",
+  "version": "3.0.0",
+  "description": "Spec-driven development orchestrator for Merkurial-studio. v3.0 re-platforms from Antigravity to the Claude ecosystem (Claude Code + Cowork): the five Commands and Protocols ship as one installable plugin, ending per-project fan-out. Manages per-project conductor/ state — consolidated identity, domain glossary, batched ADRs, living PRD, dynamic index sync, and domain-aware tracks."
 }
