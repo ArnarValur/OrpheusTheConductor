@@ -1,4 +1,4 @@
-<!-- Template: TheOracle v2.1 | Mode: light -->
+<!-- Template: Orpheus v3.0 | Mode: light -->
 # Project Workflow — Light
 
 > Streamlined workflow for prototypes, websites, and non-product projects.

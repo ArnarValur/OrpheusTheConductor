@@ -1,6 +1,6 @@
 # Protocol: New Track
 
-<!-- Source: TheOracle v2.1 @ 2026-05-25 -->
+<!-- Source: Orpheus v3.0 @ 2026-07-11 -->
 
 > Reference protocol for creating a new track (feature, bug, chore, spike) with spec and phased implementation plan.
 >

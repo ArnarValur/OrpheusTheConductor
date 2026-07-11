@@ -1,4 +1,4 @@
-<!-- Template: TheOracle v2.1 -->
+<!-- Template: Orpheus v3.0 -->
 # Project Context — <Project Name>
 
 > Single identity + operational document for this project.

@@ -1,6 +1,6 @@
 # Index Sync Protocol
 
-<!-- Source: TheOracle v2.1 @ 2026-05-25 -->
+<!-- Source: Orpheus v3.0 @ 2026-07-11 -->
 
 **PROTOCOL: How to keep `conductor/index.md` accurate as files come into existence lazily.**
 
