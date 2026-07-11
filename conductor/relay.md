@@ -51,3 +51,10 @@ Timestamped entries for context continuity between sessions.
 - **Decisions:** ADR 0006 (Light self-host mode), ADR 0007 (plugin packaging + marketplace layout)
 - **Deferred (supervised):** live plugin install/registration verification (CLI + Cowork) and the DittoDatto pilot migration (separate live repo + real secrets). Runbook: `tracks/platform/v3_port_20260711/dittodatto-pilot.md`.
 - **Next (morning):** `claude --plugin-dir <repo>` → verify the five Commands register; run the DittoDatto pilot; fill `plugin.json` homepage/repo/license once a remote exists; then merge the branch.
+
+## 2026-07-11 10:31
+- **Session:** Morning checkpoint — verified, merged, installed the v3.0 port
+- **Tracks touched:** `v3_port_20260711` (platform) — now P1–P4 complete (pilot is a separate rollout)
+- **Status:** Live-verified the plugin (`claude plugin details orpheus` → 5 components; user confirmed Commands register in the palette). Merged the port branch → `main` (merge commit `472e632`) cleanly on top of the user's housekeeping commit `2f08a53` (archived v2.1 design docs → `.archived/`, template whitespace). Swapped `merkurial-studio` marketplace worktree → `main`; `orpheus` now installed **user-scope** (durable). Softened the DittoDatto runbook's secrets framing.
+- **Decisions:** none new (0006/0007 settled). Recorded a preference: **DittoDatto's keys are intentional — never flag/scrub; ADR 0005 keeps them local.**
+- **Next:** retire the merged worktree (`git worktree remove`, from `main`); migrate v2.x projects each in its own repo when at them; fill `plugin.json` homepage/repo/license once a remote exists; start v3.1 Hardening. Future conductor work is on `main`.

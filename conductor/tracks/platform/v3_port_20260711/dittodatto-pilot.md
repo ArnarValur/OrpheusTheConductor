@@ -2,7 +2,7 @@
 
 > Track: `v3_port_20260711` · Phase 4 acceptance test.
 >
-> **⏸️ NOT auto-executed.** Deferred on purpose: DittoDatto is a *separate live repo carrying real secrets* (ADR 0005), it lives outside this port worktree, and its acceptance needs interactive `/conductor` verification. Run this **together, supervised.** This runbook drives [`protocols/migrate.md`](../../../protocols/migrate.md).
+> **⏸️ NOT auto-executed.** Deferred on purpose: DittoDatto is a *separate live repo* outside this port worktree, and its acceptance needs interactive `/conductor` verification. Run this **together, supervised.** This runbook drives [`protocols/migrate.md`](../../../protocols/migrate.md).
 
 ## Precondition
 
@@ -12,7 +12,7 @@
 
 1. **Locate** the DittoDatto repo on PlutoII (and/or Saturn). Confirm the path before touching anything.
 2. **Safety:** clean working tree; branch it — `git switch -c migrate/orpheus-v3`. Record the current SHA for rollback.
-3. **Secrets first (ADR 0005).** DittoDatto was observed carrying a live `.env` and a service-account key under `conductor/docs/keys/`. BEFORE anything else, add `conductor/.gitignore` (`docs/keys/`, `*.env`, `.obsidian/`). **If those secrets are already committed in git history, STOP** — decide on a history scrub separately; `migrate.md` does not rewrite history.
+3. **Keep local keys local (ADR 0005).** DittoDatto intentionally keeps local keys under `conductor/docs/keys/` (and a local `.env`) — they are *meant to be there* and are left completely untouched. Just ensure `conductor/.gitignore` (`docs/keys/`, `*.env`, `.obsidian/`) is present so they stay local and never travel with the repo. Do not move, scrub, or flag them.
 4. **Run `migrate.md` §3:** retire `.agents/workflows/` (+ any redundant root `workflows/`); confirm the plugin resolves the Commands; run index-sync.
 5. **Preserve check:** diff `conductor/` content — `pulse` / `relay` / `tracks` / `adr` / `context` / `prd` / `project-context` must be **byte-unchanged** (ADR 0003).
 6. **Verify acceptance:** run `/conductor` inside DittoDatto → resume works on the plugin; `.agents/workflows/` is gone; secrets are gitignored.
