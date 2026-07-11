@@ -56,6 +56,7 @@
    - **8.1:** Get commit hash: `git log -1 --format="%H"`
    - **8.2:** Draft note content — task name, summary of changes, list of created/modified files
    - **8.3:** Attach note:
+
      ```bash
      git notes add -m "<note content>" <commit_hash>
      ```
@@ -110,6 +111,7 @@
 ## Commit Guidelines
 
 ### Message Format
+
 ```
 <type>(<scope>): <description>
 
@@ -119,6 +121,7 @@
 ```
 
 ### Types
+
 - `feat`: New feature
 - `fix`: Bug fix
 - `docs`: Documentation only
@@ -129,6 +132,7 @@
 - `conductor`: Conductor file updates (plan, checkpoint, tracks)
 
 ### Examples
+
 ```bash
 git commit -m "feat(auth): Add remember me functionality"
 git commit -m "fix(layout): Correct mobile nav overflow"
@@ -158,18 +162,21 @@ A task is complete when:
 > **Customize this section per project.** Replace examples with actual project commands.
 
 ### Setup
+
 ```bash
 # Install dependencies and configure environment
 # e.g., npm install / go mod tidy / pip install -r requirements.txt
 ```
 
 ### Daily Development
+
 ```bash
 # Start dev server, run tests, lint
 # e.g., npm run dev / go run main.go
 ```
 
 ### Before Committing
+
 ```bash
 # Run pre-commit checks: format, lint, test
 # e.g., npm run check / make check
@@ -188,6 +195,7 @@ Tests are not mandatory in light mode but are strongly recommended for:
 - **Security-sensitive paths** — auth, input validation, permissions
 
 Skip tests for:
+
 - Static content pages
 - Simple CRUD with no logic
 - One-off scripts and prototypes
@@ -198,6 +206,7 @@ Skip tests for:
 ## Emergency Procedures
 
 ### Critical Bug in Production
+
 1. Create hotfix branch from main
 2. Implement minimal fix
 3. Verify fix works
@@ -205,12 +214,14 @@ Skip tests for:
 5. Document in tracks.md
 
 ### Data Loss
+
 1. Stop all write operations
 2. Restore from latest backup
 3. Verify data integrity
 4. Document incident
 
 ### Security Breach
+
 1. Rotate all secrets immediately
 2. Review access logs
 3. Patch vulnerability

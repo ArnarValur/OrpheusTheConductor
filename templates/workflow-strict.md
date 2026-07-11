@@ -41,6 +41,7 @@ All tasks follow a strict 11-step lifecycle:
    - Rerun tests to ensure they still pass after refactoring
 
 6. **Verify Coverage:** Run coverage reports using the project's chosen tools. For example:
+
    ```bash
    # Python
    pytest --cov=app --cov-report=html
@@ -49,6 +50,7 @@ All tasks follow a strict 11-step lifecycle:
    # Go
    go test -coverprofile=coverage.out ./...
    ```
+
    **Gate: >80% coverage for new code.** Do not proceed if coverage is below threshold.
 
 7. **Document Deviations:** If implementation differs from tech stack:
@@ -67,6 +69,7 @@ All tasks follow a strict 11-step lifecycle:
    - **9.1:** Get commit hash: `git log -1 --format="%H"`
    - **9.2:** Draft note content — task name, summary of changes, list of created/modified files, and the core "why"
    - **9.3:** Attach note:
+
      ```bash
      git notes add -m "<note content>" <commit_hash>
      ```
@@ -102,6 +105,7 @@ All tasks follow a strict 11-step lifecycle:
    - Generate step-by-step verification instructions with specific commands and expected outcomes
 
    **Frontend example:**
+
    ```
    Manual Verification Steps:
    1. Start the dev server: `npm run dev`
@@ -110,6 +114,7 @@ All tasks follow a strict 11-step lifecycle:
    ```
 
    **Backend example:**
+
    ```
    Manual Verification Steps:
    1. Ensure the server is running
@@ -161,6 +166,7 @@ Before marking any task complete, verify:
 ## Commit Guidelines
 
 ### Message Format
+
 ```
 <type>(<scope>): <description>
 
@@ -170,6 +176,7 @@ Before marking any task complete, verify:
 ```
 
 ### Types
+
 - `feat`: New feature
 - `fix`: Bug fix
 - `docs`: Documentation only
@@ -180,6 +187,7 @@ Before marking any task complete, verify:
 - `conductor`: Conductor file updates (plan, checkpoint, tracks)
 
 ### Examples
+
 ```bash
 git commit -m "feat(auth): Add remember me functionality"
 git commit -m "fix(posts): Correct excerpt generation for short posts"
@@ -210,18 +218,21 @@ A task is complete when:
 > **Customize this section per project.** Replace examples with actual project commands.
 
 ### Setup
+
 ```bash
 # Install dependencies and configure environment
 # e.g., npm install / go mod tidy / pip install -r requirements.txt
 ```
 
 ### Daily Development
+
 ```bash
 # Start dev server, run tests, lint, format
 # e.g., npm run dev / go run main.go / npm test
 ```
 
 ### Before Committing
+
 ```bash
 # Run all pre-commit checks: format, lint, type check, tests
 # e.g., npm run check / make check
@@ -232,18 +243,21 @@ A task is complete when:
 ## Testing Requirements
 
 ### Unit Testing
+
 - Every module must have corresponding tests
 - Use appropriate test setup/teardown mechanisms
 - Mock external dependencies
 - Test both success and failure cases
 
 ### Integration Testing
+
 - Test complete user flows
 - Verify database transactions
 - Test authentication and authorization
 - Check form submissions
 
 ### Mobile Testing (if applicable)
+
 - Test touch interactions
 - Verify responsive layouts
 - Check performance on constrained networks
@@ -265,6 +279,7 @@ Before requesting review:
 ## Emergency Procedures
 
 ### Critical Bug in Production
+
 1. Create hotfix branch from main
 2. Write failing test for bug
 3. Implement minimal fix
@@ -273,6 +288,7 @@ Before requesting review:
 6. Document in tracks.md
 
 ### Data Loss
+
 1. Stop all write operations
 2. Restore from latest backup
 3. Verify data integrity
@@ -280,6 +296,7 @@ Before requesting review:
 5. Update backup procedures
 
 ### Security Breach
+
 1. Rotate all secrets immediately
 2. Review access logs
 3. Patch vulnerability
@@ -291,6 +308,7 @@ Before requesting review:
 ## Deployment Workflow
 
 ### Pre-Deployment Checklist
+
 - [ ] All tests passing
 - [ ] Coverage >80%
 - [ ] No linting errors
@@ -300,6 +318,7 @@ Before requesting review:
 - [ ] Backup created
 
 ### Deployment Steps
+
 1. Merge feature branch to main
 2. Tag release with version
 3. Push to deployment service
@@ -309,6 +328,7 @@ Before requesting review:
 7. Monitor for errors
 
 ### Post-Deployment
+
 1. Monitor analytics
 2. Check error logs
 3. Gather user feedback
