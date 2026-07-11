@@ -26,13 +26,14 @@
 - [x] Task: Retire legacy Antigravity command dirs — `.agents/workflows/` (4) + byte-identical `workflows/` (5) = 9 files deleted (superseded by `.claude/commands/`)
 - [~] Verify: static verification done (grep clean, diffs reviewed). **Live modal smoke-test deferred** — needs an interactive session; folds into the Phase 3 install verification the user runs.
 
-## Phase 3 — Plugin Packaging + Distribution
+## Phase 3 — Plugin Packaging + Distribution ✅ *(structure built + CLI-validated; live install pending user)*
 
-- [ ] Task: Author `plugin.json` manifest (Orpheus identity, v3.0.0, Commands + skills)
-- [ ] Task: Author `marketplace.json` (git-sourced marketplace — the Orpheus repo doubles as its marketplace)
-- [ ] Task: Bundle Protocols **un-inlined** inside the plugin (`protocols/` directory)
-- [ ] Task: Finalize distribution mechanics — resolve the PRD open question (git-sourced marketplace vs local)
-- [ ] ✅ Verify: local install → all five Commands register in **CLI + Cowork**
+- [x] Task: Author plugin manifest — `.claude-plugin/plugin.json` (orpheus, v3.0.0, author, keywords)
+- [x] Task: Author `.claude-plugin/marketplace.json` (git-sourced marketplace `merkurial-studio`, plugin `source: "."`)
+- [x] Task: Restructure to plugin-at-root — `.claude/commands/` → `commands/` (4 Commands) + `conductor-init` as a Skill; Protocols + templates bundled at plugin root, referenced via `${CLAUDE_PLUGIN_ROOT}` (ADR 0007)
+- [x] Task: Finalize distribution mechanics — git-sourced marketplace (ADR 0007, resolves the PRD open question)
+- [x] Task: Rewrite `README.md` → v3.0 (install, Commands, modes, conductor/ layout, migration)
+- [~] Verify: **`claude plugin validate .` passes** ✓. **Live install → Command registration in CLI + Cowork deferred to the user** (`claude --plugin-dir .`, then `/orpheus:conductor`).
 
 ## Phase 4 — Migration Protocol + DittoDatto Pilot + Acceptance
 
