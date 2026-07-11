@@ -8,13 +8,15 @@ All tracks organized by domain. Each track links to its dedicated folder.
 
 | Domain | Path | Caution Level |
 |--------|------|---------------|
-| _Define domains when creating tracks_ | | |
+| platform | conductor/tracks/platform/ | 🔴 Critical |
 
 ---
 
 ## Active Tracks
 
-_No tracks yet._
+- [ ] **Orpheus v3.0 Port**
+  - *Type:* feature | *Domain:* platform | *Status:* new
+  - *Link:* [tracks/platform/v3_port_20260711/](./tracks/platform/v3_port_20260711/)
 
 ## Completed Tracks
 
