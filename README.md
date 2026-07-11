@@ -1,99 +1,87 @@
-# TheOracle v2.1
+# Orpheus v3.0
 
-> Spec-driven development orchestrator for Merkurial-studio.
+> A conductor, not a copilot.
 
-TheOracle provides structured, spec-driven development workflows for any project. It scaffolds projects with a consolidated identity + operational document, a domain glossary, architectural decision records, and full development workflows — then manages the full lifecycle of feature tracks from specification through implementation, review, and completion.
+Orpheus is a spec-driven development orchestrator for Merkurial-studio. It doesn't write your code — it orchestrates the workflow around it: **spec → plan → implement → review → checkpoint**.
 
-## What's New in v2.1
+## What is Orpheus?
 
-- **Consolidated project context** — `project-context.md` is now a single identity + operational document. The v2.0 `product.md` / `product-guidelines.md` / `tech-stack.md` split has been merged in (identity-first, operational-second section order).
-- **Domain awareness** — new `conductor/context.md` (domain glossary) and optional `conductor/context-map.md` (bounded-context map) drive domain-aware spec generation in `/new-track`.
-- **Architectural Decision Records** — `conductor/adr/` holds batched ADRs proposed at the end of `/grill`, `/new-track`, and `/checkpoint` runs.
-- **Living PRD** — `conductor/prd.md` is created lazily when product scope crystallizes during `/grill`.
-- **Long-form docs under the conductor roof** — `conductor/docs/` replaces the old `.docs/` convention. Human-authored only.
-- **Dynamic `index.md`** — links are appended lazily by [`protocols/index-sync.md`](./protocols/index-sync.md) as files come into existence. No dead links, ever.
-- **Reader/writer contracts** — each workflow declares what it reads and writes in its frontmatter, making the system self-documenting.
+Orpheus gives a project a structured, spec-driven backbone: a domain glossary, architectural decision records, a living PRD, and a lifecycle for feature tracks from specification through implementation, review, and completion. State lives in a per-project `conductor/` directory and travels with the repo via Git.
 
-## Slash Commands
+Formerly **TheOracle** (through v2.1), v3.0 re-platforms from Google Antigravity to the Claude ecosystem — **Claude Code + Cowork**. It ships as a Claude Code plugin named `orpheus`, distributed through a git-sourced marketplace named `merkurial-studio`. The repo *is* both the plugin (at its root) and the marketplace.
 
-TheOracle provides 5 Antigravity workflow commands. These are deployed to a project's `.agents/workflows/` directory during initialization.
+Pure markdown and shell — no runtime dependencies.
+
+## Install
+
+Three ways to install, depending on your setup.
+
+**From the marketplace** (once a git remote exists):
+
+```
+/plugin marketplace add <orpheus-repo-url>
+/plugin install orpheus@merkurial-studio
+```
+
+> `<orpheus-repo-url>` is a placeholder — no git remote is configured yet, so this URL is **TBD** until the repo is pushed.
+
+**From a local marketplace** (point at your local checkout):
+
+```
+/plugin marketplace add /path/to/orpheus
+/plugin install orpheus@merkurial-studio
+```
+
+**Local dev** (no marketplace, load the plugin directly):
+
+```
+claude --plugin-dir /path/to/orpheus
+```
+
+## The Five Commands
 
 | Command | Purpose |
 |---------|---------|
-| `/conductor-init` | Initialize conductor in a project — interactive grill for product identity, tech stack, guidelines, workflow mode, and (brownfield) targeted domain scan |
-| `/conductor` | Resume work — loads project context, defensive index reconcile, presents status, awaits orders |
-| `/grill` | Repeatable domain refinement — sharpens `context.md`, batches ADR proposals, offers to write/update `prd.md` |
-| `/new-track` | Create a new feature/bug/chore track with domain-aware spec and implementation plan |
-| `/checkpoint` | Save session state — ADR gate for decision classification, pulse update, relay handoff, git commit |
+| `/conductor-init` | Scaffold or migrate a project's Conductor. Shipped as a Skill; auto-suggests on uninitialized projects. |
+| `/conductor` | Resume session context, reconcile the index, and present status. |
+| `/grill` | Domain-refinement session: sharpen the glossary, batch ADRs, update the PRD. |
+| `/new-track` | Create a domain-aware track (spec + phased plan). |
+| `/checkpoint` | Save session state and sweep for unclassified decisions. |
 
-> Note: `/grill` is separate from the native `/grill-me` Antigravity command, which is left untouched.
+> As plugin commands, these are namespaced `/orpheus:<name>` (e.g. `/orpheus:conductor`). The bare `/<name>` form also works when there's no naming collision.
 
 ## Workflow Modes
 
-TheOracle supports two workflow modes, selected during `/conductor-init`:
+Orpheus operates in one of two modes, selected at init:
 
-- **Strict** — Full TDD: Red → Green → Refactor, >80% coverage gate, 11-step task lifecycle. For products and production codebases.
-- **Light** — Plan → Execute → Verify. No mandatory test-first, no coverage gates. For prototypes, websites, and experiments.
+- **Strict** — test-driven, with coverage gates. For products and production codebases.
+- **Light** — flexible iteration, with verification checkpoints. For prototypes and experiments.
 
-## Per-Project Structure (v2.1)
+## The `conductor/` Directory
 
-After running `/conductor-init`, your project gets:
+Each initialized project carries its Orpheus state in a `conductor/` directory:
 
-```text
-project-root/
-├── .agents/workflows/          ← Slash commands (conductor, conductor-init, grill, new-track, checkpoint)
-├── conductor/
-│   ├── index.md                ← Dynamic central index (no dead links — see protocols/index-sync.md)
-│   ├── project-context.md      ← CONSOLIDATED: identity + operational
-│   ├── workflow.md             ← Development workflow (strict or light)
-│   ├── context.md              ← Domain glossary (lazy — pre-populated brownfield, created by /grill greenfield)
-│   ├── context-map.md          ← Optional — multi-bounded-context projects only
-│   ├── prd.md                  ← Living product requirements (lazy — created by /grill when scope emerges)
-│   ├── adr/                    ← Architectural decision records (batched by /grill, /new-track, /checkpoint)
-│   │   └── .gitkeep
-│   ├── docs/                   ← Long-form human-authored documentation
-│   │   └── .gitkeep
-│   ├── agent-rules/            ← Optional — installed by the agent-rules plugin
-│   ├── code_styleguides/       ← Language-specific style guides (copied at init)
-│   ├── pulse.md                ← Session memory
-│   ├── pulse-archive/          ← Archived session states
-│   ├── relay.md                ← Cross-session handoffs
-│   ├── tracks.md               ← Track registry
-│   └── tracks/                 ← Feature/bug/chore tracks
-│       └── <domain>/<track_id>/
-│           ├── index.md
-│           ├── spec.md         ← Domain-aware (reads context.md + adr/* + prd.md)
-│           ├── plan.md
-│           └── metadata.json
-```
+| Path | Role |
+|------|------|
+| `project-context.md` | Project identity + operational context |
+| `context.md` | Domain glossary |
+| `adr/` | Architectural decision records |
+| `prd.md` | Living product requirements |
+| `tracks.md` + `tracks/` | Work tracks |
+| `pulse.md` | Session memory |
+| `relay.md` | Cross-session handoff |
+| `index.md` | Dynamic index |
 
-## Updating Workflows in Existing Projects
+Conductor state travels with each repo via Git. Secrets stay out — `docs/keys/`, `*.env`, and `.obsidian/` are gitignored.
 
-Two options:
+## Migrating from v2.x (TheOracle)
 
-1. **Re-initialize:** Run `/conductor-init` again — it detects brownfield projects and offers to update workflow files while preserving your conductor state, including the v2.0 → v2.1 migration path (consolidate `product.md` / `product-guidelines.md` / `tech-stack.md` into `project-context.md` if found as separate files).
-2. **Manual copy:** Copy updated workflow files from `~/Hermes/TheOracle/workflows/` to your project's `.agents/workflows/`. Each file has a `# Source: TheOracle v2.1 @ <date>` header for version tracking.
+Existing Antigravity / TheOracle projects migrate through `/conductor-init` as a brownfield re-init. It runs `protocols/migrate.md`, which:
 
-## Protocols
+1. Detects a v2.x project.
+2. Preserves the existing `conductor/` state untouched.
+3. Retires the old `.agents/workflows/` copies.
 
-Detailed agent protocols live in `~/Hermes/TheOracle/protocols/`:
+## Status
 
-| Protocol | Purpose |
-|----------|---------|
-| `file-resolution.md` | How to locate conductor files within any project (v2.1 defaults) |
-| `index-sync.md` | **NEW v2.1** — shared protocol for lazy `index.md` appends + defensive reconcile |
-| `implement.md` | Execute tasks from a track's implementation plan |
-| `new-track.md` | Create a new track with domain-aware spec and plan |
-| `review.md` | Code review against guidelines and plan |
-| `revert.md` | Git-aware undo of tracks, phases, or tasks |
-| `status.md` | Progress dashboard across all tracks |
-
-## Design Documents
-
-- [`conductor-v2.1-design-brief.md`](./conductor-v2.1-design-brief.md) — full design rationale (D1–D12)
-- [`conductor-v2.1-design-brief-supplement.md`](./conductor-v2.1-design-brief-supplement.md) — second-pass seams + polish (now absorbed into the main brief; retained as audit trail)
-
-## Source
-
-- **Upstream inspiration:** [gemini-cli-extensions/conductor](https://github.com/gemini-cli-extensions/conductor)
-- **Grill inspiration:** [mattpocock/skills](https://github.com/mattpocock/skills/tree/main/skills/engineering)
+The v3.0 port from Antigravity to the Claude ecosystem is **in progress**.
