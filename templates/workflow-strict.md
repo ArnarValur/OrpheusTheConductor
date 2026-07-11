@@ -1,4 +1,4 @@
-<!-- Template: TheOracle v2.1 | Mode: strict -->
+<!-- Template: Orpheus v3.0 | Mode: strict -->
 # Project Workflow — Strict (TDD)
 
 > Full test-driven development workflow with coverage gates.

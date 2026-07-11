@@ -276,3 +276,9 @@ Tell the user:
 > - Review the spec: `conductor/tracks/{domain}/{track_id}/spec.md`
 > - Start implementation: run `/conductor` and select this track
 > - Create another track: `/new-track`"
+
+---
+
+## Session Behavior
+
+- **Interactive prompts:** Use the `AskUserQuestion` tool for all multiple-choice selections and confirmations — it renders as a rich Claude Code modal (up to 4 questions per call, 2–4 options each, with an automatic "Other" write-in). Fall back to plain markdown options only if the tool is unavailable.

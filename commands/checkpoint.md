@@ -221,3 +221,9 @@ Tell the user:
 > - Continue working on current track
 > - Switch to a different track
 > - End session"
+
+---
+
+## Session Behavior
+
+- **Interactive prompts:** Use the `AskUserQuestion` tool for all multiple-choice selections and confirmations — it renders as a rich Claude Code modal (up to 4 questions per call, 2–4 options each, with an automatic "Other" write-in). Fall back to plain markdown options only if the tool is unavailable.

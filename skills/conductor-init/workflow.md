@@ -19,7 +19,7 @@ Determine if this is a **Brownfield** (existing) or **Greenfield** (new) project
 **Greenfield** — ONLY if none of the above are found.
 
 **If an existing `conductor/` directory is detected:**
-> Ask the user: "A `conductor/` directory already exists. Do you want to **reinitialize** (this will detect a v2.0 conductor and migrate it to v2.1 in place — see Step 1b) or **abort**?"
+> Ask the user: "A `conductor/` directory already exists. Do you want to **reinitialize** (detect the conductor version and migrate it in place — see Step 1b) or **abort**?"
 > If abort, halt. If reinitialize, proceed to Step 1b.
 
 **If Brownfield (no existing conductor):**
@@ -38,9 +38,13 @@ Determine if this is a **Brownfield** (existing) or **Greenfield** (new) project
 
 ---
 
-## Step 1b: v2.0 → v2.1 Migration (only when reinitializing an existing conductor)
+## Step 1b: In-place Migration (only when reinitializing an existing conductor)
 
 **This step does NOT clobber** existing user data — tracks, pulse, relay, pulse-archive, agent-rules, and code_styleguides are preserved untouched.
+
+### 1b.0 Retire Antigravity remnants (v2.x → v3.0)
+
+If this project carries v2.x Antigravity remnants — a `.agents/workflows/` directory, a root `plugin.json` named `the-oracle`, or `TheOracle`-headed files — run the **[Migrate protocol](${CLAUDE_PLUGIN_ROOT}/protocols/migrate.md)** first: it retires the deploy copies, confirms the Orpheus plugin, and ships the secrets `.gitignore` (ADR 0005), all while preserving `conductor/` state. Then continue with the version detection + state reconcile below.
 
 ### 1b.1 Detect conductor version
 
@@ -71,11 +75,9 @@ Apply in order:
 
 4. **Rewrite `conductor/index.md`** to the dynamic format — keep only links to files that **actually exist** on disk. See Step 11. Then reconcile: for any lazy files present (context.md, prd.md, first ADR, docs/, agent-rules/), ensure `index.md` has a matching link — append if missing.
 
-5. **Update deployed workflows** — copy the latest workflows from `~/Hermes/TheOracle/workflows/` to `.agents/workflows/`, overwriting old versions.
+5. **Preserve everything else.** Do NOT touch `conductor/pulse.md`, `conductor/relay.md`, `conductor/tracks.md`, `conductor/tracks/`, `conductor/pulse-archive/`, `conductor/agent-rules/`, or `conductor/code_styleguides/`.
 
-6. **Preserve everything else.** Do NOT touch `conductor/pulse.md`, `conductor/relay.md`, `conductor/tracks.md`, `conductor/tracks/`, `conductor/pulse-archive/`, `conductor/agent-rules/`, or `conductor/code_styleguides/`.
-
-7. **Report** the migration result to the user and skip ahead to Step 12 (deploy workflows) — Steps 2–11 are for fresh initializations.
+6. **Report** the migration result to the user, then halt — Steps 2–11 are for fresh initializations, so nothing further runs on a reinit.
 
 ---
 
@@ -166,7 +168,7 @@ Draft the **Tech Stack** section content for `project-context.md`. Present for r
 
 ## Step 5: Code Style Guide Selection
 
-List available style guides from `~/Hermes/TheOracle/templates/code_styleguides/`:
+List available style guides from `${CLAUDE_PLUGIN_ROOT}/templates/code_styleguides/`:
 
 | Guide | File |
 |-------|------|
@@ -262,11 +264,11 @@ On approval:
 
 ## Step 8: Copy Style Guides
 
-Copy the selected style guides from `~/Hermes/TheOracle/templates/code_styleguides/` to `conductor/code_styleguides/`.
+Copy the selected style guides from `${CLAUDE_PLUGIN_ROOT}/templates/code_styleguides/` to `conductor/code_styleguides/`.
 
 ```bash
-cp ~/Hermes/TheOracle/templates/code_styleguides/typescript.md conductor/code_styleguides/
-cp ~/Hermes/TheOracle/templates/code_styleguides/general.md conductor/code_styleguides/
+cp ${CLAUDE_PLUGIN_ROOT}/templates/code_styleguides/typescript.md conductor/code_styleguides/
+cp ${CLAUDE_PLUGIN_ROOT}/templates/code_styleguides/general.md conductor/code_styleguides/
 # ... etc.
 ```
 
@@ -278,14 +280,14 @@ Always include `general.md` regardless of selection.
 
 Based on the mode selected in Step 6:
 
-- **Strict:** Copy `~/Hermes/TheOracle/templates/workflow-strict.md` → `conductor/workflow.md`
-- **Light:** Copy `~/Hermes/TheOracle/templates/workflow-light.md` → `conductor/workflow.md`
+- **Strict:** Copy `${CLAUDE_PLUGIN_ROOT}/templates/workflow-strict.md` → `conductor/workflow.md`
+- **Light:** Copy `${CLAUDE_PLUGIN_ROOT}/templates/workflow-light.md` → `conductor/workflow.md`
 
 ---
 
 ## Step 10: Create `project-context.md`
 
-Write `conductor/project-context.md` using the template at `~/Hermes/TheOracle/templates/project-context.md` as a base. The file consolidates **identity + operational** content in one document. Populate with information gathered during Steps 2–4.
+Write `conductor/project-context.md` using the template at `${CLAUDE_PLUGIN_ROOT}/templates/project-context.md` as a base. The file consolidates **identity + operational** content in one document. Populate with information gathered during Steps 2–4.
 
 **Section order (deliberate, identity-first — do NOT reorder):**
 
@@ -405,46 +407,23 @@ _None._
 
 ---
 
-## Step 12: Deploy Workflow Files
-
-Copy the Conductor workflow files to the project's `.agents/workflows/` directory so they are available as slash commands:
-
-```bash
-mkdir -p .agents/workflows
-cp ~/Hermes/TheOracle/workflows/conductor.md .agents/workflows/
-cp ~/Hermes/TheOracle/workflows/grill.md .agents/workflows/
-cp ~/Hermes/TheOracle/workflows/checkpoint.md .agents/workflows/
-cp ~/Hermes/TheOracle/workflows/new-track.md .agents/workflows/
-```
-
-**Post-copy verification:** After copying, verify each deployed file:
-1. Starts with `---` on line 1.
-2. Contains a `description:` field in the YAML frontmatter.
-3. Is under 12,000 characters total.
-
-If any file fails these checks, halt and report the error — do not proceed with a broken deployment.
-
-> **Note:** `conductor-init.md` is intentionally NOT deployed into the project. It is a one-shot scaffolding command — the plugin-level skill provides it globally for any reinit or migration needs.
-
----
-
-## Step 13: Initial Track Generation (Optional)
+## Step 12: Initial Track Generation (Optional)
 
 Ask the user:
 > "Would you like to create the first track now, run `/grill` to refine the domain first, or do that later?"
 
 - **First track now** → invoke the `/new-track` workflow inline.
 - **Grill first** → tell the user to run `/grill` after this command completes; it will read the freshly-written `project-context.md` (and `context.md` if brownfield) for orientation.
-- **Later** → skip to Step 14.
+- **Later** → skip to Step 13.
 
 ---
 
-## Step 14: Git Commit
+## Step 13: Git Commit
 
 Stage all conductor files and commit:
 
 ```bash
-git add conductor/ .agents/workflows/
+git add conductor/
 git commit -m "chore: initialize conductor"
 ```
 
@@ -458,3 +437,9 @@ Announce completion:
 > - `/grill` — refine domain language, batch ADRs, optionally write a PRD
 > - `/new-track` — create a feature/bug/chore track (will be domain-aware on top of `/grill`'s output)
 > - `/conductor` — resume / status dashboard
+
+---
+
+## Session Behavior
+
+- **Interactive prompts:** Use the `AskUserQuestion` tool for all multiple-choice selections and confirmations — it renders as a rich Claude Code modal (up to 4 questions per call, 2–4 options each, with an automatic "Other" write-in). Fall back to plain markdown options only if the tool is unavailable.

@@ -1,6 +1,6 @@
 # Protocol: Implement
 
-<!-- Source: TheOracle v2.1 @ 2026-05-25 -->
+<!-- Source: Orpheus v3.0 @ 2026-07-11 -->
 
 > Executes the tasks defined in a track's implementation plan following the project workflow.
 
