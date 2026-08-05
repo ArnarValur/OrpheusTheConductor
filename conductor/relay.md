@@ -3,6 +3,13 @@
 > One entry per session, ≤10 lines, plain language. Newest first (entries below 2026-08-05 predate this rule and stay oldest-first as written).
 > Say what happened and what it means for the human — then point, don't retell.
 
+## 2026-08-05 — Public release prep (OrpheusTheConductor)
+
+- **What happened:** History audited for publication — 32 commits, zero secret patterns; publish-safe with history intact. MIT LICENSE added; `plugin.json` gained homepage/repository/license; README de-internalized: real install command (`/plugin marketplace add ArnarValur/OrpheusTheConductor`), conductor.build non-affiliation note, the 78K-token → 300–400-line origin story, self-hosting pointer.
+- **Status:** Committed on `main`; `origin` wired to github.com/ArnarValur/OrpheusTheConductor. Push blocked in-session (sandbox holds no GitHub credentials) — one command remains for Arnar.
+- **Decisions:** MIT license; publish with full history (dogfooding as credibility). No ADR — reversible choices.
+- **Next:** `git push -u origin main` → verify marketplace install → launch writeup.
+
 ## 2026-08-05 — v3.1 conductor rebuild templated into init
 
 - **What happened:** `/conductor-init` now emits DittoDatto's rebuilt shape for every future repo — state-only pulse, relay as the one story home, two laws in workflow, static index, self-contained `/conductor` + `/checkpoint` in `.claude/commands/`. Plugin commands, `/grill`, `/new-track`, protocols, README all aligned; `index-sync` and `metadata.json` retired; version → 3.1.0; Orpheus's own conductor migrated to the shape. Old source archived at `.archived/init-source-pre-rebuild-20260805/`.
