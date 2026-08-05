@@ -6,6 +6,9 @@
     "name": "ArnarValur",
     "email": "arnarvalurjonsson@gmail.com"
   },
+  "homepage": "https://github.com/ArnarValur/OrpheusTheConductor",
+  "repository": "https://github.com/ArnarValur/OrpheusTheConductor",
+  "license": "MIT",
   "keywords": [
     "spec-driven-development",
     "orchestration",

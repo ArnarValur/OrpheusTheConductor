@@ -2,7 +2,11 @@
 
 > A conductor, not a copilot.
 
-Orpheus is a spec-driven development orchestrator for Merkurial-studio. It doesn't write your code — it orchestrates the workflow around it: **spec → plan → implement → review → checkpoint**.
+Orpheus is a spec-driven development orchestrator. It doesn't write your code — it orchestrates the workflow around it: **spec → plan → implement → review → checkpoint** — under a hard context budget.
+
+**Why it exists, in numbers:** the heaviest consumer of the old shape booted with a **~78K-token** hot set (unbounded relay, history-carrying pulse, eager ADR loads). After a full audit and rebuild, a v3.1 boot is budgeted at **300–400 lines** (~this repo boots at ~340). The whole design is downstream of that audit.
+
+> *Not affiliated with [conductor.build](https://conductor.build) (the parallel-agents Mac app). The `conductor/` here is a per-repo state directory — the name predates the collision in our own stack.*
 
 ## What is Orpheus?
 
@@ -21,14 +25,12 @@ Pure markdown and shell — no runtime dependencies.
 
 Three ways to install, depending on your setup.
 
-**From the marketplace** (once a git remote exists):
+**From the marketplace:**
 
 ```
-/plugin marketplace add <orpheus-repo-url>
+/plugin marketplace add ArnarValur/OrpheusTheConductor
 /plugin install orpheus@merkurial-studio
 ```
-
-> `<orpheus-repo-url>` is a placeholder — no git remote is configured yet, so this URL is **TBD** until the repo is pushed.
 
 **From a local marketplace** (point at your local checkout):
 
@@ -89,4 +91,10 @@ Conductor state travels with each repo via Git. Secrets stay out — `docs/keys/
 
 ## Status
 
-v3.0 port from Antigravity: **complete**. Current shape: **v3.1** (conductor rebuild, 2026-08-05). Old init source archived under `.archived/init-source-pre-rebuild-20260805/`.
+v3.0 port from Antigravity: **complete**. Current shape: **v3.1** (conductor rebuild, 2026-08-05, ADR 0008). Old init source archived under `.archived/init-source-pre-rebuild-20260805/`.
+
+This repo **self-hosts**: its own `conductor/` runs the v3.1 shape it ships. Reading `conductor/pulse.md`, `relay.md`, and `adr/` is the live demo.
+
+## License
+
+MIT — see [LICENSE](./LICENSE).
