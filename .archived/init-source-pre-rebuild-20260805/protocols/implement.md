@@ -74,9 +74,9 @@ You are an AI agent assistant for the Conductor framework. Your task is to imple
 3. Compare against `conductor/project-context.md` (Product Definition + Guidelines + Tech Stack sections) and `conductor/prd.md` (when present).
 4. **Analyze and propose** (no writes to `project-context.md`):
    - **Identity drift** (Product Definition / Guidelines): If the track meaningfully changed the product's identity or guidelines, propose the edit and ask the user to apply it directly to `project-context.md`.
-   - **Tech stack changes:** If new technologies were introduced, propose the edit for `project-context.md`'s Tech Stack section. Architecturally significant changes (three-criteria test: hard to reverse, surprising without context, real trade-off) should be proposed as an ADR **in-session** — `/checkpoint` writes only what was proposed and approved; it runs no sweep.
+   - **Tech stack changes:** If new technologies were introduced, propose the edit for `project-context.md`'s Tech Stack section. Architecturally significant changes (three-criteria test: hard to reverse, surprising without context, real trade-off) ALSO go into the next `/checkpoint` decision classifier as an ADR candidate.
    - **PRD scope shift:** If the completed track changed product scope, propose an update to `conductor/prd.md` and offer to apply it (this file IS command-writable via `/grill`, but `/implement` only proposes; the user can run `/grill` to apply or edit manually).
-5. Carry unresolved proposals into the next `/checkpoint`'s pulse rewrite — as 📋 Next queue or 📌 Parked lines. (Pulse has no Session Memory; it is state-only.)
+5. Surface unresolved proposals as pulse-bucket items in `conductor/pulse.md`'s Session Memory for the next `/checkpoint`.
 
 ---
 

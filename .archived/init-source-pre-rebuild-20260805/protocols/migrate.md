@@ -52,13 +52,13 @@ If none are present, this is already v3.0 (or greenfield) — halt and report *"
    ```
    If secrets were **already committed** in history, warn the user — this protocol does not rewrite git history.
 
-5. **Hand back to `/conductor-init` Step 1b.** The index rewrite (static Hot/Warm/Cold map), command emission, two-laws insertion, and the hand-migration checklist for pulse/relay reshaping are Step 1b's job — this protocol only retires the Antigravity layer.
+5. **Reconcile the index.** Run the [Index Sync protocol](./index-sync.md) so `conductor/index.md` reflects what is actually on disk. (v3.0 changes no state format — index sync is unchanged.)
 
 ## 4. What this protocol does NOT do
 
 - It does **not** rewrite user content or "modernize" stale headers inside `conductor/` — preservation over cleanup (ADR 0003).
 - It does **not** auto-fix forked ADR numbering, dual / divergent PRDs, or other per-project drift (observed in the wild, e.g. DittoDatto). Those are **surfaced to the user as manual follow-ups**, never touched automatically.
-- It does **not** change any `conductor/` state format. The v3.1 shape change (state-only pulse, relay guardrail, static index, retired `metadata.json`) is handled by `/conductor-init` Step 1b — structural files automatically, state via the human checklist.
+- It does **not** change any `conductor/` state format — pulse, relay, tracks, and ADR formats are identical in v3.0.
 
 ## 5. Report + commit
 

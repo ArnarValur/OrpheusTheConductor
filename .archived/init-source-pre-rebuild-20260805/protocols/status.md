@@ -37,8 +37,7 @@ Load v2.1 lazy context (absence is valid; counts feed the status report):
 
 1. Read the Tracks Registry
 2. Parse to identify all registered tracks and their paths
-   - Match the v3.1 one-liner format: `- {emoji} **{track_id}** — … → tracks/{domain}/{track_id}/plan.md`
-   - Legacy formats (`- [ ] **Track:` / `## [ ] Track:`) may appear in unmigrated repos — parse them too, read-only
+   - Match lines in both formats: `- [ ] **Track:` (standard) and `## [ ] Track:` (legacy)
 3. For each track: resolve and read its Implementation Plan
 
 ### 2.2 Parse and Summarize
@@ -63,7 +62,7 @@ Output a structured report:
 - **Next Action:** <next task marked [ ]>
 
 ## Blockers
-<items from pulse.md § ⚠️ Blockers, or "None">
+<any items marked as blockers in relay.md, or "None">
 
 ## Progress Summary
 | Track | Domain | Phases | Tasks | Completed | In Progress | Pending | Progress |

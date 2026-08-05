@@ -23,7 +23,7 @@ Determine the relevant index file:
 
 Read the index file and look for a link with a matching or semantically similar label.
 
-> **Note (v3.1):** The project `index.md` is a **static** Hot/Warm/Cold map. Lazy files appear as plain paths (not links) until they exist — a plain-path entry does NOT mean the file is missing; it may not have been created yet. Fall through to Step 4 to check the default path.
+> **Note (v2.1):** The project `index.md` is **dynamic** — links are appended lazily as files come into existence (see [`index-sync.md`](./index-sync.md)). A missing link does NOT mean the file is missing; it may mean the file hasn't been created yet. Fall through to Step 4 to check the default path.
 
 ## Step 3: Resolve Path
 
@@ -39,7 +39,7 @@ If the index file is missing or the link is absent, use the **Default Path** key
 
 You MUST verify the resolved file actually exists on the disk. Several v2.1 files are lazy — they only exist once something has been written to them (e.g., `context.md`, `prd.md`, anything in `adr/`). Absence of the file is a valid state; do not auto-create empty stubs.
 
-## Default Paths (Project) — v3.1
+## Default Paths (Project) — v2.1
 
 | Document                          | Default Path                  | Lifecycle |
 |-----------------------------------|-------------------------------|-----------|
@@ -47,15 +47,14 @@ You MUST verify the resolved file actually exists on the disk. Several v2.1 file
 | **Domain Glossary**               | `conductor/context.md`         | Lazy — created by `/grill` or brownfield `/conductor-init` |
 | **Context Map**                   | `conductor/context-map.md`     | Optional — multi-bounded-context projects only |
 | **Product Requirements**          | `conductor/prd.md`             | Lazy — created by `/grill` when product scope crystallizes |
-| **Workflow**                      | `conductor/workflow.md`        | Created at init from strict or light template; carries the two laws |
-| **ADR Directory**                 | `conductor/adr/`               | Scaffolded with `.gitkeep` at init; files written only for proposed-and-approved decisions (`/grill`, `/new-track` batches; `/checkpoint` in-session approvals) |
+| **Workflow**                      | `conductor/workflow.md`        | Created at init from strict or light template |
+| **ADR Directory**                 | `conductor/adr/`               | Scaffolded with `.gitkeep` at init; files appended by `/grill`, `/new-track`, `/checkpoint` (batched) |
 | **Documentation**                 | `conductor/docs/`              | Scaffolded with `.gitkeep` at init; human-authored only (no command writes) |
-| **Agent Rules**                   | `conductor/agent-rules/`       | Scaffolded empty at init; `behavioral.md` / `technical.md` created by `/checkpoint` on first graduated lesson |
-| **Tracks Registry**               | `conductor/tracks.md`          | Created at init; one-liners only |
+| **Agent Rules**                   | `conductor/agent-rules/`       | Optional — installed by the agent-rules plugin |
+| **Tracks Registry**               | `conductor/tracks.md`          | Created at init |
 | **Tracks Directory**              | `conductor/tracks/`            | Created at init |
-| **Pulse**                         | `conductor/pulse.md`           | Created at init; REWRITTEN (never appended) by `/checkpoint`; boot never writes |
-| **Relay**                         | `conductor/relay.md`           | Created at init; one entry per session appended by `/checkpoint` |
-| **Boot / Checkpoint commands**    | `.claude/commands/{conductor,checkpoint}.md` | Emitted at init; self-contained, no plugin dependency |
+| **Pulse**                         | `conductor/pulse.md`           | Created at init, updated by `/checkpoint` and `/conductor` |
+| **Relay**                         | `conductor/relay.md`           | Created at init, updated by `/checkpoint` |
 
 **Removed in v2.1** (consolidated into `project-context.md` per design brief D7):
 
@@ -70,6 +69,5 @@ If any of these are encountered on a pre-v2.1 project, treat their content as au
 | Document                | Default Path                                                |
 |-------------------------|-------------------------------------------------------------|
 | **Specification**       | `conductor/tracks/<domain>/<track_id>/spec.md`              |
-| **Implementation Plan** | `conductor/tracks/<domain>/<track_id>/plan.md` — header carries type/status/dates; `## Decisions` carries D-numbers |
-
-> `metadata.json` is retired (v3.1) — never write one. Old tracks may still carry them; ignore, don't update.
+| **Implementation Plan** | `conductor/tracks/<domain>/<track_id>/plan.md`              |
+| **Metadata**            | `conductor/tracks/<domain>/<track_id>/metadata.json`        |

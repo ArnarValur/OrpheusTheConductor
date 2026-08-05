@@ -1,6 +1,14 @@
-# Relay — Cross-Session Handoff
+# Relay — Orpheus Session Log
 
-Timestamped entries for context continuity between sessions.
+> One entry per session, ≤10 lines, plain language. Newest first (entries below 2026-08-05 predate this rule and stay oldest-first as written).
+> Say what happened and what it means for the human — then point, don't retell.
+
+## 2026-08-05 — v3.1 conductor rebuild templated into init
+
+- **What happened:** `/conductor-init` now emits DittoDatto's rebuilt shape for every future repo — state-only pulse, relay as the one story home, two laws in workflow, static index, self-contained `/conductor` + `/checkpoint` in `.claude/commands/`. Plugin commands, `/grill`, `/new-track`, protocols, README all aligned; `index-sync` and `metadata.json` retired; version → 3.1.0; Orpheus's own conductor migrated to the shape. Old source archived at `.archived/init-source-pre-rebuild-20260805/`.
+- **Status:** All changes uncommitted, awaiting Arnar's review. Verified by scaffolding a scratch repo and booting it literally — no dead links, no phantom commands.
+- **Decisions:** ADR 0008 (v3.1 conductor shape); agent-rules/ ships empty (grow-on-demand); reinit = preserve + checklist; two behavioral rules graduated (keys, DD hands-off).
+- **Next:** Review diff → commit → roll out to consumers per pulse 📋 Next queue.
 
 ---
 

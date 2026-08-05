@@ -1,4 +1,4 @@
-<!-- Template: Orpheus v3.1 | Mode: light -->
+<!-- Template: Orpheus v3.0 | Mode: light -->
 # Project Workflow — Light
 
 > Streamlined workflow for prototypes, websites, and non-product projects.
@@ -6,19 +6,10 @@
 
 ---
 
-## The Two Laws
-
-These bind every write in this conductor. Everything else in this file is convention; these are law.
-
-1. **One fact, one home.** Live truth lives in `pulse.md`. A session's story is told once, in `relay.md`. Lessons live in the permanent rules files (`agent-rules/`). Decisions live in ADRs (`adr/`) or track-plan D-numbers. Never retell — point.
-2. **A ruling binds only when it lands in a repo file.** Agent memory is a cache and conversation is vapor. If a rule, decision, or lesson is not in a repo file, it does not exist.
-
----
-
 ## Guiding Principles
 
 1. **The Plan is the Source of Truth:** All work must be tracked in `tracks.md`
-2. **The Tech Stack is Deliberate:** Changes to the tech stack must be documented in the **Tech Stack** section of `project-context.md` *before* implementation. Architecturally significant changes (those satisfying the three-criteria ADR test: hard to reverse, surprising without context, real trade-off) additionally warrant an ADR in `conductor/adr/` — propose it in-session; approved ADRs are written at `/checkpoint`.
+2. **The Tech Stack is Deliberate:** Changes to the tech stack must be documented in the **Tech Stack** section of `project-context.md` *before* implementation. Architecturally significant changes (those satisfying the three-criteria ADR test: hard to reverse, surprising without context, real trade-off) additionally warrant an ADR in `conductor/adr/` — surface as a candidate at `/grill`, `/new-track`, or `/checkpoint` time.
 3. **Ship Early, Iterate Fast:** Prioritize working software over ceremony
 4. **Test Where It Matters:** Write tests for complex logic, critical paths, and fragile code — skip boilerplate coverage
 5. **User Experience First:** Every decision should prioritize user experience
@@ -52,8 +43,8 @@ These bind every write in this conductor. Everything else in this file is conven
 6. **Document Deviations:** If implementation differs from tech stack:
    - **STOP** implementation
    - Update the **Tech Stack** section of `project-context.md` with the new design
-   - Add a dated note explaining the change (user-edited — no command writes to `project-context.md` post-init)
-   - If the change is architecturally significant (three-criteria ADR test), propose it as an ADR in-session; it is written at `/checkpoint` once approved
+   - Add a dated note explaining the change (user-edited; no command writes to `project-context.md` post-init per S3)
+   - If the change is architecturally significant (three-criteria ADR test), surface it as an ADR candidate at the next `/grill`, `/new-track`, or `/checkpoint`
    - Resume implementation
 
 7. **Commit Code Changes:**
@@ -65,6 +56,7 @@ These bind every write in this conductor. Everything else in this file is conven
    - **8.1:** Get commit hash: `git log -1 --format="%H"`
    - **8.2:** Draft note content — task name, summary of changes, list of created/modified files
    - **8.3:** Attach note:
+
      ```bash
      git notes add -m "<note content>" <commit_hash>
      ```
@@ -119,6 +111,7 @@ These bind every write in this conductor. Everything else in this file is conven
 ## Commit Guidelines
 
 ### Message Format
+
 ```
 <type>(<scope>): <description>
 
@@ -128,6 +121,7 @@ These bind every write in this conductor. Everything else in this file is conven
 ```
 
 ### Types
+
 - `feat`: New feature
 - `fix`: Bug fix
 - `docs`: Documentation only
@@ -138,6 +132,7 @@ These bind every write in this conductor. Everything else in this file is conven
 - `conductor`: Conductor file updates (plan, checkpoint, tracks)
 
 ### Examples
+
 ```bash
 git commit -m "feat(auth): Add remember me functionality"
 git commit -m "fix(layout): Correct mobile nav overflow"
@@ -167,18 +162,21 @@ A task is complete when:
 > **Customize this section per project.** Replace examples with actual project commands.
 
 ### Setup
+
 ```bash
 # Install dependencies and configure environment
 # e.g., npm install / go mod tidy / pip install -r requirements.txt
 ```
 
 ### Daily Development
+
 ```bash
 # Start dev server, run tests, lint
 # e.g., npm run dev / go run main.go
 ```
 
 ### Before Committing
+
 ```bash
 # Run pre-commit checks: format, lint, test
 # e.g., npm run check / make check
@@ -197,6 +195,7 @@ Tests are not mandatory in light mode but are strongly recommended for:
 - **Security-sensitive paths** — auth, input validation, permissions
 
 Skip tests for:
+
 - Static content pages
 - Simple CRUD with no logic
 - One-off scripts and prototypes
@@ -207,6 +206,7 @@ Skip tests for:
 ## Emergency Procedures
 
 ### Critical Bug in Production
+
 1. Create hotfix branch from main
 2. Implement minimal fix
 3. Verify fix works
@@ -214,12 +214,14 @@ Skip tests for:
 5. Document in tracks.md
 
 ### Data Loss
+
 1. Stop all write operations
 2. Restore from latest backup
 3. Verify data integrity
 4. Document incident
 
 ### Security Breach
+
 1. Rotate all secrets immediately
 2. Review access logs
 3. Patch vulnerability

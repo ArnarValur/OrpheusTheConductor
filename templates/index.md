@@ -1,59 +1,30 @@
-<!-- Template: Orpheus v3.0 -->
-# Conductor Index — <Project Name>
+<!-- Template: Orpheus v3.1 | index.md is a STATIC map. No reconcile logic, no per-boot sync — update only when the file layout itself changes. Lazy files are listed as plain paths (not links) until they exist. Placeholder: {PROJECT_NAME}. -->
+# Conductor Index — {PROJECT_NAME}
 
-> Central index for all conductor files. Start here.
->
-> **Dynamic by design.** Only links to files that actually exist on disk are
-> listed. New sections and links are appended by `/grill`, `/new-track`, and
-> `/checkpoint` via [`protocols/index-sync.md`](../protocols/index-sync.md)
-> as files are created lazily over the project lifecycle.
->
-> Why: Obsidian auto-creates an empty file when a link target is missing —
-> which would defeat lazy creation and pollute the repo with empty stubs.
+> Static map of the conductor. Hot is read at every boot; Warm is loaded when
+> work enters the domain; Cold only on explicit request. Lazy files appear as
+> plain paths until created — turn them into links when they land.
 
----
+## Hot — every boot
 
-## Context
+- [Pulse](./pulse.md) — live state, rewritten each checkpoint
+- [Relay](./relay.md) — last entry only at boot
+- [Tracks](./tracks.md) — one-liners only
+- [Workflow](./workflow.md) — the two laws + task lifecycle
+- Behavioral rules — `agent-rules/behavioral.md` _(lazy — created on first graduated lesson)_
+- Glossary — `context.md` _(lazy — created when domain language is first captured)_
 
-<!-- Identity + operational + (later) domain glossary, PRD, agent rules. -->
+## Warm — when work enters the domain
 
-- [Project Context](./project-context.md)
-- [Workflow](./workflow.md)
+- Track plans — `tracks/<track-id>/plan.md` (+ `spec.md` when present)
+- Decisions — `adr/` (load by domain, never wholesale)
+- Technical rules — `agent-rules/technical.md` _(lazy — created on first graduated lesson)_
+- [Project Context](./project-context.md) — identity, guidelines, tech stack
+- Product requirements — `prd.md` _(lazy — created on demand)_
+- Long-form docs — `docs/` (human-authored; load specific files only)
 - [Code Style Guides](./code_styleguides/)
 
-<!--
-Appended lazily by later commands (see protocols/index-sync.md):
-- [Domain Glossary](./context.md)              ← `/grill` or brownfield `/conductor-init`
-- [Context Map](./context-map.md)              ← multi-context projects only
-- [Product Requirements](./prd.md)             ← `/grill` when scope crystallizes
-- [Agent Rules](./agent-rules/)                ← `/conductor-init` when agent-rules plugin is installed
--->
+## Cold — explicit request only
 
----
-
-## State
-
-- [Pulse](./pulse.md)
-- [Relay](./relay.md)
-- [Tracks Registry](./tracks.md)
-- [Tracks Directory](./tracks/)
-
----
-
-<!--
-Sections below are created lazily on first relevant write
-(see protocols/index-sync.md). Do not pre-create them.
-
-## Decisions
-- [ADR Directory](./adr/)                      ← created on first ADR
-
-## Documentation
-- [Project Docs](./docs/)                      ← created on `.docs/` migration or first doc
--->
-
-## Quick Start
-
-1. Read `relay.md` — check for pending messages or blockers
-2. Read `pulse.md` — understand current state
-3. Read `tracks.md` — find your next task
-4. Follow `workflow.md` — execute the task lifecycle
+- Archives — `pulse-archive/` (trimmed relay entries, old state)
+- [Scratchpad](./scratchpad.md) — user-owned notes; conductor never writes here

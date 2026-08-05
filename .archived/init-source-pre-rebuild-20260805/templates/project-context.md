@@ -1,9 +1,9 @@
-<!-- Template: Orpheus v3.1 -->
+<!-- Template: Orpheus v3.0 -->
 # Project Context — <Project Name>
 
 > Single identity + operational document for this project.
 >
-> **Created at init; user-edited thereafter — no command writes here.**
+> **Created by `/conductor-init`; user-edited thereafter — no command writes here.**
 >
 > Section order is deliberate: **identity-first (1–3), operational-second (4–8).**
 > Agents partial-reading this file should see *what the product is* before *how to behave when working on it*.
@@ -12,7 +12,7 @@
 
 ## 1. Product Definition
 
-<!-- Identity. Populated at init (Product Definition grill). -->
+<!-- Identity. Populated by `/conductor-init` Step 2 (Product Definition Grill). -->
 
 - **Name:** <Product name>
 - **Tagline:** <One-line description>
@@ -24,7 +24,7 @@
 
 ## 2. Product Guidelines
 
-<!-- Brand voice, UX principles, accessibility. Populated at init. -->
+<!-- Brand voice, UX principles, accessibility. Populated by `/conductor-init` Step 3. -->
 
 - **Brand Voice:** <Technical / casual / formal — tone and personality>
 - **UX Principles:** <e.g. "simplicity first", "mobile-first", "keyboard-accessible">
@@ -34,7 +34,7 @@
 
 ## 3. Tech Stack
 
-<!-- Languages, frameworks, deployment. Populated at init. -->
+<!-- Languages, frameworks, deployment. Populated by `/conductor-init` Step 4. -->
 
 - **Languages:** <Primary programming language(s)>
 - **Frameworks:** <Frontend / backend frameworks>
@@ -46,16 +46,12 @@
 
 ## 4. Caution Levels
 
-<!-- Customize per project — replace the example rows with this project's real domains.
-     Do NOT record live infrastructure facts (regions, ports, hosts) here as permanent
-     truths; enumerate live state where the work happens, and keep hard constraints in
-     §7 Project-Specific Constraints. -->
-
 | Domain              | Level       | Notes                                   |
 |---------------------|-------------|-----------------------------------------|
 | UI / Pages          | 🟡 Careful  | Visual impact — verify rendering        |
 | Config / Build      | 🔴 Critical | Can break everything — verify before    |
 | Shared packages     | 🔴 Critical | Cross-project impact                    |
+| Firebase Functions  | 🔴 Critical | ALWAYS `europe-west1` — never `us-central1` |
 | Content / Assets    | 🟢 Normal   | Low risk                                |
 | conductor/ files    | 🟡 Careful  | Source of truth — don't corrupt         |
 
@@ -76,16 +72,17 @@
 ## 6. Preferred Workflows
 
 1. **Session Start Protocol:**
-   - Boot with `/conductor` — it loads the hot set (pulse, last relay entry, tracks one-liners, workflow, behavioral rules, glossary) and nothing else
-   - Warm-load track plans, ADRs, and technical rules only when work enters their domain
+   - Read `conductor/relay.md` first (pending messages, blockers)
+   - Then read `conductor/pulse.md` (current state, recent progress)
+   - Review `conductor/tracks.md` for next task
 
 2. **Checkpoint Frequency:**
    - Checkpoint after every completed phase
    - Consider mid-phase checkpoints for long phases (>5 tasks)
 
 3. **Decision Logging:**
-   - Architectural decisions live in `conductor/adr/` — proposed and approved in-session, written at `/checkpoint`
-   - Live state lives in `conductor/pulse.md`; the session story in `conductor/relay.md`; lessons in `conductor/agent-rules/`
+   - Architectural decisions live in `conductor/adr/` (batched by `/grill`, `/new-track`, or `/checkpoint`)
+   - Operational notes live in `conductor/pulse.md` Session Memory
    - Verify actual state on disk before proposing changes
 
 4. **Debugging Protocol:**

@@ -81,12 +81,27 @@ You are an AI agent assistant for the Conductor framework. Your task is to guide
 1. **Check for name collision:** List existing track directories in the selected domain. If proposed shortname matches → halt, suggest renaming or resuming
 2. **Generate Track ID:** `<snake_case>_<YYYYMMDD>`
 3. **Create directory:** `conductor/tracks/<domain>/<track_id>/`
-4. **No `metadata.json`** — retired in v3.1. Type, status, and dates live in the `plan.md` header; the registry carries the one-liner. Never write one.
-5. **Write files:** `spec.md`, `plan.md` (header + phases + `## Decisions` D-number section), `index.md` (links to spec and plan)
-6. **Update Tracks Registry:** Add ONE line under `## Active` (boot reads only these one-liners):
+4. **Create `metadata.json`:**
+   ```json
+   {
+     "track_id": "<track_id>",
+     "domain": "<domain>",
+     "type": "feature",
+     "status": "new",
+     "created_at": "ISO-8601",
+     "updated_at": "ISO-8601",
+     "description": "<description>"
+   }
+   ```
+5. **Write files:** `spec.md`, `plan.md`, `index.md` (with links to spec, plan, metadata)
+6. **Update Tracks Registry:** Append new track section:
 
    ```markdown
-   - 🟢 **<track_id>** — <type>: <one-line state> → tracks/<domain>/<track_id>/plan.md
+   ---
+
+   - [ ] **Track: <Description>**
+     *Domain: <domain>*
+     *Link: [./<domain>/<track_id>/](./<domain>/<track_id>/)*
    ```
 
 ### 2.6 Domain Glossary Update (v2.1)
@@ -95,11 +110,11 @@ For each new domain term accumulated in 2.3, present a single batch to the user 
 
 ### 2.7 ADR Batch (D3 + D10, command-end)
 
-Filter accumulated ADR candidates against the three criteria (hard to reverse, surprising without context, real trade-off). Present surviving candidates as a single batch. Write approved ADRs to `conductor/adr/{NNNN}-{kebab-title}.md` numbered sequentially. **Settled here is settled** — `/checkpoint` writes no ADRs beyond in-session approvals and runs no sweep.
+Filter accumulated ADR candidates against the three criteria (hard to reverse, surprising without context, real trade-off). Present surviving candidates as a single batch. Write approved ADRs to `conductor/adr/{NNNN}-{kebab-title}.md` numbered sequentially. **Do not re-surface settled candidates in `/checkpoint`** (S1).
 
-### 2.8 Index Touch
+### 2.8 Index Sync
 
-`conductor/index.md` is a static Hot/Warm/Cold map. Only permitted touch: if `context.md` was created this command, flip its plain-path line into a link. `adr/` is already listed statically — no action.
+Apply [`protocols/index-sync.md`](./index-sync.md) for any lazy files created this command (`context.md` first write, `adr/` first write).
 
 ### 2.9 Commit and Announce
 

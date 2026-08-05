@@ -2,7 +2,7 @@
 description: Save session state — rewrite pulse, append one relay entry, graduate lessons, fold to main
 ---
 
-<!-- Plugin copy — keep in sync with templates/commands/checkpoint.md (the version /conductor-init emits into consumer repos). Deliberate divergences, and ONLY these: (1) Step 0 may point an uninitialized project at /conductor-init; (2) the old-shape guard before Step 1. Emitted copies must never reference /conductor-init. -->
+<!-- Template: Orpheus v3.1 | Emitted into consumer repos at .claude/commands/checkpoint.md by /conductor-init. Self-contained: must never reference the Orpheus plugin, /conductor-init, or any file init does not emit. -->
 
 # Checkpoint — Save Session State
 
@@ -13,14 +13,9 @@ When the user invokes `/checkpoint`, persist the session in five writes and a gi
 ## Step 0: Pre-flight
 
 - If `conductor/` does not exist, halt:
-  > "Conductor is not initialized. Run `/conductor-init` to set up the project."
+  > "`conductor/` is missing — recover it from git history: `git log --oneline --all -- conductor/`, then `git checkout <sha> -- conductor/`."
 - If `conductor/pulse.md` does not exist, halt:
   > "`conductor/pulse.md` is missing — recover it from git history: `git log --oneline --all -- conductor/pulse.md`, then `git checkout <sha> -- conductor/pulse.md`."
-
-**Old-shape guard:** if `pulse.md` carries `Session Focus`, `Session Memory`, or `Recently Completed` sections, pause and ask:
-> "This pulse is old-shape. Rewriting it now migrates it to the v3.1 skeleton — history moves out of pulse (story → relay, lessons → agent-rules, decisions → ADRs/track plans). Proceed with the migration as part of this checkpoint, or run `/conductor-init` first for the guided upgrade + checklist?"
-
-On consent, proceed — Steps 1–5 naturally perform the migration with you reviewing each write.
 
 ---
 

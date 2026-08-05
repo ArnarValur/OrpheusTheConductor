@@ -22,7 +22,7 @@ When the user invokes `/grill`, execute this repeatable interview loop to sharpe
 
 ## Step 2: Read Existing Context
 
-Load all context documents that exist (lazy files may not — that's fine):
+Load all v2.1 context documents that exist (lazy files may not — that's fine):
 
 | File | If present, treat as |
 |------|----------------------|
@@ -124,7 +124,7 @@ For each **Domain term proposal** accumulated:
 3. For approved terms, append rows to the `## Entities` table and (when relevant) `## Relationships` and `## Terminology Boundaries` sections of `context.md`.
 4. Update the `> Last refined: {datetime}` line in the file header.
 
-If `context.md` was created this run, flip its plain-path line in `conductor/index.md` to a link (handled in Step 9).
+If `context.md` was created this run, queue an index-sync append (handled in Step 8).
 
 ---
 
@@ -139,7 +139,7 @@ If any **PRD updates** were accumulated in Step 5:
      - `## In Scope` — capabilities the product will deliver
      - `## Out of Scope` — explicit non-goals
      - `## Open Questions` — items requiring future grills
-   - Flip the `prd.md` plain-path line in `conductor/index.md` to a link (handled in Step 9).
+   - Queue an index-sync append for `prd.md`.
    - If no, drop the PRD updates list silently. They can resurface in a later grill.
 2. If `prd.md` already exists, ask:
    > "Want me to update the PRD with what we discussed?"
@@ -155,7 +155,7 @@ This is the ADR batching point — runs once, at command end.
 2. **Present the batch:**
    > "These decisions crystallized this session. Which should be recorded as ADRs?"
    > {numbered list of candidates with proposed titles + 1-sentence summary}
-3. For each candidate, the user can: **approve**, **reject**, or **defer** (re-surface in a future grill — record as a line in pulse's 📋 Next queue at the next checkpoint).
+3. For each candidate, the user can: **approve**, **reject**, or **defer** (re-surface in a future grill — keep in pulse Session Memory).
 4. For each approved candidate, write `conductor/adr/{NNNN}-{short-title-kebab}.md` using this format:
 
    ```markdown
@@ -170,17 +170,21 @@ This is the ADR batching point — runs once, at command end.
    Optional sections (only when they add genuine value): `## Considered Options`, `## Consequences`, `## Superseded by`.
 
 5. **Number sequentially** — read `conductor/adr/` to find the highest existing `NNNN` and increment.
-6. **Settled here is settled.** This batch IS the proposed-and-approved-in-session path — `/checkpoint` writes no ADRs beyond it and runs no sweep.
+6. **No double-processing.** Settled candidates (approved or explicitly rejected here) MUST NOT resurface in `/checkpoint`'s decision classifier.
 
-First ADR needs no index action — `adr/` is already listed statically under Warm.
+If this is the **first ADR** ever written for the project, queue an index-sync append for the `adr/` directory.
 
 ---
 
-## Step 9: Index Touch (static map — no sync ceremony)
+## Step 9: Index Sync
 
-`conductor/index.md` is a **static** Hot/Warm/Cold map. The only permitted touch: when a lazy file listed as a plain path came into existence this session (`context.md`, `prd.md`), flip that one line into a markdown link.
+For every lazy file or directory created this session, update `conductor/index.md`:
 
-Never append new sections, never scan for drift, never write a dead link.
+- `context.md` created → append `- [Domain Glossary](./context.md)` under the `## Context` section
+- `prd.md` created → append `- [Product Requirements](./prd.md)` under the `## Context` section
+- First ADR written → create a `## Decisions` section and append `- [ADR Directory](./adr/)`
+
+Idempotency: if the link text already exists in `index.md`, skip (no-op). Never write a dead link.
 
 ---
 
@@ -208,6 +212,7 @@ Tell the user what landed:
 > - Domain glossary: **{N terms added}**
 > - ADRs recorded: **{M}** ({list titles})
 > - PRD: **{created | updated | unchanged}**
+> - Index: **{K links appended}**
 >
 > Next: `/new-track` is now domain-aware on this glossary, or run `/grill` again to refine further."
 

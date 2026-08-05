@@ -1,4 +1,4 @@
-# Orpheus v3.0
+# Orpheus v3.1
 
 > A conductor, not a copilot.
 
@@ -8,7 +8,12 @@ Orpheus is a spec-driven development orchestrator for Merkurial-studio. It doesn
 
 Orpheus gives a project a structured, spec-driven backbone: a domain glossary, architectural decision records, a living PRD, and a lifecycle for feature tracks from specification through implementation, review, and completion. State lives in a per-project `conductor/` directory and travels with the repo via Git.
 
-Formerly **TheOracle** (through v2.1), v3.0 re-platforms from Google Antigravity to the Claude ecosystem — **Claude Code + Cowork**. It ships as a Claude Code plugin named `orpheus`, distributed through a git-sourced marketplace named `merkurial-studio`. The repo *is* both the plugin (at its root) and the marketplace.
+Formerly **TheOracle** (through v2.1), v3.0 re-platformed from Google Antigravity to the Claude ecosystem — **Claude Code + Cowork**. It ships as a Claude Code plugin named `orpheus`, distributed through a git-sourced marketplace named `merkurial-studio`. The repo *is* both the plugin (at its root) and the marketplace. **v3.1** (2026-08-05) rebuilds the conductor shape around two laws, generalized from DittoDatto's field-tested rebuild:
+
+1. **One fact, one home.** Live truth in `pulse.md`, the session story once in `relay.md`, lessons in `agent-rules/`, decisions in ADRs or track-plan D-numbers. Never retell — point.
+2. **A ruling binds only when it lands in a repo file.** Agent memory is a cache.
+
+Init also emits self-contained `/conductor` and `/checkpoint` commands into each repo's `.claude/commands/` — initialized projects boot and checkpoint **without any plugin dependency**.
 
 Pure markdown and shell — no runtime dependencies.
 
@@ -42,13 +47,13 @@ claude --plugin-dir /path/to/orpheus
 
 | Command | Purpose |
 |---------|---------|
-| `/conductor-init` | Scaffold or migrate a project's Conductor. Shipped as a Skill; auto-suggests on uninitialized projects. |
-| `/conductor` | Resume session context, reconcile the index, and present status. |
+| `/conductor-init` | Scaffold a project's Conductor and emit its `/conductor` + `/checkpoint` commands. On existing conductors: upgrade structure in place, hand the human a migration checklist. Shipped as a Skill. |
+| `/conductor` | Boot: load the hot set (~300–400 lines), report ~10-line status, await orders. |
 | `/grill` | Domain-refinement session: sharpen the glossary, batch ADRs, update the PRD. |
-| `/new-track` | Create a domain-aware track (spec + phased plan). |
-| `/checkpoint` | Save session state and sweep for unclassified decisions. |
+| `/new-track` | Create a domain-aware track (spec + phased plan with D-numbers). |
+| `/checkpoint` | Rewrite pulse, tell the session story once in relay, graduate lessons, fold to main. |
 
-> As plugin commands, these are namespaced `/orpheus:<name>` (e.g. `/orpheus:conductor`). The bare `/<name>` form also works when there's no naming collision.
+> As plugin commands, these are namespaced `/orpheus:<name>` (e.g. `/orpheus:conductor`). The bare `/<name>` form also works when there's no naming collision. In initialized repos, the emitted `.claude/commands/` copies of `/conductor` and `/checkpoint` take the bare names — plugin and emitted copies carry the same shape (`templates/commands/` is the source of truth).
 
 ## Workflow Modes
 
@@ -63,25 +68,25 @@ Each initialized project carries its Orpheus state in a `conductor/` directory:
 
 | Path | Role |
 |------|------|
-| `project-context.md` | Project identity + operational context |
-| `context.md` | Domain glossary |
-| `adr/` | Architectural decision records |
-| `prd.md` | Living product requirements |
-| `tracks.md` + `tracks/` | Work tracks |
-| `pulse.md` | Session memory |
-| `relay.md` | Cross-session handoff |
-| `index.md` | Dynamic index |
+| `project-context.md` | Project identity + operational context (user-owned after init) |
+| `context.md` | Domain glossary (lazy) |
+| `adr/` | Architectural decision records — proposed-and-approved only |
+| `prd.md` | Living product requirements (lazy) |
+| `tracks.md` + `tracks/` | One-liner registry + track folders (spec, plan, D-numbers) |
+| `pulse.md` | Live state only — ~60-line cap, rewritten each checkpoint, never appended |
+| `relay.md` | The session story, told once — one entry ≤10 lines per session |
+| `agent-rules/` | Graduated lessons — `technical.md` (auto), `behavioral.md` (ask first) |
+| `pulse-archive/` | Trimmed relay entries and old state |
+| `index.md` | Static Hot/Warm/Cold map |
 
 Conductor state travels with each repo via Git. Secrets stay out — `docs/keys/`, `*.env`, and `.obsidian/` are gitignored.
 
-## Migrating from v2.x (TheOracle)
+## Migrating
 
-Existing Antigravity / TheOracle projects migrate through `/conductor-init` as a brownfield re-init. It runs `protocols/migrate.md`, which:
+**From v2.x (TheOracle / Antigravity):** re-run `/conductor-init`. It runs `protocols/migrate.md` (retires `.agents/workflows/` copies, preserves `conductor/` state), then continues into the v3.1 structural upgrade below.
 
-1. Detects a v2.x project.
-2. Preserves the existing `conductor/` state untouched.
-3. Retires the old `.agents/workflows/` copies.
+**From the v3.0 shape:** re-run `/conductor-init`. Structure is upgraded in place (static index, emitted commands, two laws, missing directories) with **all state preserved**; pulse/relay reshaping is handed to you as a checklist — state migration takes judgment, so it is never regenerated.
 
 ## Status
 
-The v3.0 port from Antigravity to the Claude ecosystem is **in progress**.
+v3.0 port from Antigravity: **complete**. Current shape: **v3.1** (conductor rebuild, 2026-08-05). Old init source archived under `.archived/init-source-pre-rebuild-20260805/`.

@@ -25,7 +25,7 @@ If the user provides a description inline (e.g., `/new-track add rate limiting`)
 
 ## Step 1b: Load Domain Context
 
-Before any domain-related question or spec interview, load all context documents that exist. Lazy files may be absent — that is a valid state.
+Before any domain-related question or spec interview, load all v2.1 context documents that exist. Lazy files may be absent — that is a valid state.
 
 | File | Use during this command |
 |------|-------------------------|
@@ -40,9 +40,9 @@ If `conductor/` does not exist, halt with:
 > "Conductor is not initialized in this project. Run `/conductor-init` first."
 
 If `conductor/project-context.md` does not exist, halt with:
-> "`conductor/project-context.md` is missing — recover it from git history: `git log --oneline --all -- conductor/project-context.md`, then `git checkout <sha> -- conductor/project-context.md`."
+> "`conductor/project-context.md` is missing. Run `/conductor-init` to repair the conductor."
 
-Other files (`context.md`, `prd.md`, `adr/*`, `context-map.md`) are LAZY — their absence is fine. Note absences internally and proceed.
+Other v2.1 files (`context.md`, `prd.md`, `adr/*`, `context-map.md`) are LAZY — their absence is fine. Note absences internally and proceed.
 
 ---
 
@@ -65,23 +65,23 @@ Other files (`context.md`, `prd.md`, `adr/*`, `context-map.md`) are LAZY — the
 
 ## Step 2: Domain Selection
 
-Existing domains are the directory names under `conductor/tracks/` (enumerate live — there is no domain table to maintain). Caution levels come from the **Caution Levels** section of `conductor/project-context.md`.
+Read `conductor/tracks.md` and parse the `## 🗂️ Domain Structure` section to get existing domains.
 
 Present the existing domains to the user:
 
 > "Which domain does this track belong to?"
 >
-> {list of existing domains, annotated with caution levels where project-context defines them}
+> {list of existing domains with their caution levels}
 >
 > Or: **Create a new domain**
 
 If the user creates a new domain:
 
-- Ask for: domain name (lowercase, kebab-case). The domain exists once its first track folder is created — no registry row anywhere.
+- Ask for: domain name (lowercase, kebab-case), path prefix, and caution level (🟢 Normal / 🟡 Careful / 🔴 Tread Carefully).
 - **Re-enter Step 2a with the proposed new domain.** If `context-map.md` exists, the new domain must match a registered context name — otherwise halt with the error from Step 2a.
-- If the domain warrants a caution level, suggest the user add a row to the Caution Levels table in `project-context.md` — that file is user-owned, so the edit is theirs, not this command's.
+- On success, add the new domain to the Domain Structure table in `conductor/tracks.md`.
 
-For any domain marked 🔴 (Critical / Tread Carefully) in project-context, warn:
+For any domain marked 🔴 (Tread Carefully), warn:
 
 > "⚠️ This domain is marked as sensitive. Extra caution will be applied during implementation."
 
@@ -107,7 +107,19 @@ Example: `conductor/tracks/api/rate_limiting_20260525/`
 
 Create the following files in the new track folder.
 
-> **No `metadata.json`.** It is retired — type, status, and dates live in the plan header and the `tracks.md` one-liner. Never write one.
+### `metadata.json`
+
+```json
+{
+  "track_id": "{snake_case_name}_{YYYYMMDD}",
+  "type": "{feature|bug|chore|spike}",
+  "status": "new",
+  "domain": "{domain}",
+  "created_at": "{ISO 8601 timestamp}",
+  "updated_at": "{ISO 8601 timestamp}",
+  "description": "{user-provided description}"
+}
+```
 
 ### `spec.md` (domain-aware interview)
 
@@ -149,14 +161,12 @@ Present the drafted `spec.md` for user review and approval before writing.
 
 ### `plan.md`
 
-Generate a phased implementation plan based on the approved spec and `conductor/workflow.md`. Open with a short header (type, status, created date — the facts `metadata.json` used to carry), then the phases:
+Generate a phased implementation plan based on the approved spec and `conductor/workflow.md`:
 
 1. **Research & Design** phase
 2. **Implementation** phase (with test-first sub-tasks if strict workflow)
 3. **Integration & Polish** phase
 4. **Verification & Documentation** phase
-
-Close the plan with a `## Decisions` section for **track-scoped** decisions, numbered `D1`, `D2`, … — one line each. Decisions that meet the three-criteria ADR test go to `conductor/adr/` instead (Step 7); D-numbers are for the rest, and relay entries cite them.
 
 Each task uses checkbox format:
 
@@ -183,16 +193,19 @@ Present the drafted `plan.md` for user review and approval before writing.
 
 - [Specification](./spec.md)
 - [Implementation Plan](./plan.md)
+- [Metadata](./metadata.json)
 ```
 
 ---
 
 ## Step 5: Update `conductor/tracks.md`
 
-Add ONE line under the `## Active` section — boot reads only these one-liners, so detail stays in the track folder:
+Add the new track entry under the **Active Tracks** section:
 
 ```markdown
-- 🟢 **{track_id}** — {type}: {one-line state} → tracks/{domain}/{track_id}/plan.md
+- [ ] **{Track Description}**
+  - *Type:* {type} | *Domain:* {domain} | *Status:* new
+  - *Link:* [tracks/{domain}/{track_id}/](./tracks/{domain}/{track_id}/)
 ```
 
 ---
@@ -205,7 +218,7 @@ For each **New domain term** accumulated in Step 4:
 2. Present the proposed terms to the user as a single batch:
    > "These terms came up during the spec interview that aren't yet in the glossary. Should I add them?"
 3. For approved terms, append rows to the `## Entities` table of `context.md`. Update the `> Last refined: {datetime}` header.
-4. If `context.md` was created this run, flip its plain-path line in `conductor/index.md` to a link (applied in Step 8).
+4. If `context.md` was created this run, queue an index-sync append (applied in Step 8).
 
 ---
 
@@ -219,15 +232,20 @@ This is the same batching pattern as `/grill`. Runs once, at command end.
    > {numbered list with proposed titles + 1-sentence summary}
 3. For each candidate, the user can: **approve**, **reject**, or **defer**.
 4. For each approved candidate, write `conductor/adr/{NNNN}-{short-title-kebab}.md` using the standard ADR format. Number sequentially from the highest existing `NNNN`.
-5. **Settled here is settled.** This batch IS the proposed-and-approved-in-session path — `/checkpoint` writes no ADRs beyond it and runs no sweep. Deferred candidates land as a line in pulse's 📋 Next queue at the next checkpoint, nothing else remembers them.
+5. **No double-processing.** Settled candidates (approved or rejected here) MUST NOT resurface in `/checkpoint`'s decision classifier.
+
+If this is the **first ADR** ever written for the project, queue an index-sync append for the `adr/` directory (applied in Step 8).
 
 ---
 
-## Step 8: Index Touch (static map — no sync ceremony)
+## Step 8: Index Sync
 
-`conductor/index.md` is a **static** Hot/Warm/Cold map. The only permitted touch: when a lazy file listed as a plain path came into existence this command (`context.md`), flip that one line into a markdown link. ADRs need nothing — `adr/` is already listed under Warm.
+For every lazy file or directory created this command, update `conductor/index.md`:
 
-Never append new sections, never scan for drift, never write a dead link.
+- `context.md` created → append `- [Domain Glossary](./context.md)` under the `## Context` section
+- First ADR written → create a `## Decisions` section and append `- [ADR Directory](./adr/)`
+
+Idempotency: if the link already exists in `index.md`, skip (no-op). Never write a dead link.
 
 ---
 
