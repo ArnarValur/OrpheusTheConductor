@@ -1,4 +1,4 @@
-<!-- Template: Orpheus v3.0 | Mode: light -->
+<!-- Template: Orpheus v3.1 | Mode: light -->
 # Project Workflow — Light
 
 > Streamlined workflow for prototypes, websites, and non-product projects.
@@ -6,10 +6,19 @@
 
 ---
 
+## The Two Laws
+
+These bind every write in this conductor. Everything else in this file is convention; these are law.
+
+1. **One fact, one home.** Live truth lives in `pulse.md`. A session's story is told once, in `relay.md`. Lessons live in the permanent rules files (`agent-rules/`). Decisions live in ADRs (`adr/`) or track-plan D-numbers. Never retell — point.
+2. **A ruling binds only when it lands in a repo file.** Agent memory is a cache and conversation is vapor. If a rule, decision, or lesson is not in a repo file, it does not exist.
+
+---
+
 ## Guiding Principles
 
 1. **The Plan is the Source of Truth:** All work must be tracked in `tracks.md`
-2. **The Tech Stack is Deliberate:** Changes to the tech stack must be documented in the **Tech Stack** section of `project-context.md` *before* implementation. Architecturally significant changes (those satisfying the three-criteria ADR test: hard to reverse, surprising without context, real trade-off) additionally warrant an ADR in `conductor/adr/` — surface as a candidate at `/grill`, `/new-track`, or `/checkpoint` time.
+2. **The Tech Stack is Deliberate:** Changes to the tech stack must be documented in the **Tech Stack** section of `project-context.md` *before* implementation. Architecturally significant changes (those satisfying the three-criteria ADR test: hard to reverse, surprising without context, real trade-off) additionally warrant an ADR in `conductor/adr/` — propose it in-session; approved ADRs are written at `/checkpoint`.
 3. **Ship Early, Iterate Fast:** Prioritize working software over ceremony
 4. **Test Where It Matters:** Write tests for complex logic, critical paths, and fragile code — skip boilerplate coverage
 5. **User Experience First:** Every decision should prioritize user experience
@@ -43,8 +52,8 @@
 6. **Document Deviations:** If implementation differs from tech stack:
    - **STOP** implementation
    - Update the **Tech Stack** section of `project-context.md` with the new design
-   - Add a dated note explaining the change (user-edited; no command writes to `project-context.md` post-init per S3)
-   - If the change is architecturally significant (three-criteria ADR test), surface it as an ADR candidate at the next `/grill`, `/new-track`, or `/checkpoint`
+   - Add a dated note explaining the change (user-edited — no command writes to `project-context.md` post-init)
+   - If the change is architecturally significant (three-criteria ADR test), propose it as an ADR in-session; it is written at `/checkpoint` once approved
    - Resume implementation
 
 7. **Commit Code Changes:**

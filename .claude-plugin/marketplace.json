@@ -10,7 +10,7 @@
       "name": "orpheus",
       "source": ".",
       "description": "Spec-driven development orchestrator — five Commands (/conductor-init, /conductor, /grill, /new-track, /checkpoint) over per-project conductor/ state.",
-      "version": "3.0.0"
+      "version": "3.1.0"
     }
   ]
 }

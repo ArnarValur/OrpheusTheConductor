@@ -2,7 +2,7 @@
 description: Boot the conductor — load the hot set, report status, await orders
 ---
 
-<!-- Plugin copy — keep in sync with templates/commands/conductor.md (the version /conductor-init emits into consumer repos). Deliberate divergences, and ONLY these: (1) Step 0 may point an uninitialized project at /conductor-init; (2) Step 4 flags old-shape conductors and suggests the init upgrade. Emitted copies must never reference /conductor-init. -->
+<!-- Template: Orpheus v3.1 | Emitted into consumer repos at .claude/commands/conductor.md by /conductor-init. Self-contained: must never reference the Orpheus plugin, /conductor-init, or any file init does not emit. -->
 
 # Conductor — Boot
 
@@ -13,7 +13,7 @@ When the user invokes `/conductor`, restore working context from `conductor/` an
 ## Step 0: Pre-flight
 
 - If `conductor/` does not exist, halt:
-  > "Conductor is not initialized. Run `/conductor-init` to set up the project."
+  > "`conductor/` is missing — recover it from git history: `git log --oneline --all -- conductor/`, then `git checkout <sha> -- conductor/`."
 - If `conductor/pulse.md` does not exist, halt:
   > "`conductor/pulse.md` is missing — recover it from git history: `git log --oneline --all -- conductor/pulse.md`, then `git checkout <sha> -- conductor/pulse.md`."
 - **Halt on nothing else.** Every other file is optional — skip what's absent, silently.
@@ -73,10 +73,7 @@ Budget: the hot set should land around **300–400 lines total**. If it balloons
 Ready. What's our heading?
 ```
 
-Add one warning line only if true:
-
-- Hot set over budget, or `origin/main` ahead of the working tree.
-- **Old-shape conductor detected** (pulse carries `Session Memory` / `Recently Completed`, or `.claude/commands/conductor.md` is absent): *"⚠️ Old-shape conductor — run `/conductor-init` to upgrade (preserves all state, hands you a migration checklist)."*
+Add one warning line only if true: hot set over budget, or `origin/main` ahead of the working tree.
 
 ---
 
