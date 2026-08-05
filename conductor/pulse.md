@@ -8,7 +8,7 @@
 
 - Repo on `main`; v3.1 rebuild committed (story: relay 2026-08-05; decision: ADR 0008).
 - Plugin `orpheus` v3.1.0, installed user-scope from this repo (registers the five Commands).
-- `origin` → github.com/ArnarValur/OrpheusTheConductor (public repo, still empty); `main` push pending from Arnar's terminal — the session sandbox holds no GitHub credentials.
+- **Live**: github.com/ArnarValur/OrpheusTheConductor — `origin/main` = local `main` (00a9c70), MIT, full history.
 - Merged worktree `magical-spence-348695` still attached under `.claude/worktrees/` (safe to remove from `main`).
 
 ## 🚀 Active tracks
@@ -21,7 +21,7 @@
 
 ## 📋 Next queue
 
-1. `git push -u origin main` (your GitHub auth), then verify `/plugin marketplace add ArnarValur/OrpheusTheConductor` installs on a consumer machine.
+1. Verify `/plugin marketplace add ArnarValur/OrpheusTheConductor` installs on a consumer machine.
 2. Launch writeup — the 78K-token → ~340-line story (r/ClaudeAI / dev.to); the repo gets no eyes without it.
 3. Retire the merged worktree: `git worktree remove` from `main`.
 4. Roll out the v3.1 upgrade to consumers (AgentPollus, Charon, Unixplor, …) via `/conductor-init` — DittoDatto is already migrated by hand; hands off (see agent-rules/behavioral.md).
