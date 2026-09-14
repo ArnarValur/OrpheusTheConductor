@@ -42,10 +42,12 @@
 | **Orpheus** | The plugin/product itself — the spec-driven development orchestrator (formerly TheOracle, ≤ v2.1). Distinct from the Conductor, which is the per-project state directory Orpheus manages. | TheOracle (legacy) |
 | **Command** | One of the five slash-invoked units of Orpheus (`/conductor-init`, `/conductor`, `/grill`, `/new-track`, `/checkpoint`), distributed via the Orpheus plugin. Each declares a reader/writer contract in its frontmatter. Formerly called "workflow" — that term now refers exclusively to the Workflow Mode document. | Slash Command |
 | **Protocol** | A plugin-shipped, un-inlined procedure file (e.g. `protocols/migrate.md`) invoked by a Command but not itself slash-invocable. Ships inside the Orpheus plugin; retired far more cheaply than a public Command. Introduced by ADR 0004. | — |
+| **Agent** | A plugin-shipped background subagent (`agents/<name>.md`) that the parent model invokes proactively. Reads Conductor state and reports; holds no writer contract and never edits a file. First instance: `drift-watchdog` (ADR 0009). | Subagent, Watchdog |
 
 ## Relationships
 
 - **Orpheus** provides the five **Commands**; each Command reads/writes **Conductor** files strictly per its Reader/Writer Contract.
+- **Orpheus** may also ship **Agents** — background subagents that read **Conductor** files and report drift, never write (e.g. `drift-watchdog`, ADR 0009).
 - A **Command** may invoke a **Protocol** — a procedure shipped inside the Orpheus plugin but not slash-invocable (e.g. `/conductor-init` invokes `protocols/migrate.md`).
 - A **Conductor** contains: Project Context, Workflow, Domain Glossary, Pulse, Relay, Tracks Registry, Tracks, ADRs, and (lazily) PRD, Context Map, Scratchpad.
 - A **Track** belongs to one **Domain** and owns exactly one **Specification**, one **Implementation Plan**, and one `metadata.json`.
@@ -57,6 +59,7 @@
 
 - **Orpheus ≠ Conductor** — Orpheus is the plugin/product; the Conductor is the per-project state (`conductor/`). "Install Orpheus" ≠ "initialize a Conductor."
 - **Command ≠ Workflow** — Commands are the five slash-invoked units; Workflow refers only to the Strict/Light mode document (`workflow.md`).
+- **Agent ≠ Command** — a Command is user-invoked and may write Conductor files; an Agent is model-invoked, runs in the background, and is read-only.
 - **Protocol ≠ Command** — a Protocol is an internal procedure a Command calls (e.g. `protocols/migrate.md`), never slash-invoked by the user. Commands are permanent API surface; Protocols are cheap to retire.
 - **Track ≠ Git branch** — Tracks are logical units under `conductor/tracks/`; Git stays on `main`.
 - **Grill** needs no qualifier — the old "Conductor `/grill` vs native `/grill-me`" distinction is retired; no `/grill-me` exists in the Claude ecosystem.
