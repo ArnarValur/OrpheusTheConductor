@@ -8,7 +8,7 @@
 
 - Repo on `main`; v3.2 on `origin/main` (checkpoint eb4cc2b + this pulse touch). Commits: track c291d3c · boot warning 7454766 · Agent fe481a6.
 - Plugin `orpheus` **3.2.0** in the working tree: 5 Skills + 1 Agent (`drift-watchdog`); `claude plugin validate .` clean; isolated-`HOME` install from the local path lists Agents (1).
-- User-scope install serves **3.2.0** (marketplace `merkurial-studio` is local-path → this working tree; `claude plugin details orpheus` → 5 Skills + Agents (1)).
+- User-scope install **3.2.0** — reinstalled 2026-09-15 (the cached copy sessions load had been a stale 3.0.0 snapshot since July); cache `~/.claude/plugins/cache/merkurial-studio/orpheus/3.2.0` holds `agents/drift-watchdog.md`. New sessions get the Agent.
 - **Live**: github.com/ArnarValur/OrpheusTheConductor — fresh-consumer install verified 2026-09-15 from an isolated `HOME` (clone → install → 5 Skills at 3.1.0).
 - Merged worktree `magical-spence-348695` + its branch retired; `git worktree list` = main only.
 - This repo's auto-memory is symlinked into the Obsidian vault: `~/Documents/Claude Memory/Orpheus`.
