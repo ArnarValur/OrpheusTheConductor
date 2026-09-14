@@ -1,7 +1,7 @@
 {
   "name": "orpheus",
-  "version": "3.1.0",
-  "description": "Spec-driven development orchestrator for Merkurial-studio. A conductor, not a copilot: it orchestrates the workflow around your code — spec, plan, implement, review, checkpoint — through per-project conductor/ state managed by five Commands.",
+  "version": "3.2.0",
+  "description": "Spec-driven development orchestrator for Merkurial-studio. A conductor, not a copilot: it orchestrates the workflow around your code — spec, plan, implement, review, checkpoint — through per-project conductor/ state managed by five Commands, plus a read-only background drift-watchdog Agent.",
   "author": {
     "name": "ArnarValur",
     "email": "arnarvalurjonsson@gmail.com"
