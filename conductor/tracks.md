@@ -5,7 +5,7 @@
 
 ## Active
 
-- 🟢 **drift_watchdog_20260915** — feature (platform 🔴): P1–P3 done; P4 left: post-checkpoint run + user manual verification → tracks/platform/drift_watchdog_20260915/plan.md
+- 🟢 **drift_watchdog_20260915** — feature (platform 🔴): P1–P3 done; P4: post-checkpoint run passed; user manual verification left → tracks/platform/drift_watchdog_20260915/plan.md
 - 🟡 **v3_port_20260711** — feature (platform 🔴): P1–P4 complete + live-verified; consumer rollout remains → tracks/platform/v3_port_20260711/plan.md
 
 ## Done

@@ -28,7 +28,7 @@
 
 - [x] Task: Fresh install in an isolated `HOME` from the local path → `claude plugin details orpheus` lists Agents (1)
 - [x] Task: Live run before checkpoint — real repo: stale pulse (41 d) only; fixture clone with 3 code-only commits: stale pulse + 3-commit drift (Sonnet, 2026-09-15)
-- [ ] Task: Live run after checkpoint → no-op line
+- [x] Task: Live run after checkpoint → `drift-watchdog: nothing to report.` (Sonnet, 2026-09-15, checkpoint eb4cc2b)
 - [ ] Task: Conductor — User Manual Verification 'Verify' (Protocol in workflow.md)
 
 ---
