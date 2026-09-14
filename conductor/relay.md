@@ -3,6 +3,12 @@
 > One entry per session, ≤10 lines, plain language. Newest first (entries below 2026-08-05 predate this rule and stay oldest-first as written).
 > Say what happened and what it means for the human — then point, don't retell.
 
+## 2026-09-15 — Drift watchdog: ADR 0009, first Agent, boot warning (v3.2)
+- **What happened:** Reviewed Anthropic's Product Tracking plugin; its background `tracking-watchdog` became the model for our blind spot — the pulse had sat 41 days stale with no signal. Retired the merged worktree, verified a fresh consumer install from an isolated `HOME`, then created track `drift_watchdog_20260915`: `/conductor` now warns when the pulse is > 14 days old (template + both copies), and the plugin ships its first Agent `agents/drift-watchdog.md` (Sonnet, background, read-only; four checks; ≤8-line report or one no-op line). Manifests → 3.2.0, README v3.2, glossary gains **Agent**. Also symlinked this repo's auto-memory into the Obsidian vault.
+- **Status:** Live-tested on Sonnet — fixture clone with 3 code-only commits → stale pulse + commit drift; real repo → stale pulse only. P1–P3 done; P4 needs the post-checkpoint run + Arnar's manual verification. User-scope install still 3.1.0 until refreshed.
+- **Decisions:** ADR 0009 (drift watchdog Agent; hooks rejected); D1–D5 in the track plan (thresholds, no-op line).
+- **Next:** post-checkpoint watchdog run → refresh the install → consumer rollout via `/conductor-init` → launch writeup.
+
 ## 2026-08-05 — Public release prep (OrpheusTheConductor)
 
 - **What happened:** History audited for publication — 32 commits, zero secret patterns; publish-safe with history intact. MIT LICENSE added; `plugin.json` gained homepage/repository/license; README de-internalized: real install command (`/plugin marketplace add ArnarValur/OrpheusTheConductor`), conductor.build non-affiliation note, the 78K-token → 300–400-line origin story, self-hosting pointer.

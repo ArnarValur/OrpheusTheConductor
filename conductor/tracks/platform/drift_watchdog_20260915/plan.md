@@ -11,23 +11,23 @@
 - [x] Task: Write `spec.md` (F1–F5, acceptance, out of scope)
 - [x] Task: Glossary — add **Agent** to `context.md` (entity, relationship, boundary vs Command)
 
-## Phase 2 — Boot warning
+## Phase 2 — Boot warning ✅
 
-- [ ] Task: Add the stale-pulse bullet to `templates/commands/conductor.md` Step 4
-- [ ] Task: Sync `commands/conductor.md` (plugin copy) and `.claude/commands/conductor.md` (self-host copy)
-- [ ] ✅ Verify: `diff` of the three files shows only the documented divergences
+- [x] Task: Add the stale-pulse bullet to `templates/commands/conductor.md` Step 4
+- [x] Task: Sync `commands/conductor.md` (plugin copy) and `.claude/commands/conductor.md` (self-host copy)
+- [x] ✅ Verify: `diff` of the three files shows only the documented divergences
 
-## Phase 3 — Agent
+## Phase 3 — Agent ✅
 
-- [ ] Task: Author `agents/drift-watchdog.md` (frontmatter + four checks + report contract + rules)
-- [ ] Task: Bump `plugin.json` / `marketplace.json` → 3.2.0; mention the Agent in both descriptions
-- [ ] Task: README — title → v3.2, add "The Agent" section, update Status
-- [ ] ✅ Verify: `claude plugin validate .` passes
+- [x] Task: Author `agents/drift-watchdog.md` (frontmatter + four checks + report contract + rules)
+- [x] Task: Bump `plugin.json` / `marketplace.json` → 3.2.0; mention the Agent in both descriptions
+- [x] Task: README — title → v3.2, add "The Agent" section, update Status
+- [x] ✅ Verify: `claude plugin validate .` passes
 
 ## Phase 4 — Verify
 
-- [ ] Task: Fresh install in an isolated `HOME` from the local path → `claude plugin details orpheus` lists Agents (1)
-- [ ] Task: Live run against this repo before checkpoint → reports stale pulse + commits-since-conductor
+- [x] Task: Fresh install in an isolated `HOME` from the local path → `claude plugin details orpheus` lists Agents (1)
+- [x] Task: Live run before checkpoint — real repo: stale pulse (41 d) only; fixture clone with 3 code-only commits: stale pulse + 3-commit drift (Sonnet, 2026-09-15)
 - [ ] Task: Live run after checkpoint → no-op line
 - [ ] Task: Conductor — User Manual Verification 'Verify' (Protocol in workflow.md)
 

@@ -17,7 +17,7 @@
 
 - Track plans — `tracks/<track-id>/plan.md` (+ `spec.md` when present)
 - [Decisions](./adr/) — load by domain, never wholesale
-- Technical rules — `agent-rules/technical.md` _(lazy — created on first graduated lesson)_
+- [Technical rules](./agent-rules/technical.md) — graduated technical lessons
 - [Project Context](./project-context.md) — identity, guidelines, tech stack
 - [Product requirements](./prd.md)
 - Long-form docs — `docs/` (human-authored; load specific files only)
