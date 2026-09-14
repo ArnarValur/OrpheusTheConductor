@@ -1,4 +1,4 @@
-# Orpheus v3.1
+# Orpheus v3.2
 
 > A conductor, not a copilot.
 
@@ -57,6 +57,14 @@ claude --plugin-dir /path/to/orpheus
 
 > As plugin commands, these are namespaced `/orpheus:<name>` (e.g. `/orpheus:conductor`). The bare `/<name>` form also works when there's no naming collision. In initialized repos, the emitted `.claude/commands/` copies of `/conductor` and `/checkpoint` take the bare names — plugin and emitted copies carry the same shape (`templates/commands/` is the source of truth).
 
+## The Agent
+
+| Agent | Purpose |
+|-------|---------|
+| `drift-watchdog` | Read-only background monitor (Sonnet). Fires proactively after commits or feature work in any repo carrying `conductor/pulse.md`; checks stale pulse, code commits since the conductor was last touched, tracks-registry vs. plan mismatch, and hot-set cap breaches. Reports ≤ 8 lines only when something is actionable — otherwise one no-op line. Never writes. (ADR 0009) |
+
+`/conductor` also warns at boot when the pulse's `Updated:` date is more than 14 days old — the Agent covers the session, the boot warning covers its start.
+
 ## Workflow Modes
 
 Orpheus operates in one of two modes, selected at init:
@@ -91,7 +99,7 @@ Conductor state travels with each repo via Git. Secrets stay out — `docs/keys/
 
 ## Status
 
-v3.0 port from Antigravity: **complete**. Current shape: **v3.1** (conductor rebuild, 2026-08-05, ADR 0008). Old init source archived under `.archived/init-source-pre-rebuild-20260805/`.
+v3.0 port from Antigravity: **complete**. Current shape: **v3.1** (conductor rebuild, 2026-08-05, ADR 0008); **v3.2** adds the drift-watchdog Agent and the stale-pulse boot warning (2026-09-15, ADR 0009). Old init source archived under `.archived/init-source-pre-rebuild-20260805/`.
 
 This repo **self-hosts**: its own `conductor/` runs the v3.1 shape it ships. Reading `conductor/pulse.md`, `relay.md`, and `adr/` is the live demo.
 
