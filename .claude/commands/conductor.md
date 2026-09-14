@@ -72,7 +72,10 @@ Budget: the hot set should land around **300–400 lines total**. If it balloons
 Ready. What's our heading?
 ```
 
-Add one warning line only if true: hot set over budget, or `origin/main` ahead of the working tree.
+Add a warning line only when true — one per condition:
+
+- Hot set over budget, or `origin/main` ahead of the working tree.
+- **Pulse stale** — the `> **Updated:**` date in `pulse.md` is more than **14 days** before today (check with `date +%F`): *"⚠️ Pulse last updated {date} ({N} days ago) — § Now and § Next may be stale; verify before acting, and end with `/checkpoint`."*
 
 ---
 
