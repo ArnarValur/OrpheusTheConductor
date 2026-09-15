@@ -88,7 +88,7 @@ Print this checklist for the human (adjust numbers to what you actually observed
 
 ### 1b.4 Report and halt
 
-Before reporting, run **Step 13b** (Obsidian vault wrapper) — it is idempotent and touches nothing inside the repo.
+Before reporting, run **Step 13b** (Obsidian vault link) — idempotent; its only repo footprint is the gitignored `conductor/memory` symlink.
 
 Report what was upgraded and what remains on the checklist, then halt — Steps 2–13 are for fresh initializations only.
 
@@ -399,27 +399,37 @@ Announce completion:
 
 ---
 
-## Step 13b: Obsidian Vault Wrapper
+## Step 13b: Obsidian Vault Link
 
-Every conductor is opened in Obsidian through a thin wrapper folder — never a copy, never a sync. Run this on fresh inits **and** on in-place upgrades (Step 1b.4). It is idempotent.
+The vault **is** the conductor — no wrapper folder, no copy, no sync. Two symlinks:
 
-Skip silently when `~/Documents/Project-Vaults/` does not exist (that folder is the opt-in).
+```text
+~/Documents/Project-Vaults/{project}   ->  {repo}/conductor            (the vault; named after the project)
+{repo}/conductor/memory                ->  ~/.claude/projects/{slug}/memory   (Claude's auto-memory, inside the conductor, gitignored)
+```
+
+Run this on fresh inits **and** on in-place upgrades (Step 1b.4). Idempotent. Skip silently when `~/Documents/Project-Vaults/` does not exist (that folder is the opt-in).
 
 ```bash
 root="$HOME/Documents/Project-Vaults"
-[ -d "$root" ] || exit 0
+[ -d "$root" ] || { echo "🗂️ Obsidian vault skipped — $root not present"; exit 0; }
 project="$(basename "$PWD")"
 slug="$(printf '%s' "$PWD" | sed 's#[^A-Za-z0-9]#-#g')"   # Claude Code's per-project memory folder name
 mem="$HOME/.claude/projects/$slug/memory"
-mkdir -p "$root/$project" "$mem"
-ln -sfn "$PWD/conductor" "$root/$project/conductor"
-ln -sfn "$mem"           "$root/$project/memory"
-ls -l "$root/$project"
+mkdir -p "$mem"
+ln -sfn "$mem" "$PWD/conductor/memory"
+if ! grep -qx 'conductor/memory' .gitignore 2>/dev/null; then
+  printf '\n# Claude auto-memory symlink (machine-local, never commit)\nconductor/memory\n' >> .gitignore
+  git add .gitignore && git commit -qm "chore: gitignore conductor/memory symlink"
+fi
+if [ -e "$root/$project" ] && [ ! -L "$root/$project" ]; then
+  echo "⚠️ $root/$project is a real folder — move it away, then re-run this step"; exit 1
+fi
+ln -sfn "$PWD/conductor" "$root/$project"
+echo "🗂️ Obsidian vault linked: $root/$project -> $PWD/conductor (memory inside)"
 ```
 
-Result: `~/Documents/Project-Vaults/{project}/conductor` → the live `conductor/`, and `.../memory` → this repo's auto-memory. Open `~/Documents/Project-Vaults/{project}` in Obsidian as a vault; edits land straight in the repo. Nothing is written inside the repo, so there is nothing to gitignore.
-
-Announce one line: `🗂️ Obsidian vault wired: ~/Documents/Project-Vaults/{project}/` (or `🗂️ Obsidian vault skipped — ~/Documents/Project-Vaults/ not present`).
+Open `~/Documents/Project-Vaults/{project}` in Obsidian as a vault: it shows `adr/`, `docs/`, `tracks/`, `memory/`, `pulse.md`, … and every edit lands straight in the repo.
 
 ---
 
