@@ -1,14 +1,14 @@
 # Pulse — Orpheus
 
-> **Updated:** 2026-09-15 12:57 by checkpoint
+> **Updated:** 2026-09-15 13:07 by checkpoint
 > State only, cap ~60 lines. Rewritten from scratch at every checkpoint —
 > if you are appending to this file, you are doing it wrong.
 
 ## 📍 Now — what runs where
 
-- Repo on `main` = `origin/main` (8c6a791 before this checkpoint). Working tree clean.
-- Plugin `orpheus` **3.3.0** in the working tree: 5 Skills + 1 Agent (`drift-watchdog`). New in 3.3.0: `/conductor-init` Step 13b wires the Obsidian vault wrapper on fresh inits and in-place upgrades.
-- User-scope install **3.3.0** — uninstall + install from the local marketplace 2026-09-15 12:5x; installed script dry-run against this repo produced the right two links. New sessions get it.
+- Repo on `main` = `origin/main` (88ac22d before this checkpoint). Working tree clean.
+- Plugin `orpheus` **3.3.1** in the working tree: 5 Skills + 1 Agent (`drift-watchdog`). New since 3.3: `/conductor-init` Step 13b links the conductor as the Obsidian vault (fresh inits + in-place upgrades).
+- User-scope install **3.3.1** — uninstall + install 2026-09-15 13:06; installed Step 13b script run against this repo produced both links. New sessions get it.
 - **Live**: github.com/ArnarValur/OrpheusTheConductor — fresh-consumer install verified 2026-09-15 (3.2.0 era).
 - `git worktree list` = main only.
 - **Obsidian**: `~/Documents/Project-Vaults/<Project>` → `conductor/` (one symlink; Claude memory linked inside as gitignored `conductor/memory`). Done by `/conductor-init` Step 13b (3.3.1); Orpheus is linked, the hand-made wrappers were deleted. `conductor/` stays the canonical folder name.
@@ -26,7 +26,7 @@
 
 ## 📋 Next queue
 
-1. Arnar: re-run `/conductor-init` (fresh session, 3.3.0) on the project he just initialized — first real run of Step 13b.
+1. Arnar: re-run `/conductor-init` (fresh session, 3.3.1) on the project he just initialized — first real run of Step 13b.
 2. Arnar: manual verification of P4 — boot `/conductor` on a repo with a stale pulse (expect the ⚠️ line); watch `drift-watchdog` fire on its own. Tune its description if it under/over-fires (ADR 0009).
 3. Roll out v3.3 to consumers via `/conductor-init` (Charon, Unixplor, MyReciBook, ZeroGravity, …). DittoDatto stays hands-off (agent-rules/behavioral.md).
 4. Trim `workflow.md` (226 lines) so the hot set lands inside the 400-line budget.

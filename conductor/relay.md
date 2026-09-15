@@ -3,6 +3,12 @@
 > One entry per session, ≤10 lines, plain language. Newest first (entries below 2026-08-05 predate this rule and stay oldest-first as written).
 > Say what happened and what it means for the human — then point, don't retell.
 
+## 2026-09-15 — Vault layout corrected: the vault IS the conductor (3.3.1)
+- **What happened:** The 3.3.0 wrapper shape (a folder holding `conductor` + `memory` links) was wrong — Arnar wants `~/Documents/Project-Vaults/<project>` to open straight onto the conductor's own files, memory included. He deleted the hand-made wrappers. Step 13b now makes one symlink `Project-Vaults/<project> -> repo/conductor` and one `conductor/memory -> ~/.claude/projects/<slug>/memory`, adds `conductor/memory` to `.gitignore` (own commit), refuses to replace a real folder. SKILL/README/rule/pulse wording fixed; 3.3.1 installed and run on Orpheus itself.
+- **Status:** 3.3.1 live. Orpheus is linked; every other project gets it from its own `/conductor-init` re-run — never by hand.
+- **Decisions:** none new. No ADR.
+- **Next:** Arnar's init re-run on his project → P4 manual verification → consumer rollout → trim `workflow.md` → launch writeup.
+
 ## 2026-09-15 — Init wires the Obsidian vault (3.3.0); never hand-wire again
 - **What happened:** Arnar asked whether `/conductor-init` creates the vault wrapper — it did not; the morning's 10 wrappers were hand-made. He ruled that wrong: conducting-system changes land in Orpheus and flow out. Under time pressure `/conductor-init` gained **Step 13b** (creates `~/Documents/Project-Vaults/<project>/{conductor,memory}` symlinks, skips when the root folder is absent, also runs on the 1b upgrade path), SKILL description + README updated, version → 3.3.0, user-scope reinstalled, installed script dry-run verified. Two behavioral rules graduated (vault symlinks only; never hand-wire consumers). Machine cleanup finished: Hermes gateway service, away-week cron, `~/.surrealdb` + its PATH line.
 - **Status:** 3.3.0 live and installed. Arnar re-runs init on his project in a fresh session. No track was opened for the 3.3.0 change — done in a hurry; recorded here only.
