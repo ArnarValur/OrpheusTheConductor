@@ -49,7 +49,7 @@ claude --plugin-dir /path/to/orpheus
 
 | Command | Purpose |
 |---------|---------|
-| `/conductor-init` | Scaffold a project's Conductor and emit its `/conductor` + `/checkpoint` commands. On existing conductors: upgrade structure in place, hand the human a migration checklist. Also wires an Obsidian vault wrapper at `~/Documents/Project-Vaults/<project>/` (`conductor` + `memory` symlinks) when that folder exists. Shipped as a Skill. |
+| `/conductor-init` | Scaffold a project's Conductor and emit its `/conductor` + `/checkpoint` commands. On existing conductors: upgrade structure in place, hand the human a migration checklist. Also links the conductor as an Obsidian vault (`~/Documents/Project-Vaults/<project>` → `conductor/`, with Claude's auto-memory symlinked inside as `conductor/memory`) when that folder exists. Shipped as a Skill. |
 | `/conductor` | Boot: load the hot set (~300–400 lines), report ~10-line status, await orders. |
 | `/grill` | Domain-refinement session: sharpen the glossary, batch ADRs, update the PRD. |
 | `/new-track` | Create a domain-aware track (spec + phased plan with D-numbers). |
