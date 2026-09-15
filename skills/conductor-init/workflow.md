@@ -394,6 +394,7 @@ Announce completion:
 > **Next:**
 > - `/conductor` — boot: loads the hot set and reports status
 > - Create your first track (Step 12, or any time)
+> - Open `~/Documents/Project-Vaults/{project}` in Obsidian (Step 13b)
 > - `/checkpoint` — end every session with it; it rewrites pulse, tells the story once in relay, and folds to main
 
 ---
