@@ -88,6 +88,8 @@ Print this checklist for the human (adjust numbers to what you actually observed
 
 ### 1b.4 Report and halt
 
+Before reporting, run **Step 13b** (Obsidian vault wrapper) — it is idempotent and touches nothing inside the repo.
+
 Report what was upgraded and what remains on the checklist, then halt — Steps 2–13 are for fresh initializations only.
 
 ---
@@ -393,6 +395,30 @@ Announce completion:
 > - `/conductor` — boot: loads the hot set and reports status
 > - Create your first track (Step 12, or any time)
 > - `/checkpoint` — end every session with it; it rewrites pulse, tells the story once in relay, and folds to main
+
+---
+
+## Step 13b: Obsidian Vault Wrapper
+
+Every conductor is opened in Obsidian through a thin wrapper folder — never a copy, never a sync. Run this on fresh inits **and** on in-place upgrades (Step 1b.4). It is idempotent.
+
+Skip silently when `~/Documents/Project-Vaults/` does not exist (that folder is the opt-in).
+
+```bash
+root="$HOME/Documents/Project-Vaults"
+[ -d "$root" ] || exit 0
+project="$(basename "$PWD")"
+slug="$(printf '%s' "$PWD" | sed 's#[^A-Za-z0-9]#-#g')"   # Claude Code's per-project memory folder name
+mem="$HOME/.claude/projects/$slug/memory"
+mkdir -p "$root/$project" "$mem"
+ln -sfn "$PWD/conductor" "$root/$project/conductor"
+ln -sfn "$mem"           "$root/$project/memory"
+ls -l "$root/$project"
+```
+
+Result: `~/Documents/Project-Vaults/{project}/conductor` → the live `conductor/`, and `.../memory` → this repo's auto-memory. Open `~/Documents/Project-Vaults/{project}` in Obsidian as a vault; edits land straight in the repo. Nothing is written inside the repo, so there is nothing to gitignore.
+
+Announce one line: `🗂️ Obsidian vault wired: ~/Documents/Project-Vaults/{project}/` (or `🗂️ Obsidian vault skipped — ~/Documents/Project-Vaults/ not present`).
 
 ---
 

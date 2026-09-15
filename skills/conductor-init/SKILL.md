@@ -1,6 +1,6 @@
 ---
 name: conductor-init
-description: "Initialize Conductor in a project. Scaffolds the v3.1 shape: state-only pulse, story-only relay, workflow with the two laws, static index, and self-contained /conductor + /checkpoint commands. On existing conductors, upgrades structure in place (preserving all state) and hands the human a migration checklist. Use when starting a new project or upgrading an existing one."
+description: "Initialize Conductor in a project. Scaffolds the v3.1 shape: state-only pulse, story-only relay, workflow with the two laws, static index, and self-contained /conductor + /checkpoint commands, and wires an Obsidian vault wrapper (conductor + memory symlinks) under ~/Documents/Project-Vaults/ when that folder exists. On existing conductors, upgrades structure in place (preserving all state) and hands the human a migration checklist. Use when starting a new project or upgrading an existing one."
 ---
 
 # Conductor Init
