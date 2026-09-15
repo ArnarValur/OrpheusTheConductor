@@ -40,3 +40,4 @@
 - **D3** — "Silence" is a one-line no-op (`drift-watchdog: nothing to report.`), because a subagent's final message always returns to the parent — an empty reply reads as a failure.
 - **D4** — Cap checks use `pulse.md` > 72 lines (60-line cap + 20 % grace) and `relay.md` > 12 entries (the checkpoint guardrail's own trigger).
 - **D5** — Thresholds live here, not in the ADR; change them by editing this plan and the Agent file together.
+- **D6** — The Agent keeps the name `drift-watchdog` (2026-09-15). A `pollux` codename was considered and declined: the parent model and public consumers pick Agents by what the name says they do.

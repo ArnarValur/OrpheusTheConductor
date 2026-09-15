@@ -3,6 +3,12 @@
 > One entry per session, ≤10 lines, plain language. Newest first (entries below 2026-08-05 predate this rule and stay oldest-first as written).
 > Say what happened and what it means for the human — then point, don't retell.
 
+## 2026-09-15 — Obsidian symlink vaults; Pollux and Hermes leftovers retired
+- **What happened:** Morning grill on three itches. (1) The root-owned `~/Documents/CaptainsVault` that kept reappearing was a Docker bind-mount from the sleeping `hermes-webui` container — container removed, mount line dropped, folder gone, old `vault-sync`/`surrealdb-vault` units and binary cleaned. (2) `/orpheus:conductor` beside `/conductor` is Claude Code's plugin namespace — kept as is. (3) Instead of renaming `conductor/` to `<project>-conductor/` (225 hardcoded paths, 10 consumers), every project got a thin Obsidian vault at `~/Documents/Project-Vaults/<Project>/` with `conductor` + `memory` symlinks; the `Documents/Claude Memory` link folder was removed. Agent Pollux (summer copy-and-sync approach) retired: watchers, state, cache gone; vault copies archived. Hermes gateway service and an August away-week cron job removed.
+- **Status:** No plugin or template change; repo state only. Arnar's P4 manual verification of the watchdog still open.
+- **Decisions:** `conductor/` stays canonical (no rename); Agent keeps the name `drift-watchdog` (track plan D6). No ADR.
+- **Next:** Arnar verifies P4 → consumer rollout via `/conductor-init` → trim `workflow.md` → launch writeup.
+
 ## 2026-09-15 — Drift watchdog: ADR 0009, first Agent, boot warning (v3.2)
 - **What happened:** Reviewed Anthropic's Product Tracking plugin; its background `tracking-watchdog` became the model for our blind spot — the pulse had sat 41 days stale with no signal. Retired the merged worktree, verified a fresh consumer install from an isolated `HOME`, then created track `drift_watchdog_20260915`: `/conductor` now warns when the pulse is > 14 days old (template + both copies), and the plugin ships its first Agent `agents/drift-watchdog.md` (Sonnet, background, read-only; four checks; ≤8-line report or one no-op line). Manifests → 3.2.0, README v3.2, glossary gains **Agent**. Also symlinked this repo's auto-memory into the Obsidian vault.
 - **Status:** Live-tested on Sonnet — fixture clone with 3 code-only commits → stale pulse + commit drift; real repo → stale pulse only. P1–P3 done; P4 needs the post-checkpoint run + Arnar's manual verification. User-scope install still 3.1.0 until refreshed.
