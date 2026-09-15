@@ -11,7 +11,7 @@
 - User-scope install **3.3.0** — uninstall + install from the local marketplace 2026-09-15 12:5x; installed script dry-run against this repo produced the right two links. New sessions get it.
 - **Live**: github.com/ArnarValur/OrpheusTheConductor — fresh-consumer install verified 2026-09-15 (3.2.0 era).
 - `git worktree list` = main only.
-- **Obsidian**: conductors open through `~/Documents/Project-Vaults/<Project>/{conductor,memory}` symlink wrappers. 10 projects were wired by hand this morning (before the never-hand-wire rule); from now on init does it. `conductor/` stays the canonical folder name.
+- **Obsidian**: `~/Documents/Project-Vaults/<Project>` → `conductor/` (one symlink; Claude memory linked inside as gitignored `conductor/memory`). Done by `/conductor-init` Step 13b (3.3.1); Orpheus is linked, the hand-made wrappers were deleted. `conductor/` stays the canonical folder name.
 - **Machine**: Pollux retired (watchers, state, cache gone; vault copies at `~/Documents/Archives/pollux-vaults/`); Hermes asleep (`hermes-webui` + CaptainsVault mount, gateway service removed); away-week cron and `~/.surrealdb` removed.
 - Hot set at boot: 427 lines (budget 400) — `workflow.md` is 226 of them.
 
