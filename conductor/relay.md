@@ -3,6 +3,12 @@
 > One entry per session, ≤10 lines, plain language. Newest first (entries below 2026-08-05 predate this rule and stay oldest-first as written).
 > Say what happened and what it means for the human — then point, don't retell.
 
+## 2026-09-15 — Init wires the Obsidian vault (3.3.0); never hand-wire again
+- **What happened:** Arnar asked whether `/conductor-init` creates the vault wrapper — it did not; the morning's 10 wrappers were hand-made. He ruled that wrong: conducting-system changes land in Orpheus and flow out. Under time pressure `/conductor-init` gained **Step 13b** (creates `~/Documents/Project-Vaults/<project>/{conductor,memory}` symlinks, skips when the root folder is absent, also runs on the 1b upgrade path), SKILL description + README updated, version → 3.3.0, user-scope reinstalled, installed script dry-run verified. Two behavioral rules graduated (vault symlinks only; never hand-wire consumers). Machine cleanup finished: Hermes gateway service, away-week cron, `~/.surrealdb` + its PATH line.
+- **Status:** 3.3.0 live and installed. Arnar re-runs init on his project in a fresh session. No track was opened for the 3.3.0 change — done in a hurry; recorded here only.
+- **Decisions:** none new (D6 from the morning stands). No ADR.
+- **Next:** Arnar's init re-run → P4 manual verification → consumer rollout → trim `workflow.md` → launch writeup.
+
 ## 2026-09-15 — Obsidian symlink vaults; Pollux and Hermes leftovers retired
 - **What happened:** Morning grill on three itches. (1) The root-owned `~/Documents/CaptainsVault` that kept reappearing was a Docker bind-mount from the sleeping `hermes-webui` container — container removed, mount line dropped, folder gone, old `vault-sync`/`surrealdb-vault` units and binary cleaned. (2) `/orpheus:conductor` beside `/conductor` is Claude Code's plugin namespace — kept as is. (3) Instead of renaming `conductor/` to `<project>-conductor/` (225 hardcoded paths, 10 consumers), every project got a thin Obsidian vault at `~/Documents/Project-Vaults/<Project>/` with `conductor` + `memory` symlinks; the `Documents/Claude Memory` link folder was removed. Agent Pollux (summer copy-and-sync approach) retired: watchers, state, cache gone; vault copies archived. Hermes gateway service and an August away-week cron job removed.
 - **Status:** No plugin or template change; repo state only. Arnar's P4 manual verification of the watchdog still open.
@@ -30,39 +36,6 @@
 - **Next:** Review diff → commit → roll out to consumers per pulse 📋 Next queue.
 
 ---
-
-## 2026-05-27 01:22
-- **Session:** Initial setup
-- **Status:** Project initialized with Conductor (TheOracle v2.1)
-- **Next:** Refine domain with `/grill` or create the first track with `/new-track`
-
-## 2026-05-27 11:59
-- **Session:** Fix workflow format for Antigravity slash command discovery
-- **Tracks touched:** None (infrastructure fix)
-- **Status:** All 4 workflow files fixed with proper YAML frontmatter, deployed to TheOracle and DittoDatto
-- **Decisions:** None recorded as ADR (deferred to next session)
-- **Next:** Verify slash commands in Antigravity UI, update Unixplor workflows, consider ADRs for format decisions
-
-## 2026-05-27 14:40
-- **Session:** Integrated Antigravity GUI (ask_question tool) into custom /grill workflow
-- **Tracks touched:** None (infrastructure fix)
-- **Status:** Modified workflows/grill.md and .agents/workflows/grill.md to invoke the native ask_question API, ensuring rich selectable GUI options instead of raw markdown text. Commits pushed.
-- **Decisions:** None recorded as ADR (1 operational decision saved to Pulse Session Memory)
-- **Next:** Run a /grill session to verify the interactive question modals render perfectly.
-
-## 2026-05-28 09:17
-- **Session:** Addressed future issues and todos (added time-of-day to session memory, added scratchpad scaffolding to conductor-init, and cleaned up hermes references)
-- **Tracks touched:** None (infrastructure adjustments)
-- **Status:** Implemented all three changes in templates and workflows; created `scratchpad.md` and updated `index.md` for this project
-- **Decisions:** None (operational updates registered in Pulse Session Memory)
-- **Next:** Verify scratchpad creation on the next project initialization and inspect the timestamp format in future checkpoints
-
-## 2026-06-18 23:56
-- **Session:** Fixed decision batch quiz bug across all Conductor deployments
-- **Tracks touched:** None (infrastructure fix)
-- **Status:** Rewrote checkpoint Step 3 from batch classifier → safety-net sweep; added inline decision classification to conductor Session Behavior. Deployed to 11 checkpoint + 10 conductor files across 10 projects.
-- **Decisions:** None
-- **Next:** Verify inline classification works in a real session
 
 ## 2026-07-11 01:59
 - **Session:** First Cowork-era session — Orpheus rename grill, DittoDatto token measurement, CLI handoff
