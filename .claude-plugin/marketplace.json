@@ -9,8 +9,8 @@
     {
       "name": "orpheus",
       "source": ".",
-      "description": "Spec-driven development orchestrator — five Commands (/conductor-init, /conductor, /grill, /new-track, /checkpoint) over per-project conductor/ state, plus the drift-watchdog Agent.",
-      "version": "3.3.1"
+      "description": "Spec-driven development orchestrator — /conductor-init, /conductor, /grill, /new-track and /checkpoint over per-project conductor/ state, Obsidian vault linking, and a read-only drift-watchdog agent.",
+      "version": "3.3.2"
     }
   ]
 }
