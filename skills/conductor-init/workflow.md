@@ -90,6 +90,8 @@ Print this checklist for the human (adjust numbers to what you actually observed
 
 Before reporting, run **Step 13b** (Obsidian vault link) — idempotent; its only repo footprint is the gitignored `conductor/memory` symlink.
 
+If structural upgrades changed files and `conductor/.git` exists (private conductor repo), commit them inside it with `git -C conductor` — the parent repo ignores `conductor/`.
+
 Report what was upgraded and what remains on the checklist, then halt — Steps 2–13 are for fresh initializations only.
 
 ---
@@ -385,6 +387,14 @@ git add conductor/ .claude/commands/
 git commit -m "chore: initialize conductor (v3.1 shape)"
 ```
 
+**Private conductor repo:** if `conductor/.git` exists, `conductor/` is its own (usually private) repo and the parent ignores it. Commit it there, and add the commands to the parent only when the parent tracks them:
+
+```bash
+git -C conductor add -A
+git -C conductor commit -m "chore: initialize conductor (v3.1 shape)"
+git check-ignore -q .claude/commands || { git add .claude/commands/ && git commit -m "chore: emit conductor commands"; }
+```
+
 If `.docs/` was migrated in Step 7b, include its removal in the same commit (or a separate `chore: migrate .docs/ → conductor/docs/` commit — your call based on cleanliness).
 
 Announce completion:
@@ -418,7 +428,12 @@ slug="$(printf '%s' "$PWD" | sed 's#[^A-Za-z0-9]#-#g')"   # Claude Code's per-pr
 mem="$HOME/.claude/projects/$slug/memory"
 mkdir -p "$mem"
 ln -sfn "$mem" "$PWD/conductor/memory"
-if ! grep -qx 'conductor/memory' .gitignore 2>/dev/null; then
+if [ -d conductor/.git ]; then   # private conductor repo: the ignore lives inside it
+  if ! grep -qx 'memory' conductor/.gitignore 2>/dev/null; then
+    printf '\n# Claude auto-memory symlink (machine-local, never commit)\nmemory\n' >> conductor/.gitignore
+    git -C conductor add .gitignore && git -C conductor commit -qm "chore: gitignore memory symlink"
+  fi
+elif ! grep -qx 'conductor/memory' .gitignore 2>/dev/null; then
   printf '\n# Claude auto-memory symlink (machine-local, never commit)\nconductor/memory\n' >> .gitignore
   git add .gitignore && git commit -qm "chore: gitignore conductor/memory symlink"
 fi

@@ -37,7 +37,7 @@ Using the [File Resolution Protocol](./file-resolution.md), verify the **Tracks 
 1. **Find implementation commits:** Match SHAs from plan to git history
    - Handle rewritten history (rebase/squash): search by similar commit message, ask user to confirm
 2. **Find plan-update commits:** For each implementation commit, find the subsequent plan-update commit
-3. **Track creation commit (track revert only):** Search `git log -- <tracks_registry>` for the commit that introduced the track entry
+3. **Track creation commit (track revert only):** Search `git log -- <tracks_registry>` for the commit that introduced the track entry (private conductor repo — `conductor/.git` exists: search `git -C conductor log -- tracks.md` and revert it there)
 4. **Compile final list:** All SHAs to revert. Check for merge commits and cherry-pick duplicates.
 
 ---
