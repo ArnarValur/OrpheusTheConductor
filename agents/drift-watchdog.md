@@ -36,8 +36,13 @@ Flag when `days` > 14. A missing or future date is not a finding (mention "no Up
 ### 2. Commits since the conductor was last touched (threshold: 3)
 
 ```bash
-LAST=$(git log -1 --format=%H -- conductor/ 2>/dev/null)
-[ -n "$LAST" ] && git log --oneline "$LAST..HEAD" -- . ':(exclude)conductor' 2>/dev/null
+if [ -d conductor/.git ]; then   # conductor is its own repo: compare by time
+  T=$(git -C conductor log -1 --format=%ct 2>/dev/null)
+  [ -n "$T" ] && git log --oneline --since="@$T" 2>/dev/null
+else
+  LAST=$(git log -1 --format=%H -- conductor/ 2>/dev/null)
+  [ -n "$LAST" ] && git log --oneline "$LAST..HEAD" -- . ':(exclude)conductor' 2>/dev/null
+fi
 ```
 
 Flag when the list has 3 or more entries. Quote the oldest and newest (one line each). Fix to suggest: tick the matching tasks in the active track's `plan.md`, or `/checkpoint`.

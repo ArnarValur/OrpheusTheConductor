@@ -1,4 +1,4 @@
-# Orpheus v3.3
+# Orpheus v3.4
 
 > A conductor, not a copilot.
 
@@ -36,6 +36,8 @@ Plus **drift-watchdog**, a background agent that warns when the conductor falls 
 | `context.md` | The project's vocabulary |
 | `prd.md` | What the product should do |
 | `agent-rules/` | Lessons learned |
+
+Want the notes private? Make `conductor/` its own git repo and ignore it in the main one. Orpheus then commits there instead.
 
 Not affiliated with [conductor.build](https://conductor.build).
 

@@ -193,6 +193,8 @@ git add conductor/
 git commit -m "grill: {1-line summary of focus} ({N glossary updates}, {M ADRs}, {prd: yes|no})"
 ```
 
+If `conductor/.git` exists, `conductor/` is its own repo: use `git -C conductor add -A` and `git -C conductor commit` instead, then `git -C conductor push` when it has a remote.
+
 If nothing changed (no glossary edits, no ADRs approved, no PRD touch), skip the commit and tell the user:
 
 > "Nothing new to record from this session — orientation was useful but no candidates landed."

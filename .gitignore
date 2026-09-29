@@ -1,3 +1,4 @@
-
-# Claude auto-memory symlink (machine-local, never commit)
-conductor/memory
+# Local only: conductor/ is its own private repo (ArnarValur/Orpheus-conductor)
+conductor/
+.archived/
+.claude/

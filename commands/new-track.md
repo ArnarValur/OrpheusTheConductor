@@ -240,6 +240,8 @@ git add conductor/
 git commit -m "track: create {track_id} ({N glossary terms}, {M ADRs})"
 ```
 
+If `conductor/.git` exists, `conductor/` is its own repo: use `git -C conductor add -A` and `git -C conductor commit` instead, then `git -C conductor push` when it has a remote.
+
 If neither glossary nor ADRs were touched, simplify the message: `track: create {track_id}`.
 
 ---

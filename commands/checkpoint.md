@@ -103,6 +103,8 @@ No sweep, no batch quiz, no "while we're here". Nothing proposed → skip.
 3. If on a work branch, bring the checkpoint commit to `main` (merge or cherry-pick per repo convention) — shared truth lives on `main`.
 4. `git push origin main` when a remote exists; skip silently otherwise.
 
+**Own-repo conductor:** if `conductor/.git` exists, `conductor/` is its own (usually private) repo and the parent repo ignores it. Run steps 1–2 inside it (`git -C conductor add -A`, `git -C conductor commit`), skip step 3, and push with `git -C conductor push` when it has a remote.
+
 ---
 
 ## Step 7: Confirm — ≤6 lines

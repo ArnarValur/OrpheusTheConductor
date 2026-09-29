@@ -10,7 +10,7 @@
       "name": "orpheus",
       "source": ".",
       "description": "Spec-driven development orchestrator — /conductor-init, /conductor, /grill, /new-track and /checkpoint over per-project conductor/ state, Obsidian vault linking, and a read-only drift-watchdog agent.",
-      "version": "3.3.2"
+      "version": "3.4.0"
     }
   ]
 }
