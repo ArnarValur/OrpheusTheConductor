@@ -39,8 +39,6 @@ Plus **drift-watchdog**, a background agent that warns when the conductor falls 
 
 Want the notes private? Make `conductor/` its own git repo and ignore it in the main one. Orpheus then commits there instead.
 
-Not affiliated with [conductor.build](https://conductor.build).
-
 ## License
 
 MIT. See [LICENSE](./LICENSE).
