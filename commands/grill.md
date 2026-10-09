@@ -1,5 +1,5 @@
 ---
-description: Repeatable domain-refinement session. Sharpens context.md, batches ADR proposals, and offers to write/update prd.md
+description: Interviews the human to sharpen the project's domain glossary (conductor/context.md), turn hard-to-reverse decisions into ADRs, and scope prd.md. Use when the user says "grill me" or "grill this", asks what a term means in this project, argues over naming, asks whether a decision deserves an ADR, or wants to pin down what's in or out of scope.
 ---
 
 # Grill — Domain Refinement Session
@@ -29,7 +29,7 @@ Load all context documents that exist (lazy files may not — that's fine):
 | `conductor/context.md` | Authoritative current domain glossary |
 | `conductor/context-map.md` | Bounded-context registry (multi-context projects only) |
 | `conductor/prd.md` | Current product scope — features, capabilities, in/out of scope |
-| `conductor/adr/*.md` | Settled architectural decisions — do NOT re-litigate without explicit user request |
+| `conductor/adr/` | Settled decisions — read titles and dates only (`head -3 conductor/adr/*.md`); open an ADR in full only when the interview enters its domain. Never re-litigate without an explicit user request |
 
 For files that do not exist, note their absence internally. Do not pre-create them.
 
@@ -55,7 +55,7 @@ Apply any corrections inline, then proceed to Step 4.
 
 ## Step 4: Refinement Topic Selection
 
-Ask the user what they want to refine in this session. **Use the `AskUserQuestion` tool** with `multiSelect: true` to present these options as a rich interactive modal:
+Ask what to refine this session — one `AskUserQuestion` call with `multiSelect: true`:
 
 | Focus | Option Text | Outcome |
 |-------|-------------|---------|
@@ -64,7 +64,7 @@ Ask the user what they want to refine in this session. **Use the `AskUserQuestio
 | **Architectural decision** | "Architectural decision (Propose ADRs)" | Talk through a specific decision and propose ADRs |
 | **General exploration** | "General exploration (Open-ended interview)" | Open-ended interview — surface candidate domain terms, decisions, scope edges |
 
-Fallback to standard text-based markdown options in the chat only if the tool fails. The user may pick more than one. Mix freely during the interview.
+The user may pick more than one. Mix freely during the interview.
 
 ---
 
@@ -73,8 +73,7 @@ Fallback to standard text-based markdown options in the chat only if the tool fa
 **One question at a time.** Wait for the response before asking the next. For each question:
 
 1. **Read the codebase first** (when the question is grounded in code). Cite specific files and lines in your question.
-2. **Formulate options and ask the user using the `AskUserQuestion` tool.** Recommend 2–3 specific answers based on what you've read. Anchor every question to a concrete entity, file, or decision, and list these recommendations under the `options` array (each option a `label` + `description`). Claude Code renders these as a rich interactive modal.
-3. **Be specific.** Vague questions produce vague answers. Fallback to standard text-based markdown in the chat only if the tool is unavailable or fails.
+2. **Ask with `AskUserQuestion`,** recommending 2–3 specific answers based on what you've read. Anchor every question to a concrete entity, file, or decision.
 
 ### What to accumulate as you go
 
@@ -100,23 +99,7 @@ If the user is uncertain, **propose** based on the codebase or established conte
 
 For each **Domain term proposal** accumulated:
 
-1. If `context.md` does NOT exist, create it with this structure:
-
-   ```markdown
-   # Domain Glossary
-
-   > Ubiquitous language for this project. All commands, specs, and discussions use these terms verbatim.
-   > Last refined: {datetime}
-
-   ## Entities
-
-   | Term | Definition | Also Known As |
-   |------|-----------|---------------|
-
-   ## Relationships
-
-   ## Terminology Boundaries
-   ```
+1. If `context.md` does NOT exist, create it from `${CLAUDE_PLUGIN_ROOT}/templates/context.md` (strip the header comment) — but only once at least one term is approved.
 
 2. Present each proposal to the user as a single batch:
    > "These terms came up — should I add them to the glossary?"
@@ -155,19 +138,8 @@ This is the ADR batching point — runs once, at command end.
 2. **Present the batch:**
    > "These decisions crystallized this session. Which should be recorded as ADRs?"
    > {numbered list of candidates with proposed titles + 1-sentence summary}
-3. For each candidate, the user can: **approve**, **reject**, or **defer** (re-surface in a future grill — record as a line in pulse's 📋 Next queue at the next checkpoint).
-4. For each approved candidate, write `conductor/adr/{NNNN}-{short-title-kebab}.md` using this format:
-
-   ```markdown
-   # {Short title of the decision}
-
-   > **Recorded:** {YYYY-MM-DD HH:MM}
-   > **Status:** accepted
-
-   {1–3 sentences: what's the context, what did we decide, and why.}
-   ```
-
-   Optional sections (only when they add genuine value): `## Considered Options`, `## Consequences`, `## Superseded by`.
+3. For each candidate, the user can: **approve**, **reject**, or **defer** (re-surface in a future grill — `/checkpoint` carries it into pulse's 📋 Next queue; until then it lives only in this conversation).
+4. For each approved candidate, write `conductor/adr/{NNNN}-{short-title-kebab}.md` from `${CLAUDE_PLUGIN_ROOT}/templates/adr.md` (strip the header comment).
 
 5. **Number sequentially** — read `conductor/adr/` to find the highest existing `NNNN` and increment.
 6. **Settled here is settled.** This batch IS the proposed-and-approved-in-session path — `/checkpoint` writes no ADRs beyond it and runs no sweep.
@@ -193,7 +165,7 @@ git add conductor/
 git commit -m "grill: {1-line summary of focus} ({N glossary updates}, {M ADRs}, {prd: yes|no})"
 ```
 
-If `conductor/.git` exists, `conductor/` is its own repo: use `git -C conductor add -A` and `git -C conductor commit` instead, then `git -C conductor push` when it has a remote.
+If `conductor/.git` exists, `conductor/` is its own repo: use `git -C conductor add -A` and `git -C conductor commit` instead, then `git -C conductor push` when it has a remote. If the push fails (no network, no credentials), don't retry — say so in Step 11.
 
 If nothing changed (no glossary edits, no ADRs approved, no PRD touch), skip the commit and tell the user:
 
@@ -210,6 +182,7 @@ Tell the user what landed:
 > - Domain glossary: **{N terms added}**
 > - ADRs recorded: **{M}** ({list titles})
 > - PRD: **{created | updated | unchanged}**
+> - Deferred: **{N}** — {only if N > 0: "they live only in this chat until `/checkpoint` carries them into pulse's Next queue"}
 >
 > Next: `/new-track` is now domain-aware on this glossary, or run `/grill` again to refine further."
 
@@ -219,9 +192,14 @@ Tell the user what landed:
 
 While `/grill` is active:
 
-- **Use the `AskUserQuestion` tool** to present all multiple-choice questions, option lists, and selections to the user. This ensures they render as rich interactive Claude Code modals (up to 4 questions per call, 2–4 options each; an "Other" write-in is always available).
-- Treat `conductor/project-context.md` as read-only (read-only — no command writes here).
-- Treat `conductor/docs/` as read-only (read-only — no command writes here).
+- Ask every multiple-choice question with `AskUserQuestion`; fall back to plain-text options only if the tool fails.
+- `/grill` writes only `context.md`, `prd.md`, approved ADRs, and the one-line link flip in `index.md` (Step 9). Never `pulse.md` or `relay.md` — those belong to `/checkpoint`.
+- Treat `conductor/project-context.md` and `conductor/docs/` as read-only — no command writes there.
 - Treat ADRs in `conductor/adr/` as settled. Surface them in answers but never edit them; superseding ADRs use the `## Superseded by` link.
 - Never auto-create empty stubs for lazy files. Lazy = "exists only when there's something to write."
 - Never write a dead link to `index.md`.
+
+## Gotchas
+
+- **Glossary rows that describe the project's own tooling rot first.** When the workflow or commands change, rows like these silently keep the old meaning — check them against the code before re-confirming them.
+- **Deferred ADR candidates are not saved anywhere yet.** They reach the repo only when `/checkpoint` writes them into pulse's Next queue. Say so in the confirm, every time.

@@ -2,7 +2,7 @@
 description: Save session state — rewrite pulse, append one relay entry, graduate lessons, fold to main
 ---
 
-<!-- Template: Orpheus v3.1 | Emitted into consumer repos at .claude/commands/checkpoint.md by /conductor-init. Self-contained: must never reference the Orpheus plugin, /conductor-init, or any file init does not emit. -->
+<!-- Template: Orpheus v3.1 | Emitted into consumer repos at .claude/commands/checkpoint.md by /conductor-init. Self-contained: must never reference the Orpheus plugin, /conductor-init, or any file init does not emit. It rewrites pulse, appends relay, commits and pushes: Claude runs it when the human asks, never on its own. -->
 
 # Checkpoint — Save Session State
 
@@ -38,7 +38,7 @@ Rewrite the file from scratch. **State only, cap ~60 lines.** Exactly these sect
 - **📍 Now:** enumerate live at write time — services, environments, branches in flight. Never copy the previous pulse's claims forward unverified.
 - **🚀 Active tracks:** one line each + pointer to the track plan.
 - **⚠️ Blockers:** real and current only. Empty is healthy.
-- **📋 Next queue:** ordered, actionable.
+- **📋 Next queue:** ordered, actionable — include any ADR candidates the human deferred this session (they exist nowhere else).
 - **📌 Parked:** one pointer line per item.
 
 **Forbidden:** Session Focus, Session Memory, Recently Completed, or any narrative/history section. The story goes to relay (Step 2), lessons to rules files (Step 3), decisions to ADRs or track plans (Steps 4–5).
@@ -96,9 +96,9 @@ No sweep, no batch quiz, no "while we're here". Nothing proposed → skip.
 1. Stage the state: `git add conductor/`
 2. Commit: `checkpoint: {≤50-char summary}`
 3. If on a work branch, bring the checkpoint commit to `main` (merge or cherry-pick per repo convention) — shared truth lives on `main`.
-4. `git push origin main` when a remote exists; skip silently otherwise.
+4. `git push origin main` when a remote exists; skip silently otherwise. If the push fails (no network, no credentials), don't retry and don't touch the remote config — report it in Step 7 and leave the push to the human.
 
-**Own-repo conductor:** if `conductor/.git` exists, `conductor/` is its own (usually private) repo and the parent repo ignores it. Run steps 1–2 inside it (`git -C conductor add -A`, `git -C conductor commit`), skip step 3, and push with `git -C conductor push` when it has a remote.
+**Own-repo conductor:** if `conductor/.git` exists, `conductor/` is its own (usually private) repo and the parent repo ignores it. Run steps 1–2 inside it (`git -C conductor add -A`, `git -C conductor commit`), skip step 3, and push with `git -C conductor push` when it has a remote (same rule if it fails).
 
 ---
 
@@ -109,5 +109,5 @@ No sweep, no batch quiz, no "while we're here". Nothing proposed → skip.
 - pulse rewritten ({N} lines) · relay +1 ({M} entries)
 - lessons graduated: {T technical / B behavioral, or "none"}
 - ADRs: {titles, or "none"} · tracks: {ids, or "none"}
-- folded to main: {yes/no} · pushed: {yes/no/no remote}
+- folded to main: {yes/no} · pushed: {yes / no remote / failed — run `git push`}
 ```
