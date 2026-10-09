@@ -4,8 +4,7 @@
 
 > Migrates a v2.x project (Antigravity / TheOracle, ≤ v2.1) onto Orpheus v3.0.
 >
-> **Used by:** `/conductor-init` — invoked when it detects a v2.x conductor.
-> **Signposted by:** `/conductor` — when v2.x remnants are found on resume.
+> **Used by:** `/conductor-init` Step 1b.0 — when it detects v2.x remnants. Nothing else loads it.
 
 This protocol is **transient by design** (ADR 0004): it exists to move the ~10 live v2.x projects onto the Orpheus plugin, and is retired once they are all migrated. It **preserves `conductor/` state untouched** (ADR 0003) — the migration retires the old Antigravity deploy copies and confirms the plugin; it does NOT rewrite the user's pulse, relay, tracks, ADRs, glossary, or project-context.
 

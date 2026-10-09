@@ -1,5 +1,5 @@
 ---
-description: Create a domain-aware track with spec and implementation plan. Reads context.md, ADRs, and PRD for informed specification
+description: Opens a new conductor track — a short interview grounded in the glossary, ADRs and PRD, then spec.md and a phased plan.md under conductor/tracks/{domain}/ and a one-liner in tracks.md. Use when the user says "new track", or wants to start a feature, bug fix, chore or spike as tracked work with a spec and plan.
 ---
 
 # New Track — Create a Domain-Aware Track
@@ -33,7 +33,7 @@ Before any domain-related question or spec interview, load all context documents
 | `conductor/context.md` | Domain glossary — use these terms verbatim in questions / suggestions |
 | `conductor/context-map.md` | Bounded-context registry — drives Step 2a validation |
 | `conductor/prd.md` | Product scope — surface relevant in-scope features when proposing track scope; surface out-of-scope items to avoid relitigating |
-| `conductor/adr/*.md` | Settled architectural decisions — propose ADR-consistent options; do NOT re-litigate without explicit user request |
+| `conductor/adr/` | Settled decisions — read titles only (`head -1 conductor/adr/*.md`), then open in full every ADR whose title or text touches this track's area (`grep -li '<key term>' conductor/adr/*.md`; when unsure, open it). Propose ADR-consistent options; never re-litigate without an explicit user request |
 | `conductor/workflow.md` | Strict vs Light — drives plan-generation rules in Step 4 |
 
 If `conductor/` does not exist, halt with:
@@ -58,8 +58,6 @@ Other files (`context.md`, `prd.md`, `adr/*`, `context-map.md`) are LAZY — the
       - **Valid:** record the validated domain and skip Step 2's "Create new domain" branch.
       - **Invalid:** halt with:
         > "Domain `{proposed}` is not registered in `context-map.md`. Valid contexts: {list}. To add a new context, edit `context-map.md` first, then re-run `/new-track`."
-
-> **Why this step exists today as a near-no-op:** `context-map.md` is supported but most projects do not have one yet. The gate is wired now so it has zero cost when the file is absent and full enforcement when it appears (e.g., when DittoDatto gets multi-context).
 
 ---
 
@@ -119,7 +117,7 @@ Run an interactive specification interview. Ask 3–5 clarifying questions (sequ
 2. **Respect ADRs.** When proposing options, default to choices consistent with `adr/*`. If a proposed option would conflict with an ADR, surface the ADR title in the question and ask the user whether they want to revisit it (an ADR superseder is a separate decision — see Step 6).
 3. **Anchor scope to PRD.** When `prd.md` exists, cite the in-scope item this track delivers, and explicitly check the out-of-scope list to avoid feature-creep.
 
-**Sections to populate (unchanged from v2.0):**
+**Sections to populate:**
 
 - **Overview** — What problem does this solve?
 - **Functional Requirements** — What must it do?
@@ -201,7 +199,7 @@ Add ONE line under the `## Active` section — boot reads only these one-liners,
 
 For each **New domain term** accumulated in Step 4:
 
-1. If `context.md` does NOT exist, create it from the greenfield template.
+1. If `context.md` does NOT exist, create it from `${CLAUDE_PLUGIN_ROOT}/templates/context.md` (strip the header comment) — but only once at least one term is approved.
 2. Present the proposed terms to the user as a single batch:
    > "These terms came up during the spec interview that aren't yet in the glossary. Should I add them?"
 3. For approved terms, append rows to the `## Entities` table of `context.md`. Update the `> Last refined: {datetime}` header.
@@ -218,7 +216,7 @@ This is the same batching pattern as `/grill`. Runs once, at command end.
    > "These architectural decisions surfaced while specifying this track. Which should be recorded as ADRs?"
    > {numbered list with proposed titles + 1-sentence summary}
 3. For each candidate, the user can: **approve**, **reject**, or **defer**.
-4. For each approved candidate, write `conductor/adr/{NNNN}-{short-title-kebab}.md` using the standard ADR format. Number sequentially from the highest existing `NNNN`.
+4. For each approved candidate, write `conductor/adr/{NNNN}-{short-title-kebab}.md` from `${CLAUDE_PLUGIN_ROOT}/templates/adr.md` (strip the header comment). Number sequentially from the highest existing `NNNN`.
 5. **Settled here is settled.** This batch IS the proposed-and-approved-in-session path — `/checkpoint` writes no ADRs beyond it and runs no sweep. Deferred candidates land as a line in pulse's 📋 Next queue at the next checkpoint, nothing else remembers them.
 
 ---
@@ -240,7 +238,7 @@ git add conductor/
 git commit -m "track: create {track_id} ({N glossary terms}, {M ADRs})"
 ```
 
-If `conductor/.git` exists, `conductor/` is its own repo: use `git -C conductor add -A` and `git -C conductor commit` instead, then `git -C conductor push` when it has a remote.
+If `conductor/.git` exists, `conductor/` is its own repo: use `git -C conductor add -A` and `git -C conductor commit` instead, then `git -C conductor push` when it has a remote. If the push fails (no network, no credentials), don't retry — say so in Step 10.
 
 If neither glossary nor ADRs were touched, simplify the message: `track: create {track_id}`.
 
@@ -254,6 +252,7 @@ Tell the user:
 >
 > - Glossary updates: **{N terms}**
 > - ADRs recorded: **{M}** ({titles if any})
+> - Deferred ADR candidates: **{N}** — {only if N > 0: "they live only in this chat until `/checkpoint` carries them into pulse's Next queue"}
 >
 > **Next steps:**
 >
@@ -265,4 +264,10 @@ Tell the user:
 
 ## Session Behavior
 
-- **Interactive prompts:** Use the `AskUserQuestion` tool for all multiple-choice selections and confirmations — it renders as a rich Claude Code modal (up to 4 questions per call, 2–4 options each, with an automatic "Other" write-in). Fall back to plain markdown options only if the tool is unavailable.
+- Ask every multiple-choice question and confirmation with `AskUserQuestion`; fall back to plain-text options only if the tool is unavailable.
+- `/new-track` writes only the new track folder, `tracks.md` (one line under `## Active`), approved glossary terms, approved ADRs, and the one-line link flip in `index.md` (Step 8). Never `pulse.md` or `relay.md` — those belong to `/checkpoint`.
+
+## Gotchas
+
+- **The one-liner's pointer must include the domain** — `→ tracks/{domain}/{track_id}/plan.md`. Boot and the drift watchdog follow that exact path; a pointer without the domain reads as a missing plan.
+- **Deferred ADR candidates are not saved anywhere yet.** They reach the repo only when `/checkpoint` writes them into pulse's Next queue — say so in the confirm.
