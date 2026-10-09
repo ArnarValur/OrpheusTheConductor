@@ -125,7 +125,7 @@ Present two workflow modes and ask the user to choose:
 
 - **Best for:** Products, production apps, TDD-driven development
 - Enforces test-driven development (write tests first)
-- Requires phase completion verification
+- Tests must pass before a phase closes
 - Commit after every task
 - Code coverage requirements
 - Full spec → plan → implement cycle
@@ -135,7 +135,7 @@ Present two workflow modes and ask the user to choose:
 - **Best for:** Prototypes, websites, experiments, spikes
 - No mandatory TDD
 - Flexible commit cadence
-- Simplified planning (no phase verification gates)
+- Simplified planning
 - Faster iteration, fewer guardrails
 
 > "Which workflow mode fits this project?"

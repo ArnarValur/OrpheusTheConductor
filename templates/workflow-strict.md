@@ -74,20 +74,11 @@ All tasks follow a strict 11-step lifecycle:
    - Commit with a clear, concise message following conventional commits format
    - Example: `feat(ui): Create basic HTML structure for calculator`
 
-9. **Attach Task Summary with Git Notes:**
-   - **9.1:** Get commit hash: `git log -1 --format="%H"`
-   - **9.2:** Draft note content — task name, summary of changes, list of created/modified files, and the core "why"
-   - **9.3:** Attach note:
+9. **Record Task Completion in Plan:**
+    - **9.1:** In the track's `plan.md`, update the completed task from `[~]` to `[x]` and append the first 7 characters of the commit hash
+    - **9.2:** Write the updated content back to the track's `plan.md`
 
-     ```bash
-     git notes add -m "<note content>" <commit_hash>
-     ```
-
-10. **Record Task Completion in Plan:**
-    - **10.1:** In the track's `plan.md`, update the completed task from `[~]` to `[x]` and append the first 7 characters of the commit hash
-    - **10.2:** Write the updated content back to the track's `plan.md`
-
-11. **Commit Plan Update:**
+10. **Commit Plan Update:**
     - Stage the modified `plan.md`
     - Commit: `conductor(tracks): Mark task '<task name>' as complete`
 
@@ -109,50 +100,20 @@ All tasks follow a strict 11-step lifecycle:
    - Execute the test command
    - If tests fail: inform user, attempt fix (max 2 attempts). If still failing, **stop and ask for guidance**
 
-4. **Propose Manual Verification Plan:**
-   - Analyze `project-context.md` (Product Definition + Guidelines sections), `prd.md` (when present, for current scope), and the track's `plan.md` to determine the phase's user-facing goals
-   - Generate step-by-step verification instructions with specific commands and expected outcomes
-
-   **Frontend example:**
-
-   ```
-   Manual Verification Steps:
-   1. Start the dev server: `npm run dev`
-   2. Open browser to: `http://localhost:3000`
-   3. Confirm: The new user profile page displays correctly
-   ```
-
-   **Backend example:**
-
-   ```
-   Manual Verification Steps:
-   1. Ensure the server is running
-   2. Execute: `curl -X POST http://localhost:8080/api/v1/users -d '{"name": "test"}'`
-   3. Confirm: JSON response with status `201 Created`
-   ```
-
-5. **Await User Feedback:**
-   - Ask: "Does this meet your expectations? Please confirm with yes or provide feedback."
-   - **PAUSE.** Do not proceed without explicit confirmation
-
-6. **Create Checkpoint Commit:**
+4. **Create Checkpoint Commit:**
    - Stage all changes (or create empty commit if no changes)
    - Commit: `conductor(checkpoint): Checkpoint end of Phase X`
 
-7. **Attach Verification Report via Git Notes:**
-   - **7.1:** Draft report including automated test command, manual steps, and user confirmation
-   - **7.2:** Attach to checkpoint commit via `git notes add`
+5. **Record Phase Checkpoint SHA:**
+   - **5.1:** Get checkpoint commit hash: `git log -1 --format="%H"`
+   - **5.2:** In the track's `plan.md`, append `[checkpoint: <7-char-sha>]` to the completed phase heading
+   - **5.3:** Write the updated `plan.md`
 
-8. **Record Phase Checkpoint SHA:**
-   - **8.1:** Get checkpoint commit hash: `git log -1 --format="%H"`
-   - **8.2:** In the track's `plan.md`, append `[checkpoint: <7-char-sha>]` to the completed phase heading
-   - **8.3:** Write the updated `plan.md`
-
-9. **Commit Plan Update:**
+6. **Commit Plan Update:**
    - Stage the track's `plan.md`
    - Commit: `conductor(tracks): Mark phase '<PHASE NAME>' as complete`
 
-10. **Announce Completion:** Inform user that the phase is complete with checkpoint and verification report attached
+7. **Announce Completion:** Tell the user the phase is done — no sign-off step; the user speaks up if something is wrong
 
 ---
 
@@ -218,7 +179,6 @@ A task is complete when:
 6. Works on mobile (if applicable)
 7. Implementation notes added to the track's `plan.md`
 8. Changes committed with proper message
-9. Git note with task summary attached to the commit
 
 ---
 
@@ -282,35 +242,6 @@ Before requesting review:
 3. **Testing** — Unit tests comprehensive, integration tests pass, coverage adequate (>80%)
 4. **Security** — No hardcoded secrets, input validation present, injection prevented, XSS protection
 5. **Performance** — Queries optimized, images optimized, caching where needed
-
----
-
-## Emergency Procedures
-
-### Critical Bug in Production
-
-1. Create hotfix branch from main
-2. Write failing test for bug
-3. Implement minimal fix
-4. Test thoroughly
-5. Deploy immediately
-6. Document it in a track's `plan.md`
-
-### Data Loss
-
-1. Stop all write operations
-2. Restore from latest backup
-3. Verify data integrity
-4. Document incident
-5. Update backup procedures
-
-### Security Breach
-
-1. Rotate all secrets immediately
-2. Review access logs
-3. Patch vulnerability
-4. Notify affected users (if any)
-5. Document and update security procedures
 
 ---
 

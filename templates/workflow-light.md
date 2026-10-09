@@ -46,7 +46,6 @@ These bind every write in this conductor. Everything else in this file is conven
 
 5. **Verify:**
    - Run any existing tests to ensure nothing is broken: `CI=true <test command>`
-   - Manual verification — confirm the feature works as intended
    - Check for obvious regressions
 
 6. **Document Deviations:** If implementation differs from tech stack:
@@ -61,19 +60,10 @@ These bind every write in this conductor. Everything else in this file is conven
    - Commit with a clear, concise message following conventional commits format
    - Example: `feat(landing): Add hero section with CTA`
 
-8. **Attach Task Summary with Git Notes:**
-   - **8.1:** Get commit hash: `git log -1 --format="%H"`
-   - **8.2:** Draft note content — task name, summary of changes, list of created/modified files
-   - **8.3:** Attach note:
-
-     ```bash
-     git notes add -m "<note content>" <commit_hash>
-     ```
-
-9. **Record Task Completion:**
+8. **Record Task Completion:**
    - In the track's `plan.md`, update the completed task from `[~]` to `[x]` and append the first 7 characters of the commit hash
 
-10. **Commit Plan Update:**
+9. **Commit Plan Update:**
     - Stage the track's `plan.md`
     - Commit: `conductor(tracks): Mark task '<task name>' as complete`
 
@@ -83,38 +73,10 @@ These bind every write in this conductor. Everything else in this file is conven
 
 **Trigger:** Executed immediately after a task is completed that also concludes a phase in the track's `plan.md`.
 
-1. **Announce Protocol Start:** Inform the user that the phase is complete and checkpointing has begun
-
-2. **Run Existing Tests (if any):**
-   - Announce the exact shell command before running
-   - Execute the test command
-   - If tests fail: inform user, attempt fix (max 2 attempts). If still failing, **stop and ask for guidance**
-
-3. **Propose Manual Verification Plan:**
-   - Analyze `project-context.md` (Product Definition section), `prd.md` (when present, for current scope), and the track's `plan.md` to determine the phase's user-facing goals
-   - Generate step-by-step verification instructions with specific commands and expected outcomes
-
-4. **Await User Feedback:**
-   - Ask: "Does this meet your expectations? Please confirm with yes or provide feedback."
-   - **PAUSE.** Do not proceed without explicit confirmation
-
-5. **Create Checkpoint Commit:**
-   - Stage all changes (or create empty commit if no changes)
-   - Commit: `conductor(checkpoint): Checkpoint end of Phase X`
-
-6. **Attach Verification Report via Git Notes:**
-   - Draft report including test results (if any), manual verification steps, and user confirmation
-   - Attach to checkpoint commit via `git notes add`
-
-7. **Record Phase Checkpoint SHA:**
-   - In the track's `plan.md`, append `[checkpoint: <7-char-sha>]` to the completed phase heading
-
-8. **Commit Plan Update:**
-   - Stage the track's `plan.md`
-   - Commit: `conductor(tracks): Mark phase '<PHASE NAME>' as complete`
-
-9. **Announce Completion:** Inform user that the phase is complete with checkpoint created
-
+1. **Run Existing Tests (if any):** announce the command, run it. If tests fail, attempt a fix (max 2 attempts); if still failing, **stop and ask for guidance**
+2. **Create Checkpoint Commit:** `conductor(checkpoint): Checkpoint end of Phase X` (empty commit if no changes)
+3. **Record Phase Checkpoint SHA:** in the track's `plan.md`, append `[checkpoint: <7-char-sha>]` to the completed phase heading, and commit: `conductor(tracks): Mark phase '<PHASE NAME>' as complete`
+4. **Announce Completion:** tell the user the phase is done — no sign-off step; the user speaks up if something is wrong
 ---
 
 ## Commit Guidelines
@@ -162,7 +124,6 @@ A task is complete when:
 5. Works on mobile (if applicable)
 6. Implementation recorded in the track's `plan.md`
 7. Changes committed with proper message
-8. Git note with task summary attached
 
 ---
 
@@ -210,28 +171,3 @@ Skip tests for:
 - One-off scripts and prototypes
 - Pure UI layout (use visual verification instead)
 
----
-
-## Emergency Procedures
-
-### Critical Bug in Production
-
-1. Create hotfix branch from main
-2. Implement minimal fix
-3. Verify fix works
-4. Deploy immediately
-5. Document it in a track's `plan.md`
-
-### Data Loss
-
-1. Stop all write operations
-2. Restore from latest backup
-3. Verify data integrity
-4. Document incident
-
-### Security Breach
-
-1. Rotate all secrets immediately
-2. Review access logs
-3. Patch vulnerability
-4. Document and update security procedures

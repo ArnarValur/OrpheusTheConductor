@@ -152,7 +152,7 @@ Generate a phased implementation plan based on the approved spec and `conductor/
 1. **Research & Design** phase
 2. **Implementation** phase (with test-first sub-tasks if strict workflow)
 3. **Integration & Polish** phase
-4. **Verification & Documentation** phase
+4. **Wrap-up** phase — docs and cleanup. No manual sign-off task: Claude verifies its own work; the human speaks up if something is wrong
 
 Close the plan with a `## Decisions` section for **track-scoped** decisions, numbered `D1`, `D2`, … — one line each. Decisions that meet the three-criteria ADR test go to `conductor/adr/` instead (Step 7); D-numbers are for the rest, and relay entries cite them.
 
