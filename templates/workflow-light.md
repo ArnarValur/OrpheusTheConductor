@@ -17,7 +17,7 @@ These bind every write in this conductor. Everything else in this file is conven
 
 ## Guiding Principles
 
-1. **The Plan is the Source of Truth:** All work is tracked in a track — its `plan.md` holds the tasks; `tracks.md` holds one line per track
+1. **The Plan is the Source of Truth:** All work must be tracked in `tracks.md`
 2. **The Tech Stack is Deliberate:** Changes to the tech stack must be documented in the **Tech Stack** section of `project-context.md` *before* implementation. Architecturally significant changes (those satisfying the three-criteria ADR test: hard to reverse, surprising without context, real trade-off) additionally warrant an ADR in `conductor/adr/` — propose it in-session; approved ADRs are written at `/checkpoint`.
 3. **Ship Early, Iterate Fast:** Prioritize working software over ceremony
 4. **Test Where It Matters:** Write tests for complex logic, critical paths, and fragile code — skip boilerplate coverage
@@ -30,9 +30,9 @@ These bind every write in this conductor. Everything else in this file is conven
 
 ### Standard Task Lifecycle
 
-1. **Select Task:** Choose the next available task from the active track's `plan.md`, in order
+1. **Select Task:** Choose the next available task from `tracks.md` in sequential order
 
-2. **Mark In Progress:** In the track's `plan.md`, change the task from `[ ]` to `[~]`
+2. **Mark In Progress:** Edit `tracks.md` and change the task from `[ ]` to `[~]`
 
 3. **Plan Approach:**
    - Review the task requirements and acceptance criteria
@@ -71,17 +71,17 @@ These bind every write in this conductor. Everything else in this file is conven
      ```
 
 9. **Record Task Completion:**
-   - In the track's `plan.md`, update the completed task from `[~]` to `[x]` and append the first 7 characters of the commit hash
+   - In `tracks.md`, update the completed task from `[~]` to `[x]` and append the first 7 characters of the commit hash
 
 10. **Commit Plan Update:**
-    - Stage the track's `plan.md`
+    - Stage `tracks.md`
     - Commit: `conductor(tracks): Mark task '<task name>' as complete`
 
 ---
 
 ## Phase Completion — Checkpointing Protocol
 
-**Trigger:** Executed immediately after a task is completed that also concludes a phase in the track's `plan.md`.
+**Trigger:** Executed immediately after a task is completed that also concludes a phase in `tracks.md`.
 
 1. **Announce Protocol Start:** Inform the user that the phase is complete and checkpointing has begun
 
@@ -91,7 +91,7 @@ These bind every write in this conductor. Everything else in this file is conven
    - If tests fail: inform user, attempt fix (max 2 attempts). If still failing, **stop and ask for guidance**
 
 3. **Propose Manual Verification Plan:**
-   - Analyze `project-context.md` (Product Definition section), `prd.md` (when present, for current scope), and the track's `plan.md` to determine the phase's user-facing goals
+   - Analyze `project-context.md` (Product Definition section), `prd.md` (when present, for current scope), and `tracks.md` to determine the phase's user-facing goals
    - Generate step-by-step verification instructions with specific commands and expected outcomes
 
 4. **Await User Feedback:**
@@ -107,10 +107,10 @@ These bind every write in this conductor. Everything else in this file is conven
    - Attach to checkpoint commit via `git notes add`
 
 7. **Record Phase Checkpoint SHA:**
-   - In the track's `plan.md`, append `[checkpoint: <7-char-sha>]` to the completed phase heading
+   - In `tracks.md`, append `[checkpoint: <7-char-sha>]` to the completed phase heading
 
 8. **Commit Plan Update:**
-   - Stage the track's `plan.md`
+   - Stage `tracks.md`
    - Commit: `conductor(tracks): Mark phase '<PHASE NAME>' as complete`
 
 9. **Announce Completion:** Inform user that the phase is complete with checkpoint created
@@ -160,7 +160,7 @@ A task is complete when:
 3. Tests written for complex/critical logic (where valuable)
 4. Code follows project style guidelines
 5. Works on mobile (if applicable)
-6. Implementation recorded in the track's `plan.md`
+6. Implementation recorded in `tracks.md`
 7. Changes committed with proper message
 8. Git note with task summary attached
 
@@ -220,7 +220,7 @@ Skip tests for:
 2. Implement minimal fix
 3. Verify fix works
 4. Deploy immediately
-5. Document it in a track's `plan.md`
+5. Document in tracks.md
 
 ### Data Loss
 

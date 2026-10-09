@@ -1,6 +1,6 @@
 {
   "name": "orpheus",
-  "version": "3.5.0",
+  "version": "3.4.1",
   "description": "Spec-driven development orchestrator by Merkurial-studio. A conductor, not a copilot: it runs the workflow around your code — spec, plan, implement, review, checkpoint — from a per-project conductor/ folder that lives in git. /conductor-init sets it up (or upgrades it) and links it as an Obsidian vault; /conductor, /grill, /new-track and /checkpoint drive the work; a read-only drift-watchdog agent flags stale state in the background. Pure markdown and shell, no dependencies.",
   "author": {
     "name": "ArnarValur",

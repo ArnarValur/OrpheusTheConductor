@@ -1,4 +1,4 @@
-# Orpheus v3.5
+# Orpheus v3.4
 
 > A conductor, not a copilot.
 

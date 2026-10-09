@@ -17,7 +17,7 @@ These bind every write in this conductor. Everything else in this file is conven
 
 ## Guiding Principles
 
-1. **The Plan is the Source of Truth:** All work is tracked in a track — its `plan.md` holds the tasks; `tracks.md` holds one line per track
+1. **The Plan is the Source of Truth:** All work must be tracked in `tracks.md`
 2. **The Tech Stack is Deliberate:** Changes to the tech stack must be documented in the **Tech Stack** section of `project-context.md` *before* implementation. Architecturally significant changes (those satisfying the three-criteria ADR test: hard to reverse, surprising without context, real trade-off) additionally warrant an ADR in `conductor/adr/` — propose it in-session; approved ADRs are written at `/checkpoint`.
 3. **Test-Driven Development:** Write unit tests before implementing functionality
 4. **High Code Coverage:** Aim for >80% code coverage for all modules
@@ -32,9 +32,9 @@ All tasks follow a strict 11-step lifecycle:
 
 ### Standard Task Workflow
 
-1. **Select Task:** Choose the next available task from the active track's `plan.md`, in order
+1. **Select Task:** Choose the next available task from `tracks.md` in sequential order
 
-2. **Mark In Progress:** In the track's `plan.md`, change the task from `[ ]` to `[~]`
+2. **Mark In Progress:** Edit `tracks.md` and change the task from `[ ]` to `[~]`
 
 3. **Write Failing Tests (Red Phase):**
    - Create a new test file for the feature or bug fix
@@ -84,23 +84,23 @@ All tasks follow a strict 11-step lifecycle:
      ```
 
 10. **Record Task Completion in Plan:**
-    - **10.1:** In the track's `plan.md`, update the completed task from `[~]` to `[x]` and append the first 7 characters of the commit hash
-    - **10.2:** Write the updated content back to the track's `plan.md`
+    - **10.1:** In `tracks.md`, update the completed task from `[~]` to `[x]` and append the first 7 characters of the commit hash
+    - **10.2:** Write the updated content back to `tracks.md`
 
 11. **Commit Plan Update:**
-    - Stage the modified `plan.md`
+    - Stage the modified `tracks.md`
     - Commit: `conductor(tracks): Mark task '<task name>' as complete`
 
 ---
 
 ## Phase Completion — Checkpointing Protocol
 
-**Trigger:** Executed immediately after a task is completed that also concludes a phase in the track's `plan.md`.
+**Trigger:** Executed immediately after a task is completed that also concludes a phase in `tracks.md`.
 
 1. **Announce Protocol Start:** Inform the user that the phase is complete and checkpointing has begun
 
 2. **Ensure Test Coverage for Phase Changes:**
-   - **2.1:** Read the track's `plan.md` to find the previous phase's checkpoint SHA. If none, scope is all changes since first commit
+   - **2.1:** Read `tracks.md` to find the previous phase's checkpoint SHA. If none, scope is all changes since first commit
    - **2.2:** List changed files: `git diff --name-only <previous_checkpoint_sha> HEAD`
    - **2.3:** For each code file (exclude `.json`, `.md`, `.yaml`, etc.), verify a corresponding test file exists. If missing, create one matching the project's test naming convention and style
 
@@ -110,7 +110,7 @@ All tasks follow a strict 11-step lifecycle:
    - If tests fail: inform user, attempt fix (max 2 attempts). If still failing, **stop and ask for guidance**
 
 4. **Propose Manual Verification Plan:**
-   - Analyze `project-context.md` (Product Definition + Guidelines sections), `prd.md` (when present, for current scope), and the track's `plan.md` to determine the phase's user-facing goals
+   - Analyze `project-context.md` (Product Definition + Guidelines sections), `prd.md` (when present, for current scope), and `tracks.md` to determine the phase's user-facing goals
    - Generate step-by-step verification instructions with specific commands and expected outcomes
 
    **Frontend example:**
@@ -145,11 +145,11 @@ All tasks follow a strict 11-step lifecycle:
 
 8. **Record Phase Checkpoint SHA:**
    - **8.1:** Get checkpoint commit hash: `git log -1 --format="%H"`
-   - **8.2:** In the track's `plan.md`, append `[checkpoint: <7-char-sha>]` to the completed phase heading
-   - **8.3:** Write the updated `plan.md`
+   - **8.2:** In `tracks.md`, append `[checkpoint: <7-char-sha>]` to the completed phase heading
+   - **8.3:** Write updated `tracks.md`
 
 9. **Commit Plan Update:**
-   - Stage the track's `plan.md`
+   - Stage `tracks.md`
    - Commit: `conductor(tracks): Mark phase '<PHASE NAME>' as complete`
 
 10. **Announce Completion:** Inform user that the phase is complete with checkpoint and verification report attached
@@ -216,7 +216,7 @@ A task is complete when:
 4. Documentation complete (if applicable)
 5. Code passes all configured linting and static analysis checks
 6. Works on mobile (if applicable)
-7. Implementation notes added to the track's `plan.md`
+7. Implementation notes added to `tracks.md`
 8. Changes committed with proper message
 9. Git note with task summary attached to the commit
 
@@ -294,7 +294,7 @@ Before requesting review:
 3. Implement minimal fix
 4. Test thoroughly
 5. Deploy immediately
-6. Document it in a track's `plan.md`
+6. Document in tracks.md
 
 ### Data Loss
 
