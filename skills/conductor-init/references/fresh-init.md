@@ -300,5 +300,5 @@ Run **SKILL.md Step 13b** (Obsidian vault link), then announce completion:
 > **Next:**
 > - `/conductor` — boot: loads the hot set and reports status
 > - Create your first track (Step 12, or any time)
-> - Open `~/Documents/Project-Vaults/{project}` in Obsidian (Step 13b)
+> - Open `~/Documents/10 Projects/{project}/conductor` in Obsidian (Step 13b)
 > - `/checkpoint` — end every session with it; it rewrites pulse, tells the story once in relay, and folds to main

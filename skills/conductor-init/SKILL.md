@@ -1,6 +1,6 @@
 ---
 name: conductor-init
-description: Sets up Orpheus's conductor/ folder in a project, or refreshes an existing one in place without touching its state — emits the self-contained /conductor and /checkpoint commands and links the conductor as an Obsidian vault when ~/Documents/Project-Vaults/ exists. Use when the user wants to initialize, set up or bootstrap the conductor (or Orpheus) in a repo, upgrade or refresh an existing conductor after an Orpheus plugin update, or migrate a TheOracle v2.x project.
+description: Sets up Orpheus's conductor/ folder in a project, or refreshes an existing one in place without touching its state — emits the self-contained /conductor and /checkpoint commands and links the conductor as an Obsidian vault when ~/Documents/10 Projects/ exists. Use when the user wants to initialize, set up or bootstrap the conductor (or Orpheus) in a repo, upgrade or refresh an existing conductor after an Orpheus plugin update, or migrate a TheOracle v2.x project.
 ---
 
 # Conductor Init
@@ -84,7 +84,7 @@ Run on fresh inits and on every refresh or upgrade, from the project root:
 bash "${CLAUDE_PLUGIN_ROOT}/skills/conductor-init/scripts/vault-link.sh"
 ```
 
-It skips quietly when `~/Documents/Project-Vaults/` doesn't exist (that folder is the opt-in). Otherwise it links `~/Documents/Project-Vaults/<project> → <repo>/conductor` (the vault IS the conductor — never a copy or sync) and `conductor/memory → ~/.claude/projects/<slug>/memory`, gitignored and committed on its own. If it reports a real folder in the way, pass that message to the human as is — never move or delete the folder yourself.
+It skips quietly when `~/Documents/10 Projects/` doesn't exist (that folder is the opt-in). Otherwise it links `~/Documents/10 Projects/<project>/conductor → <repo>/conductor` (the vault IS the conductor — never a copy or sync; `<project>/` is a real folder for the human's own hub notes) and `conductor/memory → ~/.claude/projects/<slug>/memory`, gitignored and committed on its own. If it reports a real folder in the way, pass that message to the human as is — never move or delete the folder yourself.
 
 ## Gotchas
 

@@ -17,7 +17,7 @@ Pure markdown and shell. No dependencies.
 
 | Command | What it does |
 |---------|--------------|
-| `/conductor-init` | Sets up `conductor/` in a project, or upgrades an old one without losing anything. Also links it as an Obsidian vault if `~/Documents/Project-Vaults/` exists. |
+| `/conductor-init` | Sets up `conductor/` in a project, or upgrades an old one without losing anything. Also links it as an Obsidian vault at `~/Documents/10 Projects/<project>/conductor` if `~/Documents/10 Projects/` exists. |
 | `/conductor` | Starts a session: loads the current state and reports where things stand. |
 | `/grill` | Sharpens the project's vocabulary, decisions and requirements. |
 | `/new-track` | Starts a new feature with a spec and a step-by-step plan. |
