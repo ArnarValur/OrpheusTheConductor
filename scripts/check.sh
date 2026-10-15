@@ -43,8 +43,8 @@ for c in conductor checkpoint; do
     bad="${bad:+$bad, }templates/$c.md(mentions /conductor-init)"
     continue
   fi
-  unallowed=$(diff -u "templates/commands/$c.md" "commands/$c.md" 2>/dev/null \
-    | grep -E '^[+-]' | grep -vE '^(\+\+\+|---)' | sed 's/^[+-]//' | grep -v '^$' \
+  unallowed=$(diff "templates/commands/$c.md" "commands/$c.md" 2>/dev/null \
+    | sed -n 's/^[<>] //p' | grep -v '^$' \
     | grep -vE "$allow" || true)
   if [ -n "$unallowed" ]; then
     bad="${bad:+$bad, }$c.md"

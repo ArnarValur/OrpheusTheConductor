@@ -25,9 +25,9 @@ When the user invokes `/conductor`, restore working context from `conductor/` an
 `pulse.md`, `relay.md`, and `tracks.md` are shared across sessions and machines; `/checkpoint`'s fold-to-main flow keeps their truth on `main`.
 
 1. `git fetch origin main` — skip silently if there is no remote named `origin`. If the fetch fails (no network, no credentials), don't retry: read the working tree and add the offline warning in Step 4.
-2. If `origin/main` is ahead of the local copies, read the three shared files from it (`git show origin/main:conductor/pulse.md`, etc.). Otherwise read the working tree.
+2. If `origin/main` is ahead of the local copies, read the three shared files from it (`git show origin/main:conductor/pulse.md`, `git show origin/main:conductor/relay.md | awk '/^## /{n++} n==2{exit} n==1'`, `git show origin/main:conductor/tracks.md`). Otherwise read the working tree.
 
-**Own-repo conductor:** if `conductor/.git` exists, `conductor/` is its own repo — run both steps inside it (`git -C conductor fetch origin main`, then `git -C conductor show origin/main:pulse.md`, etc.).
+**Own-repo conductor:** if `conductor/.git` exists, `conductor/` is its own repo — run both steps inside it (`git -C conductor fetch origin main`, then `git -C conductor show origin/main:pulse.md`, `git -C conductor show origin/main:relay.md | awk '/^## /{n++} n==2{exit} n==1'`, etc.).
 
 ---
 
@@ -36,7 +36,7 @@ When the user invokes `/conductor`, restore working context from `conductor/` an
 | Read | How much |
 |------|----------|
 | `conductor/pulse.md` | whole file (~60 lines) |
-| `conductor/relay.md` | **last entry only** |
+| `conductor/relay.md` | **last entry only** — `awk '/^## /{n++} n==2{exit} n==1' conductor/relay.md` |
 | `conductor/tracks.md` | the one-liners |
 | `conductor/workflow.md` | whole file |
 | `conductor/agent-rules/behavioral.md` | whole file, when present |

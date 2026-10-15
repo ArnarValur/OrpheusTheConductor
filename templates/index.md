@@ -5,7 +5,7 @@
 > work enters the domain; Cold only on explicit request. Lazy files appear as
 > plain paths until created — turn them into links when they land.
 > Each entry names who writes it; nothing else writes that file. This map itself: written by init;
-> `/grill` and `/new-track` only turn a lazy entry into a link.
+> `/grill`, `/new-track`, and `/checkpoint` only turn a lazy entry into a link.
 
 ## Hot — every boot
 
