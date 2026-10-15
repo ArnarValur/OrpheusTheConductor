@@ -32,7 +32,9 @@ This is the route by which template changes reach a current-shape repo after a p
 1. **Commands** — SKILL.md Step 11b: compare each emitted command with its template; write it if missing; if it differs, show the diff and ask before overwriting.
 2. **Index** — if `conductor/index.md` carries no writer notes (`grep -q 'written by' conductor/index.md` fails), offer to re-render it from `<plugin-root>/templates/index.md`: strip the header comment, substitute the project name, and turn plain-path entries into links for files that exist. Ask first — it's a map, not state, but the human may have edited it.
 3. **Vault** — SKILL.md Step 13b.
-4. **Drift checklist** — check these user-owned files and list what you find for the human. Fix nothing yourself:
+4. **Drift checklist** — check these files and list what you find for the human (fix nothing unasked):
+   - `conductor/index.md` has writer notes, but its header line doesn't list `/checkpoint` as a lazy-link flipper (`grep -q 'written by' conductor/index.md && ! grep -q '/checkpoint.*turn a lazy entry into a link' conductor/index.md`) → offer and ask first to replace that one line with the current line from `<plugin-root>/templates/index.md`.
+   - `conductor/agent-rules/technical.md` or `behavioral.md` exists while `conductor/index.md` still lists it as a plain path → offer and ask first to flip that line to a link.
    - `conductor/workflow.md` marks tasks in `tracks.md` (``grep -nE '(Edit|Stage|In|from|in) `tracks\.md`' conductor/workflow.md`` finds the old wording) → tasks live in each track's `plan.md`; `tracks.md` holds one line per track. The current wording is in `<plugin-root>/templates/workflow-light.md` / `workflow-strict.md`.
    - A `tracks.md` one-liner whose pointer lacks the domain (`→ tracks/<track-id>/plan.md`) → it should read `→ tracks/<domain>/<track-id>/plan.md`.
    - `metadata.json` files under `conductor/tracks/` → retired; delete at leisure.
