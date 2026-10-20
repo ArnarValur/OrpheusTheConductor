@@ -2,7 +2,7 @@
 description: Save session state — rewrite pulse, append one relay entry, graduate lessons, fold to main
 ---
 
-<!-- Template: Orpheus v3.1 | Emitted into consumer repos at .claude/commands/checkpoint.md by /conductor-init. Self-contained: must never reference the Orpheus plugin, /conductor-init, or any file init does not emit. It rewrites pulse, appends relay, commits and pushes: Claude runs it when the human asks, never on its own. -->
+<!-- Template: Orpheus v3.1 | Emitted into consumer repos at .claude/commands/checkpoint.md by /conductor-init. Self-contained: must never reference the Orpheus plugin, /conductor-init, or any file init does not emit. -->
 
 # Checkpoint — Save Session State
 

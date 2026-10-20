@@ -2,7 +2,7 @@
 description: Save session state — rewrite pulse, append one relay entry, graduate lessons, fold to main
 ---
 
-<!-- Plugin copy — keep in sync with templates/commands/checkpoint.md (the version /conductor-init emits into consumer repos). Deliberate divergences, and ONLY these: (1) Step 0 may point an uninitialized project at /conductor-init; (2) the old-shape guard before Step 1. Emitted copies must never reference /conductor-init. It rewrites pulse, appends relay, commits and pushes: Claude runs it when the human asks, never on its own. -->
+<!-- Plugin copy — keep in sync with templates/commands/checkpoint.md (the version /conductor-init emits into consumer repos). Deliberate divergences, and ONLY these: (1) Step 0 may point an uninitialized project at /conductor-init; (2) the old-shape guard before Step 1. Emitted copies must never reference /conductor-init. -->
 
 # Checkpoint — Save Session State
 

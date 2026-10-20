@@ -74,7 +74,7 @@ This gives the repo `/conductor` (boot: hot set only, warm-load table, ~10-line 
 - Halt messages give the git-history recovery commands and never point at `/conductor-init` — consumer repos may not carry it.
 - No plugin-root path, no mention of the Orpheus plugin, no file init does not emit.
 - No static live-state — instructions say "enumerate live".
-- `/checkpoint` carries no `disable-model-invocation` lock: Claude runs it whenever the human asks, in any wording, and never on its own.
+- `/checkpoint` carries no `disable-model-invocation` lock and no wording that limits when Claude may run it.
 
 ## Step 13b: Obsidian vault link
 

@@ -87,6 +87,6 @@ Add a warning line only when true — one per condition:
 ## Session behavior
 
 - The two laws in `conductor/workflow.md` govern every write: one fact one home; a ruling binds only when it lands in a repo file.
-- **Only `/checkpoint` writes `pulse.md` and `relay.md`, and only when the human asks for it.** Never patch the pulse or add a relay entry mid-session — carry live state to the checkpoint.
+- **Only `/checkpoint` writes `pulse.md` and `relay.md`.** Never patch the pulse or add a relay entry mid-session — carry live state to the checkpoint.
 - When a decision crystallizes mid-session, put it where it lives **now** (propose an ADR for approval, add a D-number to the track plan, or note live state for the pulse rewrite) — don't hold it for checkpoint.
-- At the end of a session, offer to run `/checkpoint`. Run it whenever the human asks, in any wording; never on your own.
+- End sessions with `/checkpoint`.
