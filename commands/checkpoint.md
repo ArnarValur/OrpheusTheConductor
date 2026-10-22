@@ -71,8 +71,8 @@ Add one entry to `conductor/relay.md`, newest first:
 A lesson that stays in the transcript is lost — only repo files bind.
 
 - **Technical lesson** (about the code, stack, or tooling): write to `conductor/agent-rules/technical.md` — create the file on first use and flip its plain-path line in `conductor/index.md` into a link. **Automatic, no confirmation needed.**
-- **Behavioral lesson** (how the human wants the agent to work): **ask the human first**, one lesson at a time. On yes, write to `conductor/agent-rules/behavioral.md` — create the file on first use and flip its plain-path line in `conductor/index.md` into a link.
-- **One fact, one home:** when a new lesson supersedes an existing rule, replace that rule in place instead of appending. Backstop cap: `behavioral.md` ≤ **10 rules**, `technical.md` ≤ **15 rules** — when at cap, consolidate or retire a stale rule before adding another (for `behavioral.md`, only with the human's yes).
+- **Behavioral lesson** (how the human wants the agent to work): **never ask at checkpoint** — a checkpoint asks no questions, because the human often switches away while it runs. Raise a lesson with the human when it happens, mid-session, never at the end; at checkpoint write only the ones the human approved then, otherwise skip silently.
+- **One fact, one home:** when a new lesson supersedes an existing rule, replace that rule in place instead of appending. Backstop cap: `behavioral.md` ≤ **10 rules**, `technical.md` ≤ **15 rules** — when at cap, consolidate or retire a stale rule before adding another.
 
 No lessons this session → skip silently.
 
