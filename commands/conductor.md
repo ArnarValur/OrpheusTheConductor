@@ -27,6 +27,8 @@ When the user invokes `/conductor`, restore working context from `conductor/` an
 1. `git fetch origin main` — skip silently if there is no remote named `origin`. If the fetch fails (no network, no credentials), don't retry: read the working tree and add the offline warning in Step 4.
 2. If `origin/main` is ahead of the local copies, read the three shared files from it (`git show origin/main:conductor/pulse.md`, `git show origin/main:conductor/relay.md | awk '/^## /{n++} n==2{exit} n==1'`, `git show origin/main:conductor/tracks.md`). Otherwise read the working tree.
 
+3. **Pick up edits from chat agents.** Run `git status --short -- conductor/` (own-repo conductor: `git -C conductor status --short`). Chat agents on the phone write into `conductor/` through the vault sync, so uncommitted or untracked files there are usually their work, not a mistake. Read every changed file that is in the hot set from the working tree (it overrides `origin/main` for that file), list the others by name, and report them all in Step 4 under **Edited outside Code**. Don't revert, delete or commit them at boot; `/checkpoint` commits them with the session.
+
 **Own-repo conductor:** if `conductor/.git` exists, `conductor/` is its own repo — run both steps inside it (`git -C conductor fetch origin main`, then `git -C conductor show origin/main:pulse.md`, `git -C conductor show origin/main:relay.md | awk '/^## /{n++} n==2{exit} n==1'`, etc.).
 
 ---
@@ -71,6 +73,7 @@ Budget: the hot set should land around **300–400 lines total**. If it balloons
 ⚠️ Blockers: {count, or "none"}
 📋 Next: {top of pulse § Next queue}
 🧠 Last session: {relay last entry — one-line what + status}
+✏️ Edited outside Code: {changed conductor/ files from Step 1.3, or omit the line when none}
 
 Ready. What's our heading?
 ```
