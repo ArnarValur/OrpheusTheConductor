@@ -29,4 +29,4 @@
 ## Cold — explicit request only
 
 - Archives — `pulse-archive/` (trimmed relay entries, old state) · written by `/checkpoint`
-- [Scratchpad](./scratchpad.md) — notes · written by the human; the conductor never writes here
+- [Scratchpad](./scratchpad.md) — notes

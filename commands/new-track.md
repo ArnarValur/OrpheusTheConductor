@@ -77,7 +77,7 @@ If the user creates a new domain:
 
 - Ask for: domain name (lowercase, kebab-case). The domain exists once its first track folder is created — no registry row anywhere.
 - **Re-enter Step 2a with the proposed new domain.** If `context-map.md` exists, the new domain must match a registered context name — otherwise halt with the error from Step 2a.
-- If the domain warrants a caution level, suggest the user add a row to the Caution Levels table in `project-context.md` — that file is user-owned, so the edit is theirs, not this command's.
+- If the domain warrants a caution level, suggest the user add a row to the Caution Levels table in `project-context.md`.
 
 For any domain marked 🔴 (Critical / Tread Carefully) in project-context, warn:
 

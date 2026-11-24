@@ -3,7 +3,7 @@
 
 > Single identity + operational document for this project.
 >
-> **Created at init; user-edited thereafter — no command writes here.**
+> **Created at init.**
 >
 > Section order is deliberate: **identity-first (1–3), operational-second (4–8).**
 > Agents partial-reading this file should see *what the product is* before *how to behave when working on it*.

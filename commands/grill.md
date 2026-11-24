@@ -16,7 +16,7 @@ When the user invokes `/grill`, execute this repeatable interview loop to sharpe
 
 1. Verify that `conductor/` exists in the project root. If it does not, halt with:
    > "Conductor is not initialized in this project. Run `/conductor-init` first."
-2. Read `conductor/project-context.md`. This file is the identity + operational source of truth — never write to it from `/grill`.
+2. Read `conductor/project-context.md`. This file is the identity + operational source of truth.
 
 ---
 
@@ -194,7 +194,6 @@ While `/grill` is active:
 
 - Ask every multiple-choice question with `AskUserQuestion`; fall back to plain-text options only if the tool fails.
 - `/grill` writes only `context.md`, `prd.md`, approved ADRs, and the one-line link flip in `index.md` (Step 9). Never `pulse.md` or `relay.md` — those belong to `/checkpoint`.
-- Treat `conductor/project-context.md` and `conductor/docs/` as read-only — no command writes there.
 - Treat ADRs in `conductor/adr/` as settled. Surface them in answers but never edit them; superseding ADRs use the `## Superseded by` link.
 - Never auto-create empty stubs for lazy files. Lazy = "exists only when there's something to write."
 - Never write a dead link to `index.md`.

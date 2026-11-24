@@ -65,7 +65,7 @@ All tasks follow a strict 11-step lifecycle:
 7. **Document Deviations:** If implementation differs from tech stack:
    - **STOP** implementation
    - Update the **Tech Stack** section of `project-context.md` with the new design
-   - Add a dated note explaining the change (user-edited — no command writes to `project-context.md` post-init)
+   - Add a dated note explaining the change
    - If the change is architecturally significant (three-criteria ADR test), propose it as an ADR in-session; it is written at `/checkpoint` once approved
    - Resume implementation
 

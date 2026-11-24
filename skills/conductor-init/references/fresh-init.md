@@ -153,7 +153,7 @@ mkdir -p conductor/tracks conductor/pulse-archive conductor/code_styleguides con
 touch conductor/adr/.gitkeep conductor/docs/.gitkeep conductor/agent-rules/.gitkeep conductor/pulse-archive/.gitkeep
 
 # Create an initial user-owned scratchpad
-printf '%b\n' "# Scratchpad\n\nUse this scratchpad to quickly write down notes, ideas, thoughts, or reminders.\nThis file is user-owned and will not be modified by Conductor." > conductor/scratchpad.md
+printf '%b\n' "# Scratchpad\n\nUse this scratchpad to quickly write down notes, ideas, thoughts, or reminders." > conductor/scratchpad.md
 ```
 
 Resulting tree:
@@ -193,7 +193,7 @@ On approval:
 2. Remove the now-empty directory: `rmdir .docs`
 3. Drop the placeholder (real files are present): `command rm -f conductor/docs/.gitkeep`
 
-> Reminder: `conductor/docs/` has **no command writers**. Humans write there directly. This migration is the only command-touch to that directory. The static index already lists `docs/` under Warm — no index action needed.
+> The static index already lists `docs/` under Warm — no index action needed.
 
 ---
 
@@ -237,8 +237,6 @@ Write `conductor/project-context.md` using the template at `<plugin-root>/templa
 7. **Project-Specific Constraints** (from template default; user-editable)
 8. **Environment Notes** (from template default; user-editable)
 
-> After this file is written, **no command writes to it**. All future edits are by the user directly.
->
 > **No static live-state as permanent truth:** tenant lists, port numbers, host names and the like do not get baked into conductor files as facts — agents enumerate live state where the work happens. §7/§8 may state *constraints* ("must deploy to region X"), not *observations* ("service Y currently runs on port Z").
 
 ---

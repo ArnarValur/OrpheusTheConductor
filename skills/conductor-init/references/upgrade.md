@@ -53,7 +53,7 @@ Apply in order. If a target file already exists with user content, ask before ov
    ```bash
    mkdir -p conductor/agent-rules conductor/pulse-archive conductor/adr conductor/docs
    touch conductor/agent-rules/.gitkeep conductor/pulse-archive/.gitkeep conductor/adr/.gitkeep conductor/docs/.gitkeep
-   [ ! -f conductor/scratchpad.md ] && printf '%b\n' "# Scratchpad\n\nUse this scratchpad to quickly write down notes, ideas, thoughts, or reminders.\nThis file is user-owned and will not be modified by Conductor." > conductor/scratchpad.md
+   [ ! -f conductor/scratchpad.md ] && printf '%b\n' "# Scratchpad\n\nUse this scratchpad to quickly write down notes, ideas, thoughts, or reminders." > conductor/scratchpad.md
    ```
 
 5. **Preserve everything else.** Do NOT touch `conductor/pulse.md`, `conductor/relay.md`, `conductor/tracks.md`, `conductor/tracks/`, `conductor/pulse-archive/` contents, `conductor/agent-rules/` contents, `conductor/project-context.md`, or `conductor/code_styleguides/`.
